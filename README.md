@@ -1,6 +1,5 @@
 # Desarrollo de una Aplicación Móvil de Chatbot con AI
 
-
 ## 1. Breve explicación del entorno de desarrollo
 
 El entorno de desarrollo para este proyecto constará de:
@@ -19,45 +18,11 @@ El entorno de desarrollo para este proyecto constará de:
 
 ## 2. Diagrama de despliegue
 
-```mermaid
-deployment {
-  node "Dispositivo Cliente" {
-    [Aplicación Flutter] as App
-    database "SQLite Local" as SQLiteLocal
-  }
+La arquitectura a usar será una aplicación móvil desarrollada en Flutter y un backend en Python desplegado en Azure. La aplicación móvil utiliza SQLite local para el almacenamiento inmediato de datos de usuario y conversaciones, y accede al backend a través de un API Gateway en Azure App Service mediante solicitudes HTTPS, mientras que el backend persiste la información en Azure SQL Database, enruta las operaciones de lenguaje natural al Servicio de Lenguaje de Azure Cognitive Services o a la API de ChatGPT de OpenAI, y publica métricas y logs en Azure Monitor. Este modelo de la Figura 2 ilustra cómo los clientes interactúan con los distintos componentes y cómo se gestionan los datos y servicios en la nube.
 
-  node "Azure App Service" {
-    [Servicio Backend Python] as Backend
-    [API Gateway] as Gateway
-  }
-  
-  node "Azure Cognitive Services" {
-    [Servicio de Lenguaje] as LangService
-  }
-  
-  cloud "OpenAI" {
-    [API ChatGPT] as ChatGPT
-  }
-  
-  node "Azure SQL Database" {
-    database "Base de Datos Cloud" as CloudDB
-  }
-  
-  node "Azure Monitor" {
-    [Servicio de Monitoreo] as Monitor
-  }
-  
-  App --> SQLiteLocal : "Almacena datos locales"
-  App --> Gateway : "Solicitudes HTTPS"
-  Gateway --> Backend : "Enruta solicitudes"
-  Backend --> CloudDB : "Persiste datos"
-  Backend --> LangService : "Procesamiento de lenguaje"
-  Backend --> ChatGPT : "Solicitudes a API"
-  Monitor --> App : "Monitoreo de cliente"
-  Monitor --> Backend : "Monitoreo de servidor"
-}
+<b>*Figura X:*</b> Diagrama de Despliegue
 
-```
+![Diagrama de Despliegue](<docs/Diagrama de Despliegue.png>)
 
 ## 3. Requerimientos no funcionales
 
@@ -93,44 +58,29 @@ deployment {
 
 ## 4. Diagrama de casos de uso
 
-```mermaid
-@startuml
-left to right direction
-skinparam packageStyle rectangle
+El siguiente diagrama de casos de uso representa las principales interacciones dentro de la Aplicación de Chatbot, basado en el modelo de requerimientos funcionales definido previamente. En este sistema, los usuarios pueden registrarse, iniciar sesión, chatear con el Sistema de IA, ver su historial de conversaciones, personalizar sus preferencias, compartir diálogos y evaluar la calidad de las respuestas recibidas. Por su parte, el Sistema de IA participa directamente en la generación de respuestas durante el caso de uso “Chatear con IA”, mientras que los administradores disponen de permisos adicionales para monitorear el uso de la plataforma, gestionar usuarios y cambiar el modelo de IA. Estas funcionalidades garantizan una experiencia interactiva, adaptable y fácilmente administrable dentro del prototipo móvil.
 
-actor Usuario
-actor "Sistema de IA" as IA
-actor Administrador
+<b>*Figura X:*</b> Diagrama de Casos de Uso
 
-rectangle "Aplicación de Chatbot" {
-  usecase "Registrarse" as UC1
-  usecase "Iniciar sesión" as UC2
-  usecase "Chatear con IA" as UC3
-  usecase "Ver historial de conversaciones" as UC4
-  usecase "Personalizar preferencias" as UC5
-  usecase "Compartir conversación" as UC6
-  usecase "Evaluar respuestas" as UC7
-  usecase "Monitorear uso" as UC8
-  usecase "Gestionar usuarios" as UC9
-  usecase "Cambiar modelo de IA" as UC10
-}
+![Diagrama de Casos de Uso](<docs/Diagrama de Casos de Uso.png>)
 
-Usuario --> UC1
-Usuario --> UC2
-Usuario --> UC3
-Usuario --> UC4
-Usuario --> UC5
-Usuario --> UC6
-Usuario --> UC7
+A continuación se detallan los casos de uso:
 
-UC3 --> IA
+| ID   | Caso de Uso                         | Descripción                                                                                       |
+|------|-------------------------------------|---------------------------------------------------------------------------------------------------|
+| UC1  | Registrarse                         | Permite crear una cuenta en la aplicación proporcionando correo electrónico y contraseña.         |
+| UC2  | Iniciar sesión                      | Permite autenticarse en la aplicación ingresando las credenciales de usuario registradas.         |
+| UC3  | Chatear con IA                      | Permite enviar mensajes al Sistema de IA y recibir respuestas generadas en tiempo real.           |
+| UC4  | Ver historial de conversaciones     | Permite consultar y navegar por las conversaciones previas almacenadas en la base de datos local. |
+| UC5  | Personalizar preferencias           | Permite ajustar opciones de la aplicación como tema, notificaciones y configuración de modelo IA. |
+| UC6  | Compartir conversación              | Permite exportar o enviar el contenido de una conversación a través de correo u otras aplicaciones.|
+| UC7  | Evaluar respuestas                  | Permite calificar la calidad o relevancia de las respuestas proporcionadas por la IA.             |
+| UC8  | Monitorear uso                      | Permite al administrador visualizar métricas de uso y rendimiento de la plataforma.               |
+| UC9  | Gestionar usuarios                  | Permite al administrador ver, activar, desactivar o eliminar cuentas de usuario.                  |
+| UC10 | Cambiar modelo de IA                | Permite al administrador seleccionar y configurar el proveedor o versión del modelo de IA.       |
 
-Administrador --> UC8
-Administrador --> UC9
-Administrador --> UC10
-@enduml
-
-```
+Y el diagrama de clases es el siguiente:
+## DIAGRAMA DE CLASES
 
 ## 5. Descripción de casos de uso (con mockups)
 
