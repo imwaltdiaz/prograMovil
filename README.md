@@ -194,3 +194,10 @@ Y el diagrama de clases es el siguiente:
 **Mockup**:  
 ![CU8 Mockup](./img/cu8.png)
 
+## 6. Diagrama de Base de Datos
+
+El siguiente diagrama representa la estructura de la base de datos utilizada en la aplicación. Incluye las tablas principales para almacenar información de usuarios, conversaciones, preferencias y evaluaciones. Este diseño asegura un acceso eficiente y seguro a los datos necesarios para el funcionamiento del sistema.
+
+<b>*Figura 3:*</b> Diagrama de Base de Datos
+
+![Diagrama de Base de Datos](./img/bd_diagrama.png)
