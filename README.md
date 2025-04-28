@@ -81,6 +81,7 @@ A continuación se detallan los casos de uso:
 
 Y el diagrama de clases es el siguiente:
 ## DIAGRAMA DE CLASES
+![Diagrama de Clases](<docs/Diagrama_de_clase.jpeg>)
 
 ## 5. Descripción de casos de uso (con mockups)
 
