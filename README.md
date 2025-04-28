@@ -77,7 +77,7 @@ A continuación se detallan los casos de uso:
 | UC5  | Personalizar preferencias           | Permite ajustar opciones de la aplicación como tema, notificaciones y configuración de modelo IA. |
 | UC6  | Compartir conversación              | Permite exportar o enviar el contenido de una conversación a través de correo u otras aplicaciones.|
 | UC7  | Evaluar respuestas                  | Permite calificar la calidad o relevancia de las respuestas proporcionadas por la IA.             |
-| UC8 | Cambiar modelo de IA                | Permite al administrador seleccionar y configurar el proveedor o versión del modelo de IA.       |
+| UC8 | Cambiar modelo de IA                | Permite al usuario seleccionar y configurar el proveedor o versión del modelo de IA.       |
 
 Y el diagrama de clases es el siguiente:
 ## DIAGRAMA DE CLASES
@@ -184,14 +184,21 @@ Y el diagrama de clases es el siguiente:
 ![CU7 Mockup](./img/cu7.png)
 
 ## CU8: Cambiar modelo de IA
-**Actor principal**: Administrador  
-**Descripción**: El administrador configura o cambia el proveedor del modelo de IA.  
+**Actor principal**: usuario  
+**Descripción**: El usuario configura o cambia el proveedor del modelo de IA.  
 **Flujo principal**:
-1. El administrador accede a "Configuración de IA"
+1. El usuario accede a "Configuración de IA"
 2. El sistema muestra las opciones de proveedores disponibles
-3. El administrador selecciona un proveedor y configura parámetros (API keys, modelos)
+3. El usuario selecciona un proveedor y configura parámetros (API keys, modelos)
 4. El sistema valida la configuración y actualiza el servicio backend
 
 **Mockup**:  
 ![CU8 Mockup](./img/cu8.png)
 
+## 6. Diagrama de Base de Datos
+
+El siguiente diagrama representa la estructura de la base de datos utilizada en la aplicación. Incluye las tablas principales para almacenar información de usuarios, conversaciones, preferencias y evaluaciones. Este diseño asegura un acceso eficiente y seguro a los datos necesarios para el funcionamiento del sistema.
+
+<b>*Figura 3:*</b> Diagrama de Base de Datos
+
+![Diagrama de Base de Datos](./img/bd_diagrama.png)
