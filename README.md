@@ -20,7 +20,7 @@ El entorno de desarrollo para este proyecto constará de:
 
 La arquitectura a usar será una aplicación móvil desarrollada en Flutter y un backend en Python desplegado en Azure. La aplicación móvil utiliza SQLite local para el almacenamiento inmediato de datos de usuario y conversaciones, y accede al backend a través de un API Gateway en Azure App Service mediante solicitudes HTTPS, mientras que el backend persiste la información en Azure SQL Database, enruta las operaciones de lenguaje natural al Servicio de Lenguaje de Azure Cognitive Services o a la API de ChatGPT de OpenAI, y publica métricas y logs en Azure Monitor. Este modelo de la Figura 2 ilustra cómo los clientes interactúan con los distintos componentes y cómo se gestionan los datos y servicios en la nube.
 
-<b>*Figura X:*</b> Diagrama de Despliegue
+<b>*Figura 1:*</b> Diagrama de Despliegue
 
 ![Diagrama de Despliegue](<docs/Diagrama de Despliegue.png>)
 
@@ -60,9 +60,11 @@ La arquitectura a usar será una aplicación móvil desarrollada en Flutter y un
 
 El siguiente diagrama de casos de uso representa las principales interacciones dentro de la Aplicación de Chatbot, basado en el modelo de requerimientos funcionales definido previamente. En este sistema, los usuarios pueden registrarse, iniciar sesión, chatear con el Sistema de IA, ver su historial de conversaciones, personalizar sus preferencias, compartir diálogos y evaluar la calidad de las respuestas recibidas. Por su parte, el Sistema de IA participa directamente en la generación de respuestas durante el caso de uso “Chatear con IA”, mientras que los administradores disponen de permisos adicionales para monitorear el uso de la plataforma, gestionar usuarios y cambiar el modelo de IA. Estas funcionalidades garantizan una experiencia interactiva, adaptable y fácilmente administrable dentro del prototipo móvil.
 
-<b>*Figura X:*</b> Diagrama de Casos de Uso
+<b>*Figura 2:*</b> Diagrama de Casos de Uso
 
-![Diagrama de Casos de Uso](<docs/Diagrama de Casos de Uso.png>)
+![Diagrama de Casos de Uso](<docs/UC_1.JPEG>)
+![Diagrama de Casos de Uso](<docs/UC_2.JPEG>)
+![Diagrama de Casos de Uso](<docs/UC_3.JPEG>)
 
 A continuación se detallan los casos de uso:
 
@@ -75,9 +77,7 @@ A continuación se detallan los casos de uso:
 | UC5  | Personalizar preferencias           | Permite ajustar opciones de la aplicación como tema, notificaciones y configuración de modelo IA. |
 | UC6  | Compartir conversación              | Permite exportar o enviar el contenido de una conversación a través de correo u otras aplicaciones.|
 | UC7  | Evaluar respuestas                  | Permite calificar la calidad o relevancia de las respuestas proporcionadas por la IA.             |
-| UC8  | Monitorear uso                      | Permite al administrador visualizar métricas de uso y rendimiento de la plataforma.               |
-| UC9  | Gestionar usuarios                  | Permite al administrador ver, activar, desactivar o eliminar cuentas de usuario.                  |
-| UC10 | Cambiar modelo de IA                | Permite al administrador seleccionar y configurar el proveedor o versión del modelo de IA.       |
+| UC8 | Cambiar modelo de IA                | Permite al administrador seleccionar y configurar el proveedor o versión del modelo de IA.       |
 
 Y el diagrama de clases es el siguiente:
 ## DIAGRAMA DE CLASES
