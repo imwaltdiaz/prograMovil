@@ -1,24 +1,80 @@
 # Desarrollo de una Aplicación Móvil de Chatbot con AI
 
-## 1. Breve explicación del entorno de desarrollo
+Este proyecto se centra en el desarrollo de una aplicación móvil de chatbot con inteligencia artificial, concebida como una plataforma interactiva donde los usuarios podrán comunicarse directamente con un modelo de IA. El sistema se basa en la interacción a través de una interfaz de chat intuitiva, procesando las entradas del usuario y generando respuestas en tiempo real. Desarrollada con Flutter para la parte cliente, que permite una experiencia nativa en múltiples plataformas, y un backend en Python desplegado en Azure, la aplicación inicia su funcionalidad integrando la API de OpenAI (ChatGPT), pero su diseño arquitectónico permite la flexibilidad para conectar con diferentes proveedores de modelos de IA en el futuro, asegurando adaptabilidad y escalabilidad.
 
-El entorno de desarrollo para este proyecto constará de:
+## Índice de Contenido
+1.  [Entorno de desarrollo](#1-entorno-de-desarrollo)
+2.  [Diagrama de Despliegue](#2-diagrama-de-despliegue)
+3.  [Requerimientos no Funcionales](#3-requerimientos-no-funcionales)
+4.  [Diagrama de Casos de Uso](#4-diagrama-de-casos-de-uso)
+5.  [Diagrama de Clases](#5-diagrama-de-clases)
+6.  [Descripción de Casos de Uso (con Mockups)](#6-descripción-de-casos-de-uso-con-mockups)
+7.  [Diagrama de Base de Datos](#7-diagrama-de-base-de-datos)
 
-- **Frontend**: Desarrollado en Flutter, un framework de UI de Google que permite crear aplicaciones nativas multiplataforma (iOS y Android) con un único código base utilizando el lenguaje Dart.
-- **Backend**: Implementado en Python, aprovechando bibliotecas como FastAPI o Flask para crear APIs RESTful que conectarán con la API de OpenAI.
-- **Base de datos**: SQLite para almacenamiento local de datos de usuario, historial de conversaciones y configuraciones.
-- **Integración de IA**: API de OpenAI (ChatGPT) en fase inicial, con arquitectura que facilite el cambio a otros modelos en el futuro.
-- **Despliegue**: Servicios de Azure para la infraestructura cloud.
+## 1. Entorno de desarrollo
 
-**Herramientas de desarrollo**:
-- Flutter SDK y Android Studio/VS Code para desarrollo frontend
-- Python con entorno virtual para desarrollo backend
-- Git para control de versiones
-- Azure DevOps para CI/CD
+El entorno de desarrollo para este proyecto de aplicación móvil de chatbot con IA se estructura en torno a tecnologías clave para cubrir tanto el cliente como el servidor y la integración con servicios externos. Los componentes principales son:
+
+* **Frontend**: Se desarrollará utilizando **Flutter**, el SDK de UI de Google, conocido por su capacidad para construir aplicaciones compiladas nativamente para dispositivos móviles (iOS y Android), web y escritorio desde una única base de código **Dart**.
+* **Backend**: Implementado en **Python**, aprovechando su ecosistema para tareas de servidor. Se emplearán frameworks web modernos como **FastAPI** o **Flask** para exponer una API RESTful que servirá como puente entre la aplicación móvil y los servicios de inteligencia artificial y base de datos centralizada.
+* **Base de datos**: Para el almacenamiento local en el dispositivo móvil (como historial de conversaciones básicas o configuraciones), se utilizará **SQLite**. Para la persistencia de datos a nivel de backend en la nube (usuarios, configuraciones globales, logs, etc.), se empleará **Azure SQL Database**, como se detalla en el diagrama de despliegue.
+* **Integración de IA**: La funcionalidad central de chatbot se basa en la interacción con una API de modelo de lenguaje. Inicialmente, se integrará la **API de OpenAI (ChatGPT)**, pero la arquitectura está diseñada para ser modular y permitir la futura incorporación o el cambio a otros proveedores de modelos de IA con el mínimo esfuerzo.
+* **Despliegue**: Los servicios de infraestructura en la nube, incluyendo el hosting del backend, la base de datos centralizada y posiblemente otros servicios auxiliares (como monitoreo o gestión de API Gateway), se gestionarán en la plataforma **Microsoft Azure**.
+
+Para comenzar a desarrollar en este proyecto, es necesario configurar el ambiente de desarrollo local instalando y configurando las siguientes herramientas. A continuación, se detalla su propósito y cómo realizar su instalación básica o dónde encontrar las guías oficiales:
+
+* **Flutter SDK**:
+    * **Descripción:** El kit de desarrollo fundamental para crear la interfaz de usuario y la lógica del lado del cliente. Incluye el compilador de Dart y las herramientas de línea de comandos (`flutter`) necesarias.
+    * **Instalación:** Se recomienda encarecidamente seguir la documentación oficial de Flutter, ya que proporciona guías detalladas y específicas para cada sistema operativo (Windows, macOS, Linux):
+        * Consulta la guía aquí: [Instalar Flutter](https://docs.flutter.dev/get-started/install)
+    * Tras la instalación, ejecuta `flutter doctor` en la terminal para verificar que todos los componentes necesarios (SDK de Android, Xcode si estás en macOS, etc.) estén correctamente configurados.
+
+* **Python**:
+    * **Descripción:** El lenguaje de programación para el desarrollo del backend. Se utilizará para crear la API que se comunica con el frontend y la IA. Es recomendable usar una versión reciente, como Python 3.9 o superior.
+    * **Instalación:** Descarga el instalador adecuado para tu sistema operativo desde el sitio web oficial de Python:
+        * Descargar Python: [python.org/downloads](https://www.python.org/downloads/)
+    * Es una práctica estándar y muy recomendada el uso de **entornos virtuales** para cada proyecto Python (`venv`, `virtualenv`, `conda`). Esto aísla las dependencias del proyecto y evita conflictos entre ellos. Puedes crear un entorno virtual básico con:
+        ```bash
+        python3 -m venv .venv
+        ```
+        Luego, actívalo (la forma varía según el SO y el shell):
+        ```bash
+        # En macOS/Linux:
+        source .venv/bin/activate
+        # En Windows (Cmd):
+        .venv\Scripts\activate.bat
+        # En Windows (PowerShell):
+        .venv\Scripts\Activate.ps1
+        ```
+    * Una vez activado el entorno virtual, instala las librerías necesarias para el backend (como FastAPI, Uvicorn, requests, etc.) usando pip, generalmente especificadas en un archivo `requirements.txt`:
+        ```bash
+        pip install -r requirements.txt
+        ```
+
+* **IDE (Entorno de Desarrollo Integrado)**:
+    * **Descripción:** Un editor de código con herramientas avanzadas para desarrollo. Los más recomendados para este proyecto son **Visual Studio Code (VS Code)** por su flexibilidad y soporte para múltiples lenguajes, o **Android Studio** (basado en IntelliJ IDEA) si prefieres un IDE más completo orientado específicamente a desarrollo móvil.
+    * **Instalación:** Descarga e instala el IDE de tu elección:
+        * [Visual Studio Code](https://code.visualstudio.com/)
+        * [Android Studio](https://developer.android.com/studio)
+    * Una vez instalado el IDE, busca e instala las extensiones o plugins necesarios para **Dart/Flutter** y **Python**. Estos plugins proporcionan resaltado de sintaxis, autocompletado, depuración y herramientas específicas del framework.
+
+* **Git**:
+    * **Descripción:** Un sistema de control de versiones distribuido esencial para el seguimiento de cambios en el código, la colaboración en equipo y la gestión del historial del proyecto.
+    * **Instalación:** Git está disponible para todos los sistemas operativos principales. Descárgalo e instálalo desde el sitio oficial:
+        * Descargar Git: [git-scm.com/downloads](https://git-scm.com/downloads)
+    * Una vez instalado, podrás clonar el repositorio del proyecto para obtener una copia local del código fuente:
+        ```bash
+        git clone <URL_DEL_REPOSITORIO_AQUÍ>
+        ```
+
+* **Claves de API (OpenAI y otras)**:
+    * **Descripción:** Credenciales necesarias para autenticarse y utilizar los servicios de terceros, como la API de OpenAI.
+    * **Configuración:** Estas claves **no deben ser almacenadas directamente en el código fuente**. Deberán configurarse de forma segura en el entorno de ejecución del backend, típicamente mediante variables de entorno o un archivo de configuración cargado de forma segura. Consulta la documentación específica del backend del proyecto sobre cómo gestionar estas credenciales.
+
 
 ## 2. Diagrama de despliegue
 
-La arquitectura a usar será una aplicación móvil desarrollada en Flutter y un backend en Python desplegado en Azure. La aplicación móvil utiliza SQLite local para el almacenamiento inmediato de datos de usuario y conversaciones, y accede al backend a través de un API Gateway en Azure App Service mediante solicitudes HTTPS, mientras que el backend persiste la información en Azure SQL Database, enruta las operaciones de lenguaje natural al Servicio de Lenguaje de Azure Cognitive Services o a la API de ChatGPT de OpenAI, y publica métricas y logs en Azure Monitor. Este modelo de la Figura 2 ilustra cómo los clientes interactúan con los distintos componentes y cómo se gestionan los datos y servicios en la nube.
+La arquitectura a usar será una aplicación móvil desarrollada en Flutter y un backend en Python desplegado en Azure. La aplicación móvil utiliza SQLite local para el almacenamiento inmediato de datos de usuario y conversaciones, y accede al backend a través de un API Gateway en Azure App Service mediante solicitudes HTTPS, mientras que el backend persiste la información en Azure SQL Database, enruta las operaciones de lenguaje natural al Servicio de Lenguaje de Azure Cognitive Services o a la API de ChatGPT de OpenAI, y publica métricas y logs en Azure Monitor. Este modelo de la Figura 1 ilustra cómo los clientes interactúan con los distintos componentes y cómo se gestionan los datos y servicios en la nube.
 
 <b>*Figura 1:*</b> Diagrama de Despliegue
 
@@ -53,7 +109,7 @@ La arquitectura a usar será una aplicación móvil desarrollada en Flutter y un
    - Capacidad para escalar horizontalmente en la nube.
 
 7. **Compatibilidad**:
-   - Soporte para Android 8.0+ e iOS 13.0+.
+   - Soporte para Android 8.0+.
    - Funcionalidad offline básica cuando no haya conexión.
 
 ## 4. Diagrama de casos de uso
@@ -62,9 +118,9 @@ El siguiente diagrama de casos de uso representa las principales interacciones d
 
 <b>*Figura 2:*</b> Diagrama de Casos de Uso
 
-![Diagrama de Casos de Uso](<docs/UC_1.JPEG>)
-![Diagrama de Casos de Uso](<docs/UC_2.JPEG>)
-![Diagrama de Casos de Uso](<docs/UC_3.JPEG>)
+![Diagrama de Casos de Uso 1](docs/UC_1.jpeg)
+![Diagrama de Casos de Uso 2](<docs/UC_2.jpeg>)
+![Diagrama de Casos de Uso 3](<docs/UC_3.jpeg>)
 
 A continuación se detallan los casos de uso:
 
@@ -80,14 +136,11 @@ A continuación se detallan los casos de uso:
 | UC8 | Cambiar modelo de IA                | Permite al usuario seleccionar y configurar el proveedor o versión del modelo de IA.       |
 
 Y el diagrama de clases es el siguiente:
-## DIAGRAMA DE CLASES
+## 5. Diagrama de Clases
+<b>*Figura 3:*</b> Diagrama de Clases
 ![Diagrama de Clases](<docs/Diagrama_de_clase.jpeg>)
 
-## 5. Descripción de casos de uso (con mockups)
-
-
-
-# Descripción de casos de uso
+## 6. Descripción de casos de uso (con mockups)
 
 ## CU1: Registrarse
 **Actor principal**: Usuario  
@@ -99,7 +152,7 @@ Y el diagrama de clases es el siguiente:
 4. El sistema valida la información y crea una cuenta
 5. El sistema redirige al usuario a la pantalla principal
 
-**Mockup**:  
+<b>*Figura 4:*</b> Mockup CU1
 ![CU1 Mockup](./img/cu1.png)
 
 ## CU2: Iniciar sesión
@@ -112,7 +165,7 @@ Y el diagrama de clases es el siguiente:
 4. El sistema valida las credenciales
 5. El sistema carga los datos del usuario y muestra la pantalla principal
 
-**Mockup**:  
+<b>*Figura 5:*</b> Mockup CU2  
 ![CU2 Mockup](./img/cu2.png)
 
 ## CU3: Chatear con IA
@@ -131,7 +184,7 @@ Y el diagrama de clases es el siguiente:
 - Si hay un error de conexión, se muestra un mensaje de error
 - Si no hay conexión a internet, se utiliza la caché local para funcionalidades básicas
 
-**Mockup**:  
+<b>*Figura 6:*</b> Mockup CU3
 ![CU3 Mockup](./img/cu3.png)
 
 ## CU4: Ver historial de conversaciones
@@ -143,7 +196,7 @@ Y el diagrama de clases es el siguiente:
 3. El usuario puede seleccionar una conversación para continuarla
 4. El sistema carga el contenido completo de la conversación seleccionada
 
-**Mockup**:  
+<b>*Figura 7:*</b> Mockup CU4
 ![CU4 Mockup](./img/cu4.png)
 
 ## CU5: Personalizar preferencias
@@ -155,7 +208,8 @@ Y el diagrama de clases es el siguiente:
 3. El usuario modifica preferencias (tema, notificaciones, comportamiento del chatbot)
 4. El sistema guarda las preferencias en la base de datos local
 
-**Mockup**:  
+**Mockup**:
+<b>*Figura 8:*</b> Mockup CU5  
 ![CU5 Mockup](./img/cu5.png)
 
 ## CU6: Compartir conversación
@@ -168,7 +222,7 @@ Y el diagrama de clases es el siguiente:
 4. El sistema genera el contenido en el formato elegido
 5. El contenido se envía usando la aplicación seleccionada por el usuario
 
-**Mockup**:  
+<b>*Figura 9:*</b> Mockup CU6 
 ![CU6 Mockup](./img/cu6.png)
 
 ## CU7: Evaluar respuestas
@@ -180,7 +234,7 @@ Y el diagrama de clases es el siguiente:
 3. El sistema registra la evaluación y la envía al backend
 4. Opcionalmente, se solicita más detalles sobre la evaluación
 
-**Mockup**:  
+<b>*Figura 10:*</b> Mockup CU7  
 ![CU7 Mockup](./img/cu7.png)
 
 ## CU8: Cambiar modelo de IA
@@ -192,13 +246,13 @@ Y el diagrama de clases es el siguiente:
 3. El usuario selecciona un proveedor y configura parámetros (API keys, modelos)
 4. El sistema valida la configuración y actualiza el servicio backend
 
-**Mockup**:  
+<b>*Figura 11:*</b> Mockup CU8  
 ![CU8 Mockup](./img/cu8.png)
 
-## 6. Diagrama de Base de Datos
+## 7. Diagrama de Base de Datos
 
 El siguiente diagrama representa la estructura de la base de datos utilizada en la aplicación. Incluye las tablas principales para almacenar información de usuarios, conversaciones, preferencias y evaluaciones. Este diseño asegura un acceso eficiente y seguro a los datos necesarios para el funcionamiento del sistema.
 
-<b>*Figura 3:*</b> Diagrama de Base de Datos
+<b>*Figura 11:*</b> Diagrama de Base de Datos
 
 ![Diagrama de Base de Datos](./img/bd_diagrama.png)
