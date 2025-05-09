@@ -76,7 +76,7 @@ Para comenzar a desarrollar en este proyecto, es necesario configurar el ambient
 
 La arquitectura a usar será una aplicación móvil desarrollada en Flutter y un backend en Python desplegado en Azure. La aplicación móvil utiliza SQLite local para el almacenamiento inmediato de datos de usuario y conversaciones, y accede al backend a través de un API Gateway en Azure App Service mediante solicitudes HTTPS, mientras que el backend persiste la información en Azure SQL Database, enruta las operaciones de lenguaje natural al Servicio de Lenguaje de Azure Cognitive Services o a la API de ChatGPT de OpenAI, y publica métricas y logs en Azure Monitor. Este modelo de la Figura 1 ilustra cómo los clientes interactúan con los distintos componentes y cómo se gestionan los datos y servicios en la nube.
 
-<b>*Figura 1:*</b> Diagrama de Despliegue
+<b>*Figura 2.1*</b> *Diagrama de Despliegue*
 
 ![Diagrama de Despliegue](<docs/Diagrama de Despliegue.png>)
 
@@ -116,7 +116,7 @@ La arquitectura a usar será una aplicación móvil desarrollada en Flutter y un
 
 El siguiente diagrama de casos de uso representa las principales interacciones dentro de la Aplicación de Chatbot, basado en el modelo de requerimientos funcionales definido previamente. En este sistema, los usuarios pueden registrarse, iniciar sesión, chatear con el Sistema de IA, ver su historial de conversaciones, personalizar sus preferencias, compartir diálogos y evaluar la calidad de las respuestas recibidas. Por su parte, el Sistema de IA participa directamente en la generación de respuestas durante el caso de uso “Chatear con IA”, mientras que los administradores disponen de permisos adicionales para monitorear el uso de la plataforma, gestionar usuarios y cambiar el modelo de IA. Estas funcionalidades garantizan una experiencia interactiva, adaptable y fácilmente administrable dentro del prototipo móvil.
 
-<b>*Figura 2:*</b> Diagrama de Casos de Uso
+<b>*Figura 4.1*</b> *Diagrama de Casos de Uso*
 
 ![Diagrama de Casos de Uso 1](docs/UC_1.jpeg)
 ![Diagrama de Casos de Uso 2](<docs/UC_2.jpeg>)
@@ -137,7 +137,7 @@ A continuación se detallan los casos de uso:
 
 Y el diagrama de clases es el siguiente:
 ## 5. Diagrama de Clases
-<b>*Figura 3:*</b> Diagrama de Clases
+<b>*Figura 5.1*</b> *Diagrama de Clases*
 ![Diagrama de Clases](<docs/Diagrama_de_clase.jpeg>)
 
 ## 6. Descripción de casos de uso (con mockups)
@@ -152,8 +152,8 @@ Y el diagrama de clases es el siguiente:
 4. El sistema valida la información y crea una cuenta
 5. El sistema redirige al usuario a la pantalla principal
 
-<b>*Figura 4:*</b> Mockup CU1
-![CU1 Mockup](./img/cu1.png)
+<b>*Figura 6.1*</b> *Mockup CU1*
+![CU1 Mockup](./docs/mockups/cu1.png)
 
 ## CU2: Iniciar sesión
 **Actor principal**: Usuario  
@@ -165,8 +165,8 @@ Y el diagrama de clases es el siguiente:
 4. El sistema valida las credenciales
 5. El sistema carga los datos del usuario y muestra la pantalla principal
 
-<b>*Figura 5:*</b> Mockup CU2  
-![CU2 Mockup](./img/cu2.png)
+<b>*Figura 6.2*</b> *Mockup CU2*  
+![CU2 Mockup](./docs/mockups/cu2.png)
 
 ## CU3: Chatear con IA
 **Actor principal**: Usuario  
@@ -184,8 +184,8 @@ Y el diagrama de clases es el siguiente:
 - Si hay un error de conexión, se muestra un mensaje de error
 - Si no hay conexión a internet, se utiliza la caché local para funcionalidades básicas
 
-<b>*Figura 6:*</b> Mockup CU3
-![CU3 Mockup](./img/cu3.png)
+<b>*Figura 6.3*</b> *Mockup CU3*
+![CU3 Mockup](./docs/mockups/cu3.png)
 
 ## CU4: Ver historial de conversaciones
 **Actor principal**: Usuario  
@@ -196,8 +196,8 @@ Y el diagrama de clases es el siguiente:
 3. El usuario puede seleccionar una conversación para continuarla
 4. El sistema carga el contenido completo de la conversación seleccionada
 
-<b>*Figura 7:*</b> Mockup CU4
-![CU4 Mockup](./img/cu4.png)
+<b>*Figura 6.4*</b> *Mockup CU4*
+![CU4 Mockup](./docs/mockups/cu4.png)
 
 ## CU5: Personalizar preferencias
 **Actor principal**: Usuario  
@@ -208,9 +208,8 @@ Y el diagrama de clases es el siguiente:
 3. El usuario modifica preferencias (tema, notificaciones, comportamiento del chatbot)
 4. El sistema guarda las preferencias en la base de datos local
 
-**Mockup**:
-<b>*Figura 8:*</b> Mockup CU5  
-![CU5 Mockup](./img/cu5.png)
+<b>*Figura 6.5*</b> *Mockup CU5*  
+![CU5 Mockup](./docs/mockups/cu5.png)
 
 ## CU6: Compartir conversación
 **Actor principal**: Usuario  
@@ -222,8 +221,8 @@ Y el diagrama de clases es el siguiente:
 4. El sistema genera el contenido en el formato elegido
 5. El contenido se envía usando la aplicación seleccionada por el usuario
 
-<b>*Figura 9:*</b> Mockup CU6 
-![CU6 Mockup](./img/cu6.png)
+<b>*Figura 6.6*</b> *Mockup CU6* 
+![CU6 Mockup](./docs/mockups/cu6.png)
 
 ## CU7: Evaluar respuestas
 **Actor principal**: Usuario  
@@ -234,8 +233,8 @@ Y el diagrama de clases es el siguiente:
 3. El sistema registra la evaluación y la envía al backend
 4. Opcionalmente, se solicita más detalles sobre la evaluación
 
-<b>*Figura 10:*</b> Mockup CU7  
-![CU7 Mockup](./img/cu7.png)
+<b>*Figura 6.7*</b> *Mockup CU7*  
+![CU7 Mockup](./docs/mockups/cu7.png)
 
 ## CU8: Cambiar modelo de IA
 **Actor principal**: usuario  
@@ -246,13 +245,39 @@ Y el diagrama de clases es el siguiente:
 3. El usuario selecciona un proveedor y configura parámetros (API keys, modelos)
 4. El sistema valida la configuración y actualiza el servicio backend
 
-<b>*Figura 11:*</b> Mockup CU8  
-![CU8 Mockup](./img/cu8.png)
+<b>*Figura 6.8*</b> *Mockup CU8*  
+![CU8 Mockup](./docs/mockups/cu8.png)
 
 ## 7. Diagrama de Base de Datos
 
-El siguiente diagrama representa la estructura de la base de datos utilizada en la aplicación. Incluye las tablas principales para almacenar información de usuarios, conversaciones, preferencias y evaluaciones. Este diseño asegura un acceso eficiente y seguro a los datos necesarios para el funcionamiento del sistema.
+El siguiente diagrama representa la estructura de la base de datos utilizada en la aplicación. Incluye las tablas principales para almacenar información de usuarios, modelos de IA, preferencias de usuario, conversaciones y mensajes. Este diseño asegura un acceso eficiente y seguro a los datos necesarios para el funcionamiento del sistema.
 
-<b>*Figura 11:*</b> Diagrama de Base de Datos
+**Figura 7.1** *Diagrama de Base de Datos*
 
-![Diagrama de Base de Datos](./img/bd_diagrama.png)
+![Diagrama de Base de Datos](/docs/bd_diagrama.png)
+
+* **`USUARIOS`**: Almacena los datos de las personas que usan la aplicación.
+    * **Incluye**: `usuario_id` (clave única), `email`, `password_hash` (contraseña cifrada), `nombre`, y fechas de registro/acceso.
+    * **Relaciones**: Es la base para saber quién es el usuario en otras tablas.
+
+* **`MODELOS_IA`**: Registra los diferentes modelos de inteligencia artificial que el chatbot puede usar.
+    * **Incluye**: `modelo_ia_id` (clave única), `nombre` del modelo (ej: "Asistente General"), `identificador_interno_modelo` (código para la API), y si está `activo`.
+    * **Relaciones**: Permite a las conversaciones y preferencias seleccionar qué IA utilizar.
+
+* **`PREFERENCIAS_USUARIO`**: Guarda la configuración particular de cada usuario, como su modelo de IA favorito.
+    * **Incluye**: `usuario_id` (clave única, tomado de `USUARIOS`), `modelo_ia_default_id` (tomado de `MODELOS_IA`).
+    * **Relaciones**: Conecta directamente un `USUARIO` con su `MODELO_IA` preferido (relación uno a uno con `USUARIOS`).
+
+* **`CONVERSACIONES`**: Contiene la información de cada chat iniciado por un usuario con un modelo de IA.
+    * **Incluye**: `conversacion_id` (clave única), `usuario_id` (quién inició el chat), `modelo_ia_id` (qué IA se usó), `titulo` del chat, y fechas.
+    * **Relaciones**: Se vincula con `USUARIOS` (para saber de quién es el chat) y con `MODELOS_IA` (para saber qué IA se usó). Agrupa varios `MENSAJES`.
+
+* **`MENSAJES`**: Almacena cada mensaje individual enviado o recibido dentro de una conversación.
+    * **Incluye**: `mensaje_id` (clave única), `conversacion_id` (a qué chat pertenece), `remitente` (quién envió: 'usuario' o 'ia'), `contenido_texto` del mensaje y `timestamp_envio`.
+    * **Relaciones**: Cada mensaje pertenece a una `CONVERSACION` específica.
+
+## Relaciones Principales
+
+* Un `USUARIO` tiene sus `PREFERENCIAS_USUARIO` y puede tener muchas `CONVERSACIONES`.
+* Cada `CONVERSACION` es de un `USUARIO`, usa un `MODELO_IA` y contiene múltiples `MENSAJES`.
+* Los `MENSAJES` forman el contenido de una `CONVERSACION` y especifican si el `remitente` es el `usuario` o la `ia`.
