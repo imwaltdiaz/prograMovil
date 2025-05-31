@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
         theme: materialTheme.light(),
         darkTheme: materialTheme.dark(),
         themeMode: ThemeMode.system,
-        initialRoute: '/register', // Ruta inicial
+        initialRoute: '/login', // Ruta inicial
         // Establece el soporte de localización de tu app
         localizationsDelegates: [
           GlobalMaterialLocalizations
