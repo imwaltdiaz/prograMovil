@@ -1,0 +1,2 @@
+C:/PP/s06/Hello-World/android/app/.cxx/Debug/5f2q3y6r/x86/CMakeFiles/edit_cache.dir
+C:/PP/s06/Hello-World/android/app/.cxx/Debug/5f2q3y6r/x86/CMakeFiles/rebuild_cache.dir

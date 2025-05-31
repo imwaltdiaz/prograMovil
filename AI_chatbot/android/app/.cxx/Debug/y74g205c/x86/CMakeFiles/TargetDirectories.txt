@@ -1,0 +1,2 @@
+C:/PP/s08/quiz/android/app/.cxx/Debug/y74g205c/x86/CMakeFiles/edit_cache.dir
+C:/PP/s08/quiz/android/app/.cxx/Debug/y74g205c/x86/CMakeFiles/rebuild_cache.dir

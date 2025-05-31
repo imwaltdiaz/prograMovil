@@ -1,0 +1,2 @@
+C:/PP/s08/quiz/android/app/.cxx/Debug/y74g205c/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/PP/s08/quiz/android/app/.cxx/Debug/y74g205c/armeabi-v7a/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,28 @@
+{
+  "usuarios": [
+    {
+      "usuario_id": 1,
+      "email": "usuario1@gmail.com",
+      "password_hash": "contrasena123",
+      "nombre": "Usuario Uno",
+      "fecha_registro": "2023-10-25",
+      "ultimo_acceso": null
+    },
+    {
+      "usuario_id": 2,
+      "email": "usuario2@gmail.com",
+      "password_hash": "clave456",
+      "nombre": "Usuario Dos",
+      "fecha_registro": "2023-10-26",
+      "ultimo_acceso": null
+    },
+    {
+      "usuario_id": 3,
+      "email": "usuario3@gmail.com",
+      "password_hash": "password789",
+      "nombre": "Usuario Tres",
+      "fecha_registro": "2023-10-27",
+      "ultimo_acceso": null
+    }
+  ]
+}

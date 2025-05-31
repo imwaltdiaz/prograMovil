@@ -1,0 +1,2 @@
+C:/PP/s07/quiz/android/app/.cxx/Debug/3u511n5j/x86_64/CMakeFiles/edit_cache.dir
+C:/PP/s07/quiz/android/app/.cxx/Debug/3u511n5j/x86_64/CMakeFiles/rebuild_cache.dir
