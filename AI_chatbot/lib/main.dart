@@ -8,6 +8,8 @@ import './pages/login/login.dart';
 import './pages/preferences/preferences_page.dart';
 import './pages/History/HistoryPage.dart';
 import 'package:intl/intl.dart';
+import './pages/Chat/chat_page.dart';
+import './pages/profile/profile_page.dart';
 
 void main() => runApp(const MyApp());
 
@@ -51,6 +53,8 @@ class _MyAppState extends State<MyApp> {
           '/login': (context) => LoginPage(),
           '/preferences': (context) => PreferencesPage(),
           '/history': (context) => HistoryPage(),
+          '/chat': (context) => ChatPage(),
+          '/profile': (context) => ProfilePage(),
         });
   }
 }

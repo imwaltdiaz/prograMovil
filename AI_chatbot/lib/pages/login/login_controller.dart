@@ -20,7 +20,7 @@ class LoginController extends GetxController {
     if (isValid) {
       message.value = "¡Usuario válido!";
       messageColor.value = Colors.green;
-      Navigator.pushReplacementNamed(context, '/preferences'); // Redirige
+      Navigator.pushReplacementNamed(context, '/chat'); // Redirige
     } else {
       message.value = "Usuario o contraseña incorrectos";
       messageColor.value = Colors.red;

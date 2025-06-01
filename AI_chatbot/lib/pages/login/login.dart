@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'login_controller.dart';
+import 'package:flutter/gestures.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,114 +14,173 @@ class _LoginPageState extends State<LoginPage> {
   final LoginController controller = Get.put(LoginController());
 
   Widget _form(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      width: MediaQuery.of(context).size.width * 0.8,
+      width: MediaQuery.of(context).size.width * 0.85,
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          const Text(
+          // Título de la pantalla
+          Text(
             'AI CHATBOT',
-            style: TextStyle(
-              fontSize: 20,
+            style: textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
+              color: colorScheme.onBackground,
             ),
+            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 30),
+
+          // Campo Email
           TextField(
             controller: controller.txtUser,
+            keyboardType: TextInputType.emailAddress,
+            style: textTheme.bodyMedium,
             decoration: InputDecoration(
               labelText: 'Email',
-              border: OutlineInputBorder(),
+              labelStyle: textTheme.titleSmall?.copyWith(
+                color: colorScheme.onSurface.withOpacity(0.7),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    BorderSide(color: colorScheme.onSurface.withOpacity(0.5)),
+              ),
+              prefixIcon: Icon(Icons.email,
+                  color: colorScheme.onSurface.withOpacity(0.7)),
             ),
           ),
           const SizedBox(height: 15),
+
+          // Campo Contraseña
           TextField(
             controller: controller.txtPassword,
             obscureText: true,
+            style: textTheme.bodyMedium,
             decoration: InputDecoration(
               labelText: 'Contraseña',
-              border: OutlineInputBorder(),
+              labelStyle: textTheme.titleSmall?.copyWith(
+                color: colorScheme.onSurface.withOpacity(0.7),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide:
+                    BorderSide(color: colorScheme.onSurface.withOpacity(0.5)),
+              ),
+              prefixIcon: Icon(Icons.lock,
+                  color: colorScheme.onSurface.withOpacity(0.7)),
             ),
           ),
+          const SizedBox(height: 25),
+
+          // Botón “Ingresar”
           ElevatedButton(
             onPressed: () {
-              controller.login(context); // Acción del botón
+              controller.login(context);
             },
-            child: Text('Ingresar'),
             style: ElevatedButton.styleFrom(
-              minimumSize: Size(double.infinity, 40),
-              backgroundColor: Colors.indigo,
-              foregroundColor: Colors.white,
+              backgroundColor: colorScheme.primary,
+              foregroundColor: colorScheme.onPrimary,
+              minimumSize: const Size(double.infinity, 48),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.zero,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: Text(
+              'Ingresar',
+              style: textTheme.labelLarge?.copyWith(
+                color: colorScheme.onPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 20),
           const Divider(thickness: 1),
           const SizedBox(height: 15),
-          const Text('o continúa con'),
-          const SizedBox(height: 10),
+
+          // Texto “o continúa con”
+          Text(
+            'o continúa con',
+            style: textTheme.bodySmall?.copyWith(
+              color: colorScheme.onBackground.withOpacity(0.7),
+            ),
+          ),
+          const SizedBox(height: 15),
+
+          // Botones “Google” y “Apple”
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                    side: const BorderSide(color: Colors.grey),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () {},
+                  icon: Icon(Icons.g_mobiledata, color: colorScheme.onSurface),
+                  label: Text(
+                    'Google',
+                    style: textTheme.bodyMedium
+                        ?.copyWith(color: colorScheme.onSurface),
                   ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(width: 8),
-                    const Text('Google'),
-                  ],
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                        color: colorScheme.onSurface.withOpacity(0.5)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    foregroundColor: colorScheme.onSurface,
+                    backgroundColor: colorScheme.surface,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
                 ),
               ),
               const SizedBox(width: 16),
-              ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                    side: const BorderSide(color: Colors.grey),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () {},
+                  icon: Icon(Icons.apple, color: colorScheme.onSurface),
+                  label: Text(
+                    'Apple',
+                    style: textTheme.bodyMedium
+                        ?.copyWith(color: colorScheme.onSurface),
                   ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(width: 8),
-                    const Text('Apple'),
-                  ],
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(
+                        color: colorScheme.onSurface.withOpacity(0.5)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    foregroundColor: colorScheme.onSurface,
+                    backgroundColor: colorScheme.surface,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('¿No tienes cuenta? '),
-              GestureDetector(
-                onTap: () {
-                  controller.goToRegister(context);
-                },
-                child: const Text(
-                  'Registrate',
-                  style: TextStyle(
+          const SizedBox(height: 30),
+
+          // Texto “¿No tienes cuenta? Regístrate”
+          RichText(
+            text: TextSpan(
+              style: textTheme.bodyMedium
+                  ?.copyWith(color: colorScheme.onBackground),
+              children: [
+                const TextSpan(text: '¿No tienes cuenta? '),
+                TextSpan(
+                  text: 'Regístrate',
+                  style: textTheme.bodyMedium?.copyWith(
                     decoration: TextDecoration.underline,
-                    color: Colors.blue,
+                    color: colorScheme.primary,
                   ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      controller.goToRegister(context);
+                    },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -153,12 +213,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: null,
-        body: _buildBody(context),
-      ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
+      resizeToAvoidBottomInset: false,
+      body: _buildBody(context),
     );
   }
 }

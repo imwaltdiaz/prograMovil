@@ -23,6 +23,14 @@
       "nombre": "Usuario Tres",
       "fecha_registro": "2023-10-27",
       "ultimo_acceso": null
+    },
+    {
+      "usuario_id": 4,
+      "email": "usuario",
+      "password_hash": "1234",
+      "nombre": "Usuario Dos",
+      "fecha_registro": "2023-10-26",
+      "ultimo_acceso": null
     }
   ]
 }
