@@ -1,2 +1,0 @@
-C:/Users/Sebastian/Desktop/progra movil/test/prograMovil/AI_chatbot/android/app/.cxx/Debug/1j6hy3y3/x86_64/CMakeFiles/edit_cache.dir
-C:/Users/Sebastian/Desktop/progra movil/test/prograMovil/AI_chatbot/android/app/.cxx/Debug/1j6hy3y3/x86_64/CMakeFiles/rebuild_cache.dir

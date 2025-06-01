@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart'; // Import de GetX
+
+// Importa tu archivo de tema y utilitarios
 import './configs/theme_1.dart';
 import './configs/util.dart';
 
+// Importa todas tus páginas
 import './pages/register/register.dart';
 import './pages/login/login.dart';
 import './pages/preferences/preferences_page.dart';
@@ -12,7 +16,9 @@ import 'package:intl/intl.dart';
 import './pages/Chat/chat_page.dart';
 import './pages/profile/profile_page.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -28,35 +34,39 @@ class _MyAppState extends State<MyApp> {
         createTextTheme(context, 'Abril Fatface', 'Allerta');
     final MaterialTheme materialTheme = MaterialTheme(textTheme);
 
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Hello World',
-        theme: materialTheme.light(),
-        darkTheme: materialTheme.dark(),
-        themeMode: ThemeMode.system,
-        initialRoute: '/evaluation', // Ruta inicial
-        // Establece el soporte de localización de tu app
-        localizationsDelegates: [
-          GlobalMaterialLocalizations
-              .delegate, // Delegado para material widgets
-          GlobalCupertinoLocalizations.delegate, // Delegado para iOS
-          GlobalWidgetsLocalizations
-              .delegate, // Delegado para widgets generales
-        ],
-        supportedLocales: const [
-          Locale('en', 'US'), // Inglés
-          Locale('es', 'ES'), // Español
-          // Agregar otros idiomas si lo necesitas
-        ],
-        locale: const Locale('es', 'ES'),
-        routes: {
-          '/register': (context) => RegisterPage(),
-          '/login': (context) => LoginPage(),
-          '/preferences': (context) => PreferencesPage(),
-          '/history': (context) => HistoryPage(),
-          '/chat': (context) => ChatPage(),
-          '/profile': (context) => ProfilePage(),
-          '/evaluation': (context) => EvaluationPage(),
-        });
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Hello World',
+
+      // ─── Temas ───────────────────────────────────────────────────────────────
+      theme: materialTheme.light(),
+      darkTheme: materialTheme.dark(),
+      themeMode: ThemeMode.system,
+
+      // ─── Localización ────────────────────────────────────────────────────────
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('es', 'ES'),
+      ],
+      locale: const Locale('es', 'ES'),
+
+      // ─── Ruta inicial ─────────────────────────────────────────────────────────
+      initialRoute: '/login',
+
+      // ─── Definición de rutas usando GetPage ─────────────────────────────────
+      getPages: [
+        GetPage(name: '/login', page: () => const LoginPage()),
+        GetPage(name: '/register', page: () => const RegisterPage()),
+        GetPage(name: '/preferences', page: () => const PreferencesPage()),
+        GetPage(name: '/history', page: () => const HistoryPage()),
+        GetPage(name: '/chat', page: () => const ChatPage()),
+        GetPage(name: '/profile', page: () => const ProfilePage()),
+      ],
+    );
   }
 }

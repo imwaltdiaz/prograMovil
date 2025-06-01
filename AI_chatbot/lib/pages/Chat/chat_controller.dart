@@ -1,53 +1,64 @@
-// lib/pages/Chat/chat_controller.dart
+// lib/pages/chat/chat_controller.dart
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../models/mensaje.dart'; // Enum y clase Mensaje
+import '../../models/conversacion.dart'; // Clase Conversacion
+import '../../models/user.dart'; // Clase Usuario
+import '../../services/mensaje_service.dart'; // MensajeService que lee/guarda en JSON
+
 class ChatController extends GetxController {
-  var messages = <Map<String, String>>[].obs;
-  final messageTextController = TextEditingController();
+  final MensajeService _mensajeService = MensajeService();
+
+  /// El usuario que inició sesión (viene en Get.arguments['user'])
+  late final Usuario user;
+
+  /// La conversación activa (viene en Get.arguments['conversacion'])
+  late final Conversacion conversacion;
+
+  /// Lista reactiva de Mensaje para la conversación actual
+  var mensajes = <Mensaje>[].obs;
+
+  /// Controller para el TextField de entrada de texto
+  final TextEditingController messageTextController = TextEditingController();
 
   @override
   void onInit() {
     super.onInit();
-    // Mensaje inicial de la IA
-    messages.add({
-      'sender': 'ia',
-      'text': 'Hola, ¿en qué puedo ayudarte hoy?',
-    });
+
+    final args = Get.arguments;
+    if (args is Map<String, dynamic>) {
+      user = args['user'] as Usuario;
+      conversacion = args['conversacion'] as Conversacion;
+      _cargarMensajesDeConversacion(conversacion.conversacion_id);
+    } else {
+      // Si no se recibieron argumentos válidos, volvemos atrás
+      mensajes.clear();
+      Get.back();
+    }
   }
 
-  void sendMessage() {
-    final text = messageTextController.text.trim();
-    if (text.isEmpty) return;
+  Future<void> _cargarMensajesDeConversacion(int convId) async {
+    final lista = await _mensajeService.getMensajesPorConversacion(convId);
+    mensajes.assignAll(lista);
+  }
 
-    // Mensaje del usuario
-    messages.add({'sender': 'user', 'text': text});
+  Future<void> sendMessage() async {
+    final texto = messageTextController.text.trim();
+    if (texto.isEmpty) return;
+
+    final nuevoMensaje = Mensaje(
+      mensaje_id: DateTime.now().millisecondsSinceEpoch,
+      conversacion_id: conversacion.conversacion_id,
+      remitente: RemitenteType.usuario, // Aquí usamos el enum, no 'String'
+      contenido_texto: texto,
+      timestamp_envio: DateTime.now(), // Aquí pasamos DateTime, no String
+    );
+
+    await _mensajeService.guardarMensaje(nuevoMensaje);
+    mensajes.add(nuevoMensaje);
     messageTextController.clear();
-
-    // Respuesta simulada de la IA
-    Future.delayed(const Duration(milliseconds: 500), () {
-      messages.add({
-        'sender': 'ia',
-        'text':
-            'Por supuesto, cuéntame qué problema tienes y trataré de ayudarte.',
-      });
-    });
-  }
-
-  /// Navegar a Preferencias
-  void goToPreferences(BuildContext context) {
-    Navigator.pushNamed(context, '/preferences');
-  }
-
-  /// Navegar a Historial
-  void goToHistory(BuildContext context) {
-    Navigator.pushNamed(context, '/history');
-  }
-
-  /// Navegar a Perfil
-  void goToProfile(BuildContext context) {
-    Navigator.pushNamed(context, '/profile');
   }
 
   @override

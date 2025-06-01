@@ -6,7 +6,8 @@
       "password_hash": "contrasena123",
       "nombre": "Usuario Uno",
       "fecha_registro": "2023-10-25",
-      "ultimo_acceso": null
+      "ultimo_acceso": null,
+      "imagen_url": "https://images.seeklogo.com/logo-png/28/1/psyduck-logo-png_seeklogo-286537.png"
     },
     {
       "usuario_id": 2,
@@ -14,7 +15,8 @@
       "password_hash": "clave456",
       "nombre": "Usuario Dos",
       "fecha_registro": "2023-10-26",
-      "ultimo_acceso": null
+      "ultimo_acceso": null,
+      "imagen_url": "https://images.seeklogo.com/logo-png/28/1/psyduck-logo-png_seeklogo-286537.png"
     },
     {
       "usuario_id": 3,
@@ -22,15 +24,17 @@
       "password_hash": "password789",
       "nombre": "Usuario Tres",
       "fecha_registro": "2023-10-27",
-      "ultimo_acceso": null
+      "ultimo_acceso": null,
+      "imagen_url": "https://images.seeklogo.com/logo-png/28/1/psyduck-logo-png_seeklogo-286537.png"
     },
     {
       "usuario_id": 4,
       "email": "usuario",
       "password_hash": "1234",
-      "nombre": "Usuario Dos",
+      "nombre": "Usuario Cuatro",
       "fecha_registro": "2023-10-26",
-      "ultimo_acceso": null
+      "ultimo_acceso": null,
+      "imagen_url": "https://images.seeklogo.com/logo-png/28/1/psyduck-logo-png_seeklogo-286537.png"
     }
   ]
 }

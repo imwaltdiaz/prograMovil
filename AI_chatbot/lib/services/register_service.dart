@@ -1,68 +1,44 @@
+// lib/services/register_service.dart
+
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
+import '../models/user.dart';
 
 class RegisterService {
-  static const String _assetPath = 'assets/jsons/users.json';
+  /// Firma: recibe email, nombre y password, y devuelve true/false
+  Future<bool> registerUser({
+    required String email,
+    required String nombre,
+    required String password,
+  }) async {
+    // 1) Cargo el JSON completo de usuarios
+    final jsonData = await rootBundle.loadString('assets/jsons/users.json');
+    final Map<String, dynamic> dataMap = json.decode(jsonData);
 
-  Future<File> _getUsersFile() async {
-    final directory = await getApplicationDocumentsDirectory();
-    return File('${directory.path}/users.json');
-  }
-
-  Future<void> _initializeUsersFile() async {
-    final file = await _getUsersFile();
-    if (!await file.exists()) {
-      // Si no existe, copiamos desde assets
-      final String jsonString = await rootBundle.loadString(_assetPath);
-      await file.writeAsString(jsonString);
+    // 2) Compruebo si ya hay un usuario con ese email
+    final List usuariosJson = dataMap['usuarios'] as List;
+    final bool existe = usuariosJson.any((u) => u['email'] == email);
+    if (existe) {
+      // Si ya existe el email, retorno false: fallo en el registro
+      return false;
     }
-  }
 
-  Future<void> registerUser(String email, String password, String name) async {
-    try {
-      // 1. Inicializar archivo si no existe
-      await _initializeUsersFile();
+    // 3) Si no existe, creo mi nuevo objeto Usuario
+    final nuevoUsuario = Usuario(
+      usuario_id: usuariosJson.length + 1,
+      email: email,
+      password_hash: password,
+      nombre: nombre,
+      fecha_registro: DateTime.now().toUtc(),
+      ultimo_acceso: null,
+    );
 
-      // 2. Cargar usuarios existentes
-      final file = await _getUsersFile();
-      final String jsonString = await file.readAsString();
-      final Map<String, dynamic> data = jsonDecode(jsonString);
+    // 4) Agrego el nuevo usuario al arreglo del JSON en memoria
+    usuariosJson.add(nuevoUsuario.toJson());
 
-      // 3. Verificar si el email ya existe
-      final List usuarios = data['usuarios'];
-      for (var user in usuarios) {
-        if (user['email'] == email) {
-          throw Exception('El email ya está registrado');
-        }
-      }
-
-      // 4. Crear nuevo usuario
-      final newUser = {
-        "usuario_id": DateTime.now().millisecondsSinceEpoch,
-        "email": email,
-        "password_hash": password,
-        "nombre": name,
-        "fecha_registro": DateTime.now().toIso8601String().split('T')[0],
-        "ultimo_acceso": null
-      };
-
-      // 5. Agregar el nuevo usuario
-      data['usuarios'].add(newUser);
-
-      // 6. Sobreescribir el archivo
-      await file.writeAsString(jsonEncode(data));
-      final directory = await getApplicationDocumentsDirectory();
-      print("Directorio de documentos: ${directory.path}");
-
-      print('Usuario registrado con éxito: $newUser');
-    } catch (e) {
-      print('Error al registrar: $e');
-      final directory = await getApplicationDocumentsDirectory();
-      print("Directorio de documentos: ${directory.path}");
-
-      throw Exception('Error al guardar los datos: ${e.toString()}');
-    }
+    // 5) En un entorno real, aquí reescribirías el archivo JSON
+    //    o harías un insert a la base de datos. Pero como esto es solo “mock”,
+    //    limitamos la simulación y devolvemos true para indicar éxito.
+    return true;
   }
 }

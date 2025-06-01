@@ -10,7 +10,6 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ProfileController controller = Get.put(ProfileController());
-    final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -20,97 +19,126 @@ class ProfilePage extends StatelessWidget {
         leading: const BackButton(color: Colors.black),
         title: Text(
           'Perfil',
-          style: textTheme.titleLarge?.copyWith(color: Colors.black),
+          style: TextStyle(
+            color: colorScheme.onBackground,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
       ),
+      backgroundColor: colorScheme.background,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Avatar circular
-              Center(
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundColor: colorScheme.onSurface.withOpacity(0.1),
-                  child: Icon(
-                    Icons.person,
-                    size: 60,
-                    color: colorScheme.onSurface.withOpacity(0.7),
-                  ),
+              // Avatar / ícono de usuario
+              CircleAvatar(
+                radius: 48,
+                backgroundColor: colorScheme.onBackground.withOpacity(0.1),
+                child: Icon(
+                  Icons.person,
+                  size: 48,
+                  color: colorScheme.onBackground.withOpacity(0.6),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
 
               // Campo Nombre
               TextField(
                 controller: controller.txtName,
-                style: textTheme.bodyMedium,
                 decoration: InputDecoration(
                   labelText: 'Nombre',
-                  labelStyle: textTheme.titleMedium,
+                  prefixIcon: const Icon(Icons.person),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  prefixIcon: Icon(Icons.person, color: colorScheme.onSurface),
                 ),
+                style: TextStyle(color: colorScheme.onBackground),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 16),
 
               // Campo Correo
               TextField(
                 controller: controller.txtEmail,
-                keyboardType: TextInputType.emailAddress,
-                style: textTheme.bodyMedium,
+                readOnly: true, // Quizá no quieras que puedan cambiar el email
                 decoration: InputDecoration(
                   labelText: 'Correo',
-                  labelStyle: textTheme.titleMedium,
+                  prefixIcon: const Icon(Icons.email),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  prefixIcon: Icon(Icons.email, color: colorScheme.onSurface),
                 ),
+                style: TextStyle(color: colorScheme.onBackground),
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 16),
 
-              // Campo Teléfono
-              TextField(
-                controller: controller.txtPhone,
-                keyboardType: TextInputType.phone,
-                style: textTheme.bodyMedium,
-                decoration: InputDecoration(
-                  labelText: 'Teléfono',
-                  labelStyle: textTheme.titleMedium,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+              // Mostrar fecha de registro
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Fecha de registro',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: colorScheme.onBackground,
+                    ),
                   ),
-                  prefixIcon: Icon(Icons.phone, color: colorScheme.onSurface),
-                ),
+                  const SizedBox(height: 8),
+                  Obx(() {
+                    return Container(
+                      padding: const EdgeInsets.all(12),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                            color: colorScheme.onBackground.withOpacity(0.4)),
+                      ),
+                      child: Text(
+                        controller.fechaRegistroValue.value,
+                        style: TextStyle(
+                          color: colorScheme.onBackground,
+                        ),
+                      ),
+                    );
+                  }),
+                ],
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 32),
 
-              // Botón Guardar cambios usando colores del tema
-              ElevatedButton(
-                onPressed: () {
-                  controller.saveProfile(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.primary,
-                  foregroundColor: colorScheme.onPrimary,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
+              // Botón Guardar cambios + mensaje reactivo
+              Obx(() {
+                return Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: controller.saveProfile,
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 48),
+                        backgroundColor: colorScheme.primary,
+                        foregroundColor: colorScheme.onPrimary,
+                      ),
+                      child: const Text('Guardar cambios'),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      controller.message.value,
+                      style: TextStyle(
+                        color: controller.messageColor.value,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                );
+              }),
+              const SizedBox(height: 24),
+
+              // Botón para regresar a preferencias
+              TextButton(
+                onPressed: controller.goToPreferences,
                 child: Text(
-                  'Guardar cambios',
-                  style: textTheme.labelLarge?.copyWith(
-                    color: colorScheme.onPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  'Volver a Preferencias',
+                  style: TextStyle(color: colorScheme.primary),
                 ),
               ),
             ],

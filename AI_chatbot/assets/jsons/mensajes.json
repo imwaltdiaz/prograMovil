@@ -1,0 +1,53 @@
+{
+  "mensajes": [
+    {
+      "mensaje_id": 1,
+      "conversacion_id": 1,
+      "remitente": "usuario",
+      "contenido_texto": "Hola, ¿podrías ayudarme con la tarea de matemáticas?",
+      "timestamp_envio": "2023-10-30T14:12:00Z"
+    },
+    {
+      "mensaje_id": 2,
+      "conversacion_id": 1,
+      "remitente": "ia",
+      "contenido_texto": "Claro, ¿en qué problema estás trabado?",
+      "timestamp_envio": "2023-10-30T14:12:30Z"
+    },
+    {
+      "mensaje_id": 3,
+      "conversacion_id": 1,
+      "remitente": "usuario",
+      "contenido_texto": "Necesito entender la derivada de funciones polinómicas.",
+      "timestamp_envio": "2023-10-30T14:13:00Z"
+    },
+    {
+      "mensaje_id": 4,
+      "conversacion_id": 2,
+      "remitente": "usuario",
+      "contenido_texto": "Quiero planear un viaje a Perú en diciembre.",
+      "timestamp_envio": "2023-10-28T09:20:00Z"
+    },
+    {
+      "mensaje_id": 5,
+      "conversacion_id": 2,
+      "remitente": "ia",
+      "contenido_texto": "Genial, ¿prefieres costa o sierra?",
+      "timestamp_envio": "2023-10-28T09:20:30Z"
+    },
+    {
+      "mensaje_id": 6,
+      "conversacion_id": 3,
+      "remitente": "usuario",
+      "contenido_texto": "¿Cómo hago una pizza casera?",
+      "timestamp_envio": "2023-10-29T18:00:00Z"
+    },
+    {
+      "mensaje_id": 7,
+      "conversacion_id": 3,
+      "remitente": "ia",
+      "contenido_texto": "Empieza con una buena harina y así sucesivamente...",
+      "timestamp_envio": "2023-10-29T18:00:30Z"
+    }
+  ]
+}

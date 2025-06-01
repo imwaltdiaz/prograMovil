@@ -1,64 +1,96 @@
+// lib/pages/preferences/preferences_controller.dart
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../models/user.dart';
+import '../../models/preferencia_usuario.dart';
+import '../../models/modelo_ia.dart';
+import '../../services/usuario_service.dart';
+import '../../services/preferencia_usuario_service.dart';
+import '../../services/modelo_ia_service.dart';
 
 class PreferencesController extends GetxController {
-  // Apariencia: theme claro u oscuro
-  var isDarkMode = false.obs;
+  final UsuarioService usuarioService = UsuarioService();
+  final PreferenciaService preferenciaService = PreferenciaService();
+  final ModeloIAService modeloIAService = ModeloIAService();
 
-  // Notificaciones
-  var notifyNewMessages = false.obs;
-  var notifyUpdates = false.obs;
+  /// El usuario que vino en los argumentos de la ruta:
+  late final Usuario user;
+
+  /// Lista de modelos IA disponibles:
+  var modelosIA = <ModeloIA>[].obs;
+
+  /// Modelo IA seleccionado:
+  Rx<ModeloIA?> modeloSeleccionado = Rx<ModeloIA?>(null);
+
+  /// Para mostrar mensaje de éxito/error:
+  RxString message = ''.obs;
+  Rx<MaterialColor> messageColor = Colors.red.obs;
 
   @override
   void onInit() {
     super.onInit();
-    // Si deseas cargar valores guardados, puedes hacerlo aquí.
-    // Por ejemplo, leer de SharedPreferences y asignar a estas variables reactivas.
+    // 1) Leer los argumentos que nos pasó Get.toNamed('/preferences', arguments: usuario)
+    final args = Get.arguments;
+    if (args is Usuario) {
+      user = args;
+      _cargarModelosIA();
+      _cargarPreferenciaUsuario();
+    } else {
+      // Si no recibimos un Usuario válido, simplemente volvemos atrás
+      Get.back();
+    }
   }
 
-  /// Cambiar entre tema claro u oscuro
-  void toggleTheme(bool value, BuildContext context) {
-    isDarkMode.value = value;
-    // Si usas ThemeMode en tu MaterialApp, aquí podrías forzar:
-    // Get.changeThemeMode(isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
-    // O bien notificar al main para que cambie ThemeMode.
+  /// Carga todos los modelos IA activos para la lista de selección
+  Future<void> _cargarModelosIA() async {
+    final lista = await modeloIAService.getTodosModelosIA();
+    modelosIA.assignAll(lista);
   }
 
-  /// Cambiar notificación de mensajes nuevos
-  void toggleNewMessages(bool value) {
-    notifyNewMessages.value = value;
-    // Guarda el valor si lo necesitas (en base local o remoto)
+  /// Consulta la preferencia del usuario actual (su modelo IA por defecto)
+  Future<void> _cargarPreferenciaUsuario() async {
+    final PreferenciaUsuario? pref =
+        await preferenciaService.getPreferenciaPorUsuario(user.usuario_id);
+    if (pref != null) {
+      // Buscamos el objeto ModeloIA en la colección para asignarlo al Rx
+      final seleccionado = modelosIA.firstWhereOrNull(
+        (m) => m.modelo_ia_id == pref.modelo_ia_default_id,
+      );
+      modeloSeleccionado.value = seleccionado;
+    }
   }
 
-  /// Cambiar notificación de actualizaciones
-  void toggleUpdates(bool value) {
-    notifyUpdates.value = value;
-    // Guarda el valor si lo necesitas
+  /// Cuando el usuario selecciona un nuevo modelo de la lista, lo guardamos:
+  Future<void> guardarPreferencia() async {
+    final seleccion = modeloSeleccionado.value;
+    if (seleccion == null) {
+      message.value = 'Debes elegir un modelo de IA.';
+      messageColor.value = Colors.red;
+      return;
+    }
+
+    final bool exito = await preferenciaService.guardarPreferenciaUsuario(
+      user.usuario_id,
+      seleccion.modelo_ia_id,
+    );
+
+    if (exito) {
+      message.value = 'Preferencia guardada';
+      messageColor.value = Colors.green;
+    } else {
+      message.value = 'Error al guardar preferencia';
+      messageColor.value = Colors.red;
+    }
   }
 
-  /// Navegar a Editar Información de Perfil
-  void goToEditProfile(BuildContext context) {
-    Navigator.pushNamed(context, '/profile');
+  /// Navegar a Historial
+  void goToHistory() {
+    Get.toNamed('/history', arguments: user);
   }
 
-  /// Navegar a Historial de Chat
-  void goToHistory(BuildContext context) {
-    Navigator.pushNamed(context, '/history');
-  }
-
-  /// Navegar a estilo de respuesta (puedes definir la ruta real)
-  void goToResponseStyle(BuildContext context) {
-    Navigator.pushNamed(context, '/response-style');
-  }
-
-  /// Navegar a longitud preferida (puedes definir la ruta real)
-  void goToPreferredLength(BuildContext context) {
-    Navigator.pushNamed(context, '/preferred-length');
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-    // Aquí podrías persistir los valores si quieres
+  /// Navegar a Editar Perfil
+  void goToProfile() {
+    Get.toNamed('/profile', arguments: user);
   }
 }

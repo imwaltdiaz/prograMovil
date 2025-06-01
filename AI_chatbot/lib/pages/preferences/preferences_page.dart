@@ -1,18 +1,16 @@
-import 'package:flutter/gestures.dart';
+// lib/pages/preferences/preferences_page.dart
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'preferences_controller.dart';
+import '../../models/modelo_ia.dart';
 
 class PreferencesPage extends StatelessWidget {
   const PreferencesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Inyectamos el controlador
     final PreferencesController controller = Get.put(PreferencesController());
-
-    // Extraemos los estilos del tema global
-    final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -21,183 +19,105 @@ class PreferencesPage extends StatelessWidget {
         elevation: 0,
         leading: const BackButton(color: Colors.black),
         title: Text(
-          'Configuración',
-          style: textTheme.titleLarge?.copyWith(color: Colors.black),
+          'Preferencias',
+          style: TextStyle(
+            color: colorScheme.onBackground,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
       ),
       backgroundColor: colorScheme.background,
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          children: [
-            // Sección: Perfil
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Perfil',
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.onBackground,
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Botón para ir a Historial
+              TextButton.icon(
+                onPressed: controller.goToHistory,
+                icon: const Icon(Icons.history),
+                label: const Text('Historial de chat'),
+                style: TextButton.styleFrom(
+                  foregroundColor: colorScheme.onBackground,
+                  textStyle: const TextStyle(fontSize: 16),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            ListTile(
-              title: Text(
-                'Editar información',
-                style: textTheme.bodyMedium
-                    ?.copyWith(color: colorScheme.onBackground),
-              ),
-              trailing: Icon(Icons.arrow_forward_ios,
-                  size: 16, color: colorScheme.onSurface),
-              onTap: () {
-                controller.goToEditProfile(context);
-              },
-            ),
-            ListTile(
-              title: Text(
-                'Historial de chat',
-                style: textTheme.bodyMedium
-                    ?.copyWith(color: colorScheme.onBackground),
-              ),
-              trailing: Icon(Icons.arrow_forward_ios,
-                  size: 16, color: colorScheme.onSurface),
-              onTap: () {
-                controller.goToHistory(context);
-              },
-            ),
-            const SizedBox(height: 10),
-            const Divider(thickness: 1),
-            const SizedBox(height: 20),
+              const SizedBox(height: 16),
 
-            // Sección: Apariencia
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Apariencia',
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.onBackground,
+              // Botón para ir a Perfil
+              TextButton.icon(
+                onPressed: controller.goToProfile,
+                icon: const Icon(Icons.person),
+                label: const Text('Editar información'),
+                style: TextButton.styleFrom(
+                  foregroundColor: colorScheme.onBackground,
+                  textStyle: const TextStyle(fontSize: 16),
                 ),
               ),
-            ),
-            Obx(() => RadioListTile<bool>(
-                  title: Text(
-                    'Tema claro',
-                    style: textTheme.bodyMedium
-                        ?.copyWith(color: colorScheme.onBackground),
-                  ),
-                  value: false,
-                  groupValue: controller.isDarkMode.value,
-                  activeColor: colorScheme.primary,
-                  onChanged: (value) {
-                    if (value != null) {
-                      controller.toggleTheme(value, context);
-                    }
-                  },
-                )),
-            Obx(() => RadioListTile<bool>(
-                  title: Text(
-                    'Tema oscuro',
-                    style: textTheme.bodyMedium
-                        ?.copyWith(color: colorScheme.onBackground),
-                  ),
-                  value: true,
-                  groupValue: controller.isDarkMode.value,
-                  activeColor: colorScheme.primary,
-                  onChanged: (value) {
-                    if (value != null) {
-                      controller.toggleTheme(value, context);
-                    }
-                  },
-                )),
-            const SizedBox(height: 10),
-            const Divider(thickness: 1),
-            const SizedBox(height: 20),
+              const SizedBox(height: 32),
 
-            // Sección: Chatbot
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Chatbot',
-                style: textTheme.titleMedium?.copyWith(
+              // Sección “Modelo IA por defecto”
+              Text(
+                'Modelo de IA predeterminado',
+                style: TextStyle(
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: colorScheme.onBackground,
                 ),
               ),
-            ),
-            ListTile(
-              title: Text(
-                'Estilo de respuesta',
-                style: textTheme.bodyMedium
-                    ?.copyWith(color: colorScheme.onBackground),
-              ),
-              trailing: Icon(Icons.arrow_forward_ios,
-                  size: 16, color: colorScheme.onSurface),
-              onTap: () {
-                controller.goToResponseStyle(context);
-              },
-            ),
-            ListTile(
-              title: Text(
-                'Longitud preferida',
-                style: textTheme.bodyMedium
-                    ?.copyWith(color: colorScheme.onBackground),
-              ),
-              trailing: Icon(Icons.arrow_forward_ios,
-                  size: 16, color: colorScheme.onSurface),
-              onTap: () {
-                controller.goToPreferredLength(context);
-              },
-            ),
-            const SizedBox(height: 10),
-            const Divider(thickness: 1),
-            const SizedBox(height: 20),
+              const SizedBox(height: 12),
 
-            // Sección: Notificaciones
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                'Notificaciones',
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.onBackground,
-                ),
-              ),
-            ),
-            Obx(() => CheckboxListTile(
-                  title: Text(
-                    'Mensajes nuevos',
-                    style: textTheme.bodyMedium
-                        ?.copyWith(color: colorScheme.onBackground),
-                  ),
-                  value: controller.notifyNewMessages.value,
-                  activeColor: colorScheme.primary,
-                  onChanged: (value) {
-                    if (value != null) {
-                      controller.toggleNewMessages(value);
-                    }
+              // Lista de selección reactiva:
+              Obx(() {
+                final List<ModeloIA> lista = controller.modelosIA;
+                final seleccionado = controller.modeloSeleccionado.value;
+
+                return DropdownButton<ModeloIA>(
+                  isExpanded: true,
+                  value: seleccionado,
+                  hint: const Text('Selecciona un modelo'),
+                  items: lista.map((m) {
+                    return DropdownMenuItem(
+                      value: m,
+                      child: Text(m.nombre),
+                    );
+                  }).toList(),
+                  onChanged: (nuevo) {
+                    controller.modeloSeleccionado.value = nuevo;
                   },
-                  controlAffinity: ListTileControlAffinity.trailing,
-                )),
-            Obx(() => CheckboxListTile(
-                  title: Text(
-                    'Actualizaciones',
-                    style: textTheme.bodyMedium
-                        ?.copyWith(color: colorScheme.onBackground),
-                  ),
-                  value: controller.notifyUpdates.value,
-                  activeColor: colorScheme.primary,
-                  onChanged: (value) {
-                    if (value != null) {
-                      controller.toggleUpdates(value);
-                    }
-                  },
-                  controlAffinity: ListTileControlAffinity.trailing,
-                )),
-            const SizedBox(height: 20),
-          ],
+                );
+              }),
+
+              const SizedBox(height: 24),
+
+              // Botón Guardar + mensaje reactivo
+              Obx(() {
+                return Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: controller.guardarPreferencia,
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 48),
+                        backgroundColor: colorScheme.primary,
+                        foregroundColor: colorScheme.onPrimary,
+                      ),
+                      child: const Text('Guardar cambios'),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      controller.message.value,
+                      style: TextStyle(
+                        color: controller.messageColor.value,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );
