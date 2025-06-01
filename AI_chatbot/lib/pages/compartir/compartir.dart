@@ -18,19 +18,19 @@ class _CompartirPageState extends State<CompartirPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF5F7),
+      backgroundColor: Theme.of(context)
+          .scaffoldBackgroundColor, // Use theme background color
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFDF5F7),
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black87),
-        title: const Text(
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        elevation: Theme.of(context).appBarTheme.elevation,
+        iconTheme: Theme.of(context).appBarTheme.iconTheme,
+        title: Text(
           'Compartir conversación',
-          style: TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Roboto',
-          ),
+          style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
       ),
@@ -43,12 +43,8 @@ class _CompartirPageState extends State<CompartirPage> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Seleccionar formato:',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
+                style: textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
             const SizedBox(height: 8),
@@ -56,7 +52,7 @@ class _CompartirPageState extends State<CompartirPage> {
             // Opción: Texto plano
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colorScheme.surface, // Use theme surface color
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
@@ -69,15 +65,12 @@ class _CompartirPageState extends State<CompartirPage> {
               child: RadioListTile<int>(
                 value: 0,
                 groupValue: _selectedFormat,
-                title: const Text(
+                title: Text(
                   'Texto plano',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 14,
-                    color: Colors.black87,
-                  ),
+                  style: textTheme.bodyMedium,
                 ),
-                activeColor: Colors.blueAccent,
+                activeColor:
+                    colorScheme.primary, // Using primary color from theme
                 onChanged: (value) {
                   setState(() {
                     _selectedFormat = value!;
@@ -90,7 +83,7 @@ class _CompartirPageState extends State<CompartirPage> {
             // Opción: Imagen
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
@@ -103,15 +96,11 @@ class _CompartirPageState extends State<CompartirPage> {
               child: RadioListTile<int>(
                 value: 1,
                 groupValue: _selectedFormat,
-                title: const Text(
+                title: Text(
                   'Imagen',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 14,
-                    color: Colors.black87,
-                  ),
+                  style: textTheme.bodyMedium,
                 ),
-                activeColor: Colors.blueAccent,
+                activeColor: colorScheme.primary,
                 onChanged: (value) {
                   setState(() {
                     _selectedFormat = value!;
@@ -124,7 +113,7 @@ class _CompartirPageState extends State<CompartirPage> {
             // Opción: Enlace (próx.)
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
@@ -137,15 +126,11 @@ class _CompartirPageState extends State<CompartirPage> {
               child: RadioListTile<int>(
                 value: 2,
                 groupValue: _selectedFormat,
-                title: const Text(
+                title: Text(
                   'Enlace (próx.)',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 14,
-                    color: Colors.black87,
-                  ),
+                  style: textTheme.bodyMedium,
                 ),
-                activeColor: Colors.blueAccent,
+                activeColor: colorScheme.primary,
                 onChanged: (value) {
                   setState(() {
                     _selectedFormat = value!;
@@ -161,12 +146,8 @@ class _CompartirPageState extends State<CompartirPage> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Incluir:',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
+                style: textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
             const SizedBox(height: 8),
@@ -174,7 +155,7 @@ class _CompartirPageState extends State<CompartirPage> {
             // Checkbox: Preguntas
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
@@ -185,16 +166,12 @@ class _CompartirPageState extends State<CompartirPage> {
                 ],
               ),
               child: CheckboxListTile(
-                title: const Text(
+                title: Text(
                   'Preguntas',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 14,
-                    color: Colors.black87,
-                  ),
+                  style: textTheme.bodyMedium,
                 ),
                 value: _includePreguntas,
-                activeColor: Colors.blueAccent,
+                activeColor: colorScheme.primary,
                 onChanged: (value) {
                   setState(() {
                     _includePreguntas = value!;
@@ -208,7 +185,7 @@ class _CompartirPageState extends State<CompartirPage> {
             // Checkbox: Respuestas
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
@@ -219,16 +196,12 @@ class _CompartirPageState extends State<CompartirPage> {
                 ],
               ),
               child: CheckboxListTile(
-                title: const Text(
+                title: Text(
                   'Respuestas',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 14,
-                    color: Colors.black87,
-                  ),
+                  style: textTheme.bodyMedium,
                 ),
                 value: _includeRespuestas,
-                activeColor: Colors.blueAccent,
+                activeColor: colorScheme.primary,
                 onChanged: (value) {
                   setState(() {
                     _includeRespuestas = value!;
@@ -245,9 +218,10 @@ class _CompartirPageState extends State<CompartirPage> {
               width: double.infinity,
               height: 200,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.black12),
+                border:
+                    Border.all(color: colorScheme.outline.withOpacity(0.12)),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.03),
@@ -257,13 +231,10 @@ class _CompartirPageState extends State<CompartirPage> {
                 ],
               ),
               alignment: Alignment.center,
-              child: const Text(
+              child: Text(
                 '[Vista previa de la conversación]',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 14,
-                  color: Colors.black45,
-                ),
+                style: textTheme.bodyMedium
+                    ?.copyWith(color: colorScheme.onSurface.withOpacity(0.45)),
               ),
             ),
 
@@ -285,20 +256,16 @@ class _CompartirPageState extends State<CompartirPage> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1E88E5),
+                  backgroundColor:
+                      colorScheme.primary, // Using primary color from theme
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   'COMPARTIR',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    letterSpacing: 1.0,
-                  ),
+                  style: textTheme.labelLarge?.copyWith(
+                      color: colorScheme.onPrimary, letterSpacing: 1.0),
                 ),
               ),
             ),

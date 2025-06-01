@@ -21,7 +21,6 @@ import './pages/share/share_page.dart';
 import './pages/evaluation/evaluation.dart';
 import './pages/compartir/compartir.dart';
 import './pages/configuracionAI/configuracionAI_page.dart';
-import 'package:intl/intl.dart';
 
 void main() {
   runApp(const MyApp());

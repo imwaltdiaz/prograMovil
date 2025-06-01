@@ -55,14 +55,17 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Configuración de IA',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87, // For back button and title color
-        elevation: 1,
-        shadowColor: Colors.grey.withOpacity(0.5),
+        title: Text('Configuración de IA',
+            style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
+        elevation: Theme.of(context).appBarTheme.elevation,
+        shadowColor: Theme.of(context).appBarTheme.shadowColor,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
@@ -70,28 +73,27 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             // Provider Selection Section
-            const Text(
+            Text(
               'Proveedor actual:',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87),
+              style:
+                  textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 10),
-            _buildProviderRadioListTile(AIProvider.openAI, 'OpenAI'),
-            _buildProviderRadioListTile(AIProvider.azureOpenAI, 'Azure OpenAI'),
-            _buildProviderRadioListTile(AIProvider.anthropic, 'Anthropic'),
             _buildProviderRadioListTile(
-                AIProvider.googleGemini, 'Google Gemini'),
+                AIProvider.openAI, 'OpenAI', colorScheme.secondary),
+            _buildProviderRadioListTile(
+                AIProvider.azureOpenAI, 'Azure OpenAI', colorScheme.secondary),
+            _buildProviderRadioListTile(
+                AIProvider.anthropic, 'Anthropic', colorScheme.secondary),
+            _buildProviderRadioListTile(AIProvider.googleGemini,
+                'Google Gemini', colorScheme.secondary),
             const SizedBox(height: 25),
 
             // Model Selection Section
-            const Text(
+            Text(
               'Modelo:',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87),
+              style:
+                  textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 10),
             if (_currentModels
@@ -100,26 +102,25 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: colorScheme.surfaceVariant, // Example grey
                   borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(color: Colors.grey[350]!, width: 1),
+                  border: Border.all(
+                      color: colorScheme.onSurface.withOpacity(0.1), width: 1),
                 ),
                 child: DropdownButtonFormField<String>(
                   value: _selectedModel,
-                  icon: const Icon(Icons.arrow_drop_down_rounded,
-                      color: Colors.black54),
+                  icon: Icon(Icons.arrow_drop_down_rounded,
+                      color: textTheme.bodyMedium?.color?.withOpacity(0.7)),
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.zero,
                   ),
-                  dropdownColor: Colors.white,
+                  dropdownColor: colorScheme.surface,
                   borderRadius: BorderRadius.circular(8.0),
                   items: _currentModels.map((String model) {
                     return DropdownMenuItem<String>(
                       value: model,
-                      child: Text(model,
-                          style: const TextStyle(
-                              fontSize: 15, color: Colors.black87)),
+                      child: Text(model, style: textTheme.bodyMedium),
                     );
                   }).toList(),
                   onChanged: (String? newValue) {
@@ -136,22 +137,22 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 12.0, vertical: 12.0),
                 decoration: BoxDecoration(
-                  color: Colors.grey[200],
+                  color: colorScheme.surfaceVariant,
                   borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(color: Colors.grey[350]!, width: 1),
+                  border: Border.all(
+                      color: colorScheme.onSurface.withOpacity(0.1), width: 1),
                 ),
-                child: const Text("Seleccione un proveedor para ver modelos.",
-                    style: TextStyle(color: Colors.black54)),
+                child: Text("Seleccione un proveedor para ver modelos.",
+                    style: textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurface.withOpacity(0.7))),
               ),
             const SizedBox(height: 25),
 
             // API Key Section
-            const Text(
+            Text(
               'API Key:',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87),
+              style:
+                  textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 10),
             TextField(
@@ -159,7 +160,7 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
               obscureText: true,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.grey[200],
+                fillColor: colorScheme.surfaceVariant,
                 hintText: 'Ingresa tu API Key',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
@@ -171,13 +172,11 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
                   icon: Icon(
                     // Simple toggle, ideally you'd manage obscureText state
                     Icons.visibility_off_outlined,
-                    color: Colors.grey[600],
+                    color: colorScheme.onSurface.withOpacity(0.6),
                   ),
                   onPressed: () {
                     // Basic toggle, for a real app, manage obscureText state
                     // For simplicity, this just clears and re-adds the placeholder
-                    final currentText = _apiKeyController.text;
-                    // This is a placeholder for actual visibility toggle logic
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content: Text(
@@ -186,44 +185,35 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
                   },
                 ),
               ),
-              style: const TextStyle(fontSize: 15, color: Colors.black87),
+              style: textTheme.bodyMedium,
             ),
             const SizedBox(height: 25),
 
             // Parameters Section
-            const Text(
+            Text(
               'Parámetros:',
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87),
+              style:
+                  textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 15),
             // Temperature Slider
             Row(
               children: [
-                const Text('Temperatura:',
-                    style: TextStyle(fontSize: 15, color: Colors.black87)),
+                Text('Temperatura:', style: textTheme.bodyMedium),
                 const SizedBox(width: 5),
                 Text(_temperature.toStringAsFixed(1),
-                    style: const TextStyle(
-                        fontSize: 15,
+                    style: textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
-                        color: Colors.teal)),
+                        color: colorScheme.secondary)),
               ],
             ),
             SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                activeTrackColor: Colors.teal,
-                inactiveTrackColor: Colors.teal.withOpacity(0.3),
-                trackHeight: 6.0,
-                thumbColor: Colors.teal,
-                thumbShape:
-                    const RoundSliderThumbShape(enabledThumbRadius: 10.0),
-                overlayColor: Colors.teal.withAlpha(32),
-                overlayShape:
-                    const RoundSliderOverlayShape(overlayRadius: 20.0),
-              ),
+              data: Theme.of(context).sliderTheme.copyWith(
+                    activeTrackColor: colorScheme.secondary,
+                    inactiveTrackColor: colorScheme.secondary.withOpacity(0.3),
+                    thumbColor: colorScheme.secondary,
+                    overlayColor: colorScheme.secondary.withAlpha(32),
+                  ),
               child: Slider(
                 value: _temperature,
                 min: 0.0,
@@ -242,28 +232,21 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
             // Max Tokens Slider
             Row(
               children: [
-                const Text('Max tokens:',
-                    style: TextStyle(fontSize: 15, color: Colors.black87)),
+                Text('Max tokens:', style: textTheme.bodyMedium),
                 const SizedBox(width: 5),
                 Text(_maxTokens.round().toString(),
-                    style: const TextStyle(
-                        fontSize: 15,
+                    style: textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
-                        color: Colors.teal)),
+                        color: colorScheme.secondary)),
               ],
             ),
             SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                activeTrackColor: Colors.teal,
-                inactiveTrackColor: Colors.teal.withOpacity(0.3),
-                trackHeight: 6.0,
-                thumbColor: Colors.teal,
-                thumbShape:
-                    const RoundSliderThumbShape(enabledThumbRadius: 10.0),
-                overlayColor: Colors.teal.withAlpha(32),
-                overlayShape:
-                    const RoundSliderOverlayShape(overlayRadius: 20.0),
-              ),
+              data: Theme.of(context).sliderTheme.copyWith(
+                    activeTrackColor: colorScheme.secondary,
+                    inactiveTrackColor: colorScheme.secondary.withOpacity(0.3),
+                    thumbColor: colorScheme.secondary,
+                    overlayColor: colorScheme.secondary.withAlpha(32),
+                  ),
               child: Slider(
                 value: _maxTokens,
                 min: 256,
@@ -283,8 +266,8 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
             Center(
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.save_alt_outlined, color: Colors.white),
-                label: const Text('GUARDAR',
-                    style: TextStyle(color: Colors.white)),
+                label: Text('GUARDAR',
+                    style: textTheme.labelLarge?.copyWith(color: Colors.white)),
                 onPressed: () {
                   // Implement save logic here
                   final providerName =
@@ -303,16 +286,15 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal,
+                  backgroundColor: colorScheme.secondary,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  textStyle: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
+                  textStyle: textTheme.labelLarge,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   elevation: 5,
-                  shadowColor: Colors.teal.withOpacity(0.5),
+                  shadowColor: colorScheme.secondary.withOpacity(0.5),
                 ),
               ),
             ),
@@ -323,10 +305,10 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
     );
   }
 
-  Widget _buildProviderRadioListTile(AIProvider provider, String title) {
+  Widget _buildProviderRadioListTile(
+      AIProvider provider, String title, Color activeColor) {
     return RadioListTile<AIProvider>(
-      title: Text(title,
-          style: const TextStyle(fontSize: 15, color: Colors.black87)),
+      title: Text(title, style: Theme.of(context).textTheme.bodyMedium),
       value: provider,
       groupValue: _selectedProvider,
       onChanged: (AIProvider? value) {
@@ -338,9 +320,11 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
           });
         }
       },
-      activeColor: Colors.teal,
-      contentPadding: EdgeInsets.zero,
-      dense: true,
+      activeColor: activeColor,
+      // Removed invalid radioListTileTheme usage
+      // You can set contentPadding directly if needed, e.g.:
+      // contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
+      // dense: false,
     );
   }
 }
