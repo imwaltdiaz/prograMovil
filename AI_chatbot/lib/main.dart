@@ -9,6 +9,8 @@ import './pages/register/register.dart';
 import './pages/login/login.dart';
 import './pages/preferences/preferences_page.dart';
 import './pages/History/HistoryPage.dart';
+import './pages/evaluation/evaluation.dart';
+import 'package:intl/intl.dart';
 import './pages/Chat/chat_page.dart';
 import './pages/profile/profile_page.dart';
 import './pages/evaluation/evaluation.dart';
