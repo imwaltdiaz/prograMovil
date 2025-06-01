@@ -5,19 +5,23 @@ import '../../services/register_service.dart';
 class RegisterController extends GetxController {
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
+  TextEditingController txtName = TextEditingController();
   RxString message = ''.obs;
   Rx<MaterialColor> messageColor = Colors.red.obs;
   final RegisterService registerService = RegisterService();
 
   Future<void> register(BuildContext context) async {
-    if (txtEmail.text.isEmpty || txtPassword.text.isEmpty) {
-      message.value = "Email y contraseña son requeridos";
+    if (txtEmail.text.isEmpty ||
+        txtPassword.text.isEmpty ||
+        txtName.text.isEmpty) {
+      message.value = "Email, nombre y contraseña son requeridos";
       messageColor.value = Colors.red;
       return;
     }
 
     try {
-      await registerService.registerUser(txtEmail.text, txtPassword.text);
+      await registerService.registerUser(
+          txtEmail.text, txtPassword.text, txtName.text);
 
       message.value = "¡Registro exitoso!";
       messageColor.value = Colors.green;
@@ -25,6 +29,7 @@ class RegisterController extends GetxController {
       // Limpiar campos después del registro
       txtEmail.clear();
       txtPassword.clear();
+      txtName.clear();
 
       // Redirigir después de 2 segundos
       Future.delayed(Duration(seconds: 2), () {

@@ -20,7 +20,7 @@ class RegisterService {
     }
   }
 
-  Future<void> registerUser(String email, String password) async {
+  Future<void> registerUser(String email, String password, String name) async {
     try {
       // 1. Inicializar archivo si no existe
       await _initializeUsersFile();
@@ -43,7 +43,7 @@ class RegisterService {
         "usuario_id": DateTime.now().millisecondsSinceEpoch,
         "email": email,
         "password_hash": password,
-        "nombre": email.split('@')[0],
+        "nombre": name,
         "fecha_registro": DateTime.now().toIso8601String().split('T')[0],
         "ultimo_acceso": null
       };

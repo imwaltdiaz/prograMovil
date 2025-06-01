@@ -25,11 +25,19 @@ class _RegisterPageState extends State<RegisterPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 15),
           TextField(
             controller: controller.txtEmail,
             decoration: InputDecoration(
               labelText: 'Email',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 15),
+          TextField(
+            controller: controller.txtName,
+            decoration: InputDecoration(
+              labelText: 'Nombre',
               border: OutlineInputBorder(),
             ),
           ),
@@ -105,17 +113,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              controller.goToPreferences(context);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.indigo,
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Ir a preferencias'),
           ),
           const SizedBox(height: 20),
           Row(
