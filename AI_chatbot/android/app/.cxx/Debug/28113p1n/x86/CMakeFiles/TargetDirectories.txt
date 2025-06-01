@@ -1,0 +1,2 @@
+C:/Users/david/Documents/Flutter/prograMovil/AI_chatbot/android/app/.cxx/Debug/28113p1n/x86/CMakeFiles/edit_cache.dir
+C:/Users/david/Documents/Flutter/prograMovil/AI_chatbot/android/app/.cxx/Debug/28113p1n/x86/CMakeFiles/rebuild_cache.dir

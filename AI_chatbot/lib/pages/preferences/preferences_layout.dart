@@ -58,8 +58,16 @@ class PreferencesLayout extends StatelessWidget {
         const Text('Chatbot', style: TextStyle(fontWeight: FontWeight.bold)),
         ListTile(
           title: const Text('Estilo de respuesta'),
-          trailing: const Icon(Icons.arrow_forward_ios),
-          onTap: () {},
+          trailing: const Icon(Icons.arrow_forward_ios,
+              size: 16,
+              color: Colors.grey), // Opcional: ajustar tamaño y color del ícono
+          onTap: () {
+            // Usar Navigator.pushNamed para ir a la ruta especificada
+            Navigator.pushNamed(context, '/configuracionAI');
+          },
+          // Opcional: añadir algo de padding o ajustar la densidad si es necesario
+          // contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          // dense: true,
         ),
         ListTile(
           title: const Text('Longitud preferida'),
@@ -67,7 +75,8 @@ class PreferencesLayout extends StatelessWidget {
           onTap: () {},
         ),
         const Divider(),
-        const Text('Notificaciones', style: TextStyle(fontWeight: FontWeight.bold)),
+        const Text('Notificaciones',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         CheckboxListTile(
           title: const Text('Mensajes nuevos'),
           value: notiNewMessages,

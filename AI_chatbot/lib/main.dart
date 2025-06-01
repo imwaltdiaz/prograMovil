@@ -7,6 +7,7 @@ import './pages/register/register.dart';
 import './pages/login/login.dart';
 import './pages/preferences/preferences_page.dart';
 import './pages/History/HistoryPage.dart';
+import './pages/configuracionAI/configuracionAI_page.dart';
 import 'package:intl/intl.dart';
 
 void main() => runApp(const MyApp());
@@ -51,6 +52,7 @@ class _MyAppState extends State<MyApp> {
           '/login': (context) => LoginPage(),
           '/preferences': (context) => PreferencesPage(),
           '/history': (context) => HistoryPage(),
+          '/configuracionAI': (context) => AIConfigScreen(),
         });
   }
 }
