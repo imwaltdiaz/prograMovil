@@ -1,9 +1,6 @@
-// lib/pages/history/history_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../models/conversacion.dart';
 import '../../models/user.dart';
 import 'history_controller.dart';
@@ -16,7 +13,7 @@ class HistoryPage extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    // Inyectamos o recuperamos el controller
+    // Instanciar el controller (esto ejecutará onInit() con el print)
     final HistoryController controller = Get.put(HistoryController());
 
     return Scaffold(
@@ -28,15 +25,16 @@ class HistoryPage extends StatelessWidget {
         title: Text(
           'Conversaciones',
           style: textTheme.titleLarge?.copyWith(
-              color: colorScheme.onBackground, fontWeight: FontWeight.bold),
+            color: colorScheme.onBackground,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(
-            child: CircularProgressIndicator(color: colorScheme.primary),
-          );
+              child: CircularProgressIndicator(color: colorScheme.primary));
         }
 
         if (controller.conversaciones.isEmpty) {
@@ -52,14 +50,13 @@ class HistoryPage extends StatelessWidget {
 
         return RefreshIndicator(
           color: colorScheme.primary,
-          backgroundColor: colorScheme.background,
           onRefresh: controller.refrescar,
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             itemCount: controller.conversaciones.length,
             itemBuilder: (context, index) {
               final Conversacion conv = controller.conversaciones[index];
-              final fechaFormateada = DateFormat('yyyy-MM-dd')
+              final fecha = DateFormat('yyyy-MM-dd')
                   .format(conv.fecha_creacion.toLocal());
 
               return Container(
@@ -88,14 +85,15 @@ class HistoryPage extends StatelessWidget {
                   subtitle: Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      fechaFormateada,
+                      fecha,
                       style: textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurfaceVariant.withOpacity(0.7),
                       ),
                     ),
                   ),
                   onTap: () {
-                    // Al tocar, navegamos a /chat PASANDO usuario y conversación
+                    print(
+                        '>> [HistoryPage] Tocó conversación id=${conv.conversacion_id}');
                     Get.toNamed(
                       '/chat',
                       arguments: {
@@ -108,7 +106,6 @@ class HistoryPage extends StatelessWidget {
                     icon: Icon(Icons.share, color: colorScheme.primary),
                     tooltip: 'Compartir conversación',
                     onPressed: () {
-                      // Por ejemplo, ir a /share (si existe)
                       Get.toNamed('/share', arguments: conv);
                     },
                   ),

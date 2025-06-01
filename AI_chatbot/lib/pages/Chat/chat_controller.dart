@@ -12,7 +12,6 @@ class ChatController extends GetxController {
 
   late final Usuario user;
   late final Conversacion conversacion;
-
   var mensajes = <Mensaje>[].obs;
   final TextEditingController messageTextController = TextEditingController();
 
@@ -23,8 +22,12 @@ class ChatController extends GetxController {
     if (args is Map<String, dynamic>) {
       user = args['user'] as Usuario;
       conversacion = args['conversacion'] as Conversacion;
+      print(
+          '>> [ChatController] Usuario=${user.email}, ConversacionId=${conversacion.conversacion_id}');
       _cargarMensajesDeConversacion(conversacion.conversacion_id);
     } else {
+      print(
+          '>> [ChatController] No recibí argumentos válidos. Volviendo atrás.');
       Get.back();
     }
   }
@@ -32,6 +35,8 @@ class ChatController extends GetxController {
   Future<void> _cargarMensajesDeConversacion(int converId) async {
     final lista = await _mensajeService.getMensajesPorConversacion(converId);
     mensajes.assignAll(lista);
+    print(
+        '>> [ChatController] Mensajes cargados para conversacion $converId: ${mensajes.length}');
   }
 
   Future<void> sendMessage() async {
@@ -59,6 +64,8 @@ class ChatController extends GetxController {
     Future.delayed(const Duration(milliseconds: 300), () async {
       mensajes.add(respuestaBot);
       await _mensajeService.guardarMensaje(respuestaBot);
+      print(
+          '>> [ChatController] Se añadió mensaje IA para conversacion ${conversacion.conversacion_id}');
     });
   }
 

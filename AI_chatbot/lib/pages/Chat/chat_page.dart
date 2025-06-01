@@ -1,18 +1,24 @@
-// lib/pages/Chat/chat_page.dart
+// lib/pages/chat/chat_page.dart
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'chat_controller.dart'; // Tu ChatController
-import '../../models/mensaje.dart'; // Aquí defines RemitenteType y Mensaje
+import 'chat_controller.dart';
+import '../../models/mensaje.dart';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Inyectamos (o recuperamos) el controlador
+    // 1) Si ya estaba registrado un ChatController, elimínalo para forzar re-creación
+    if (Get.isRegistered<ChatController>()) {
+      Get.delete<ChatController>();
+    }
+
+    // 2) Ahora sí inyectamos uno nuevo, que recibirá los argumentos recién pasados
     final ChatController control = Get.put(ChatController());
+
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
@@ -79,7 +85,7 @@ class ChatPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Row(
                 children: [
-                  // 1) Botón “Evaluar” (icono) en la esquina inferior izquierda
+                  // 1) Botón “Evaluar” (ícono) en la esquina inferior izquierda
                   Container(
                     decoration: BoxDecoration(
                       color: colorScheme.primary,
@@ -90,7 +96,6 @@ class ChatPage extends StatelessWidget {
                           Icon(Icons.rate_review, color: colorScheme.onPrimary),
                       tooltip: 'Evaluar respuesta',
                       onPressed: () {
-                        // Abre la página de evaluación
                         Get.toNamed('/evaluation');
                       },
                     ),
@@ -147,12 +152,12 @@ class ChatPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: colorScheme.background,
         elevation: 0,
-        // ─── Aquí reemplazamos el BackButton por un ícono de Logout ────
+        // Aquí reemplazamos la flecha de “Back” por un botón de “Logout”
         leading: IconButton(
           icon: Icon(Icons.logout, color: colorScheme.onBackground),
           tooltip: 'Cerrar sesión',
           onPressed: () {
-            // Volvemos a la pantalla de login (limpiando la pila de pantallas)
+            // Simplemente vamos al login (y borramos el histórico)
             Get.offAllNamed('/login');
           },
         ),
@@ -164,14 +169,11 @@ class ChatPage extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-
-        // ─── Aquí agregamos el resto de iconos en el AppBar ────────────
         actions: [
           IconButton(
             icon: Icon(Icons.settings, color: colorScheme.onBackground),
             tooltip: 'Preferencias',
             onPressed: () {
-              // Llamamos a la ruta de preferencias PASANDO el usuario actual
               Get.toNamed('/preferences', arguments: control.user);
             },
           ),
@@ -179,7 +181,6 @@ class ChatPage extends StatelessWidget {
             icon: Icon(Icons.person, color: colorScheme.onBackground),
             tooltip: 'Editar información',
             onPressed: () {
-              // Abrir perfil pasando el usuario
               Get.toNamed('/profile', arguments: control.user);
             },
           ),
@@ -187,7 +188,6 @@ class ChatPage extends StatelessWidget {
             icon: Icon(Icons.history, color: colorScheme.onBackground),
             tooltip: 'Historial de chat',
             onPressed: () {
-              // Abrir historial pasando el usuario
               Get.toNamed('/history', arguments: control.user);
             },
           ),

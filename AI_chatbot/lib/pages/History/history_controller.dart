@@ -1,5 +1,3 @@
-// lib/pages/history/history_controller.dart
-
 import 'package:get/get.dart';
 import '../../models/conversacion.dart';
 import '../../models/user.dart';
@@ -8,25 +6,22 @@ import '../../services/conversacion_service.dart';
 class HistoryController extends GetxController {
   final ConversacionService _conversacionService = ConversacionService();
 
-  /// El usuario que recibimos en Get.arguments
   late final Usuario user;
-
-  /// Lista reactiva de todas las conversaciones de este usuario
   var conversaciones = <Conversacion>[].obs;
-
-  /// Indicador de carga
   var isLoading = true.obs;
 
   @override
   void onInit() {
     super.onInit();
-
     final args = Get.arguments;
     if (args is Usuario) {
       user = args;
+      print(
+          '>> [HistoryController] Usuario logueado: ${user.email} (id=${user.usuario_id})');
       _cargarConversaciones();
     } else {
-      // Si no vino un Usuario válido, simplemente volvemos atrás
+      print(
+          '>> [HistoryController] No vino un Usuario en Get.arguments. Volviendo atrás.');
       Get.back();
     }
   }
@@ -37,9 +32,10 @@ class HistoryController extends GetxController {
         await _conversacionService.getConversacionesPorUsuario(user.usuario_id);
     conversaciones.assignAll(lista);
     isLoading.value = false;
+    print(
+        '>> [HistoryController] Conversaciones cargadas: ${conversaciones.length}');
   }
 
-  /// Para hacer pull-to-refresh
   Future<void> refrescar() async {
     await _cargarConversaciones();
   }
