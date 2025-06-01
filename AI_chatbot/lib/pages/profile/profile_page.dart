@@ -3,120 +3,233 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'profile_controller.dart';
+import '../../models/user.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Inyectamos el controller que ya carga el Usuario desde Get.arguments
     final ProfileController controller = Get.put(ProfileController());
-    final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
+      backgroundColor: colorScheme.background,
       appBar: AppBar(
         backgroundColor: colorScheme.background,
         elevation: 0,
         leading: const BackButton(color: Colors.black),
         title: Text(
           'Perfil',
-          style: textTheme.titleLarge?.copyWith(color: Colors.black),
+          style: textTheme.titleLarge?.copyWith(
+            color: colorScheme.onBackground,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Avatar circular
-              Center(
-                child: CircleAvatar(
+      body: Obx(() {
+        // Nos aseguramos de que el usuario esté inicializado en el controller
+        final Usuario user = controller.user;
+
+        // --- Avatar con Image.network + errorBuilder ---
+        Widget avatarWidget;
+        final url = user.imagen_url ?? '';
+        if (url.isNotEmpty) {
+          avatarWidget = ClipOval(
+            child: Image.network(
+              url,
+              width: 100,
+              height: 100,
+              fit: BoxFit.cover,
+              // Si falla la descarga, entramos aquí y mostramos el ícono de persona
+              errorBuilder: (context, error, stackTrace) {
+                return CircleAvatar(
                   radius: 50,
-                  backgroundColor: colorScheme.onSurface.withOpacity(0.1),
+                  backgroundColor: colorScheme.surfaceVariant,
                   child: Icon(
                     Icons.person,
                     size: 60,
-                    color: colorScheme.onSurface.withOpacity(0.7),
+                    color: colorScheme.onSurfaceVariant,
                   ),
-                ),
-              ),
-              const SizedBox(height: 20),
+                );
+              },
+            ),
+          );
+        } else {
+          // Si la URL está vacía, dibujamos directamente el ícono
+          avatarWidget = CircleAvatar(
+            radius: 50,
+            backgroundColor: colorScheme.surfaceVariant,
+            child: Icon(
+              Icons.person,
+              size: 60,
+              color: colorScheme.onSurfaceVariant,
+            ),
+          );
+        }
 
-              // Campo Nombre
-              TextField(
-                controller: controller.txtName,
-                style: textTheme.bodyMedium,
-                decoration: InputDecoration(
-                  labelText: 'Nombre',
-                  labelStyle: textTheme.titleMedium,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  prefixIcon: Icon(Icons.person, color: colorScheme.onSurface),
-                ),
-              ),
-              const SizedBox(height: 15),
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+            child: Column(
+              children: [
+                // ─── Avatar (imagen de URL con fallback) ─────────────────
+                Center(child: avatarWidget),
 
-              // Campo Correo
-              TextField(
-                controller: controller.txtEmail,
-                keyboardType: TextInputType.emailAddress,
-                style: textTheme.bodyMedium,
-                decoration: InputDecoration(
-                  labelText: 'Correo',
-                  labelStyle: textTheme.titleMedium,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  prefixIcon: Icon(Icons.email, color: colorScheme.onSurface),
-                ),
-              ),
-              const SizedBox(height: 15),
+                const SizedBox(height: 24),
 
-              // Campo Teléfono
-              TextField(
-                controller: controller.txtPhone,
-                keyboardType: TextInputType.phone,
-                style: textTheme.bodyMedium,
-                decoration: InputDecoration(
-                  labelText: 'Teléfono',
-                  labelStyle: textTheme.titleMedium,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
+                // ─── Campo NOMBRE ───────────────────────────────────────
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Nombre',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onBackground,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                  prefixIcon: Icon(Icons.phone, color: colorScheme.onSurface),
                 ),
-              ),
-              const SizedBox(height: 30),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: controller.txtName,
+                  decoration: InputDecoration(
+                    prefixIcon:
+                        Icon(Icons.person, color: colorScheme.onSurfaceVariant),
+                    filled: true,
+                    fillColor: colorScheme.surface,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: colorScheme.outline),
+                    ),
+                  ),
+                  style: textTheme.bodyLarge?.copyWith(
+                    color: colorScheme.onBackground,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
 
-              // Botón Guardar cambios usando colores del tema
-              ElevatedButton(
-                onPressed: () {
-                  controller.saveProfile(context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.primary,
-                  foregroundColor: colorScheme.onPrimary,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
+                const SizedBox(height: 20),
+
+                // ─── Campo CORREO ──────────────────────────────────────
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Correo',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onBackground,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: controller.txtEmail,
+                  decoration: InputDecoration(
+                    prefixIcon:
+                        Icon(Icons.email, color: colorScheme.onSurfaceVariant),
+                    filled: true,
+                    fillColor: colorScheme.surface,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide(color: colorScheme.outline),
+                    ),
+                  ),
+                  style: textTheme.bodyLarge?.copyWith(
+                    color: colorScheme.onBackground,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // ─── Campo FECHA DE REGISTRO (no editable) ─────────────
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Fecha de registro',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onBackground,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: colorScheme.surface,
                     borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: colorScheme.outline),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  child: Text(
+                    controller.fechaRegistroValue.value,
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onBackground,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-                child: Text(
-                  'Guardar cambios',
-                  style: textTheme.labelLarge?.copyWith(
-                    color: colorScheme.onPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+
+                const SizedBox(height: 32),
+
+                // ─── Botón “Guardar cambios” ────────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      controller.saveProfile();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorScheme.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      'Guardar cambios',
+                      style: textTheme.labelLarge?.copyWith(
+                        color: colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
+
+                const SizedBox(height: 16),
+
+                // ─── Mensaje de éxito/error (si aplica) ─────────────────
+                Obx(() {
+                  if (controller.message.value.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Container(
+                    width: double.infinity,
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                    margin: const EdgeInsets.only(top: 8),
+                    decoration: BoxDecoration(
+                      color: controller.messageColor.value.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      controller.message.value,
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: controller.messageColor.value,
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

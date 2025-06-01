@@ -1,53 +1,72 @@
-// lib/pages/Chat/chat_controller.dart
+// lib/pages/chat/chat_controller.dart
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../models/mensaje.dart';
+import '../../models/conversacion.dart';
+import '../../models/user.dart';
+import '../../services/mensaje_service.dart';
 
 class ChatController extends GetxController {
-  var messages = <Map<String, String>>[].obs;
-  final messageTextController = TextEditingController();
+  final MensajeService _mensajeService = MensajeService();
+
+  late final Usuario user;
+  late final Conversacion conversacion;
+  var mensajes = <Mensaje>[].obs;
+  final TextEditingController messageTextController = TextEditingController();
 
   @override
   void onInit() {
     super.onInit();
-    // Mensaje inicial de la IA
-    messages.add({
-      'sender': 'ia',
-      'text': 'Hola, ¿en qué puedo ayudarte hoy?',
-    });
+    final args = Get.arguments;
+    if (args is Map<String, dynamic>) {
+      user = args['user'] as Usuario;
+      conversacion = args['conversacion'] as Conversacion;
+      print(
+          '>> [ChatController] Usuario=${user.email}, ConversacionId=${conversacion.conversacion_id}');
+      _cargarMensajesDeConversacion(conversacion.conversacion_id);
+    } else {
+      print(
+          '>> [ChatController] No recibí argumentos válidos. Volviendo atrás.');
+      Get.back();
+    }
   }
 
-  void sendMessage() {
-    final text = messageTextController.text.trim();
-    if (text.isEmpty) return;
+  Future<void> _cargarMensajesDeConversacion(int converId) async {
+    final lista = await _mensajeService.getMensajesPorConversacion(converId);
+    mensajes.assignAll(lista);
+    print(
+        '>> [ChatController] Mensajes cargados para conversacion $converId: ${mensajes.length}');
+  }
 
-    // Mensaje del usuario
-    messages.add({'sender': 'user', 'text': text});
+  Future<void> sendMessage() async {
+    final texto = messageTextController.text.trim();
+    if (texto.isEmpty) return;
+
+    final mensajeUsuario = Mensaje(
+      mensaje_id: DateTime.now().millisecondsSinceEpoch,
+      conversacion_id: conversacion.conversacion_id,
+      remitente: RemitenteType.usuario,
+      contenido_texto: texto,
+      timestamp_envio: DateTime.now(),
+    );
+    mensajes.add(mensajeUsuario);
+    await _mensajeService.guardarMensaje(mensajeUsuario);
     messageTextController.clear();
 
-    // Respuesta simulada de la IA
-    Future.delayed(const Duration(milliseconds: 500), () {
-      messages.add({
-        'sender': 'ia',
-        'text':
-            'Por supuesto, cuéntame qué problema tienes y trataré de ayudarte.',
-      });
+    final respuestaBot = Mensaje(
+      mensaje_id: DateTime.now().millisecondsSinceEpoch + 1,
+      conversacion_id: conversacion.conversacion_id,
+      remitente: RemitenteType.ia,
+      contenido_texto: 'Este es un mensaje predeterminado del modelo IA.',
+      timestamp_envio: DateTime.now().add(const Duration(milliseconds: 200)),
+    );
+    Future.delayed(const Duration(milliseconds: 300), () async {
+      mensajes.add(respuestaBot);
+      await _mensajeService.guardarMensaje(respuestaBot);
+      print(
+          '>> [ChatController] Se añadió mensaje IA para conversacion ${conversacion.conversacion_id}');
     });
-  }
-
-  /// Navegar a Preferencias
-  void goToPreferences(BuildContext context) {
-    Navigator.pushNamed(context, '/preferences');
-  }
-
-  /// Navegar a Historial
-  void goToHistory(BuildContext context) {
-    Navigator.pushNamed(context, '/history');
-  }
-
-  /// Navegar a Perfil
-  void goToProfile(BuildContext context) {
-    Navigator.pushNamed(context, '/profile');
   }
 
   @override

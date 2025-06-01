@@ -9,6 +9,11 @@ class EvaluationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Tomamos el theme actual
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final textTheme = theme.textTheme;
+
     // Instanciamos el controller de GetX
     final EvaluationController controller = Get.put(EvaluationController());
 
@@ -21,17 +26,17 @@ class EvaluationPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF5F7),
+      // Usamos el background definido en el theme (puede ser background o surface según tu preferencia)
+      backgroundColor: colorScheme.background,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFDF5F7),
+        backgroundColor: colorScheme.background,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black87),
-        title: const Text(
+        iconTheme: IconThemeData(color: colorScheme.onBackground),
+        title: Text(
           'Evaluar respuestas',
-          style: TextStyle(
-            color: Colors.black87,
+          style: textTheme.titleLarge?.copyWith(
+            color: colorScheme.onBackground,
             fontWeight: FontWeight.w600,
-            fontFamily: 'Roboto',
           ),
         ),
         centerTitle: true,
@@ -47,11 +52,13 @@ class EvaluationPage extends StatelessWidget {
                 margin: const EdgeInsets.only(bottom: 24),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFF1F3),
+                  // Para la tarjeta, usamos el color de surface con sombra
+                  color: colorScheme.surface,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      // Usamos la sombra con la opacidad baja del onSurface
+                      color: colorScheme.onSurface.withOpacity(0.05),
                       blurRadius: 4,
                       offset: const Offset(0, 2),
                     ),
@@ -60,22 +67,18 @@ class EvaluationPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Evaluación de respuesta',
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 18,
+                      style: textTheme.titleMedium?.copyWith(
+                        color: colorScheme.onSurface,
                         fontWeight: FontWeight.w700,
-                        color: Colors.black87,
                       ),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
+                    Text(
                       'La respuesta del chatbot contiene información precisa sobre el tema solicitado, con detalles y ejemplos.',
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 15,
-                        color: Colors.black54,
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onSurface.withOpacity(0.7),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -86,11 +89,11 @@ class EvaluationPage extends StatelessWidget {
                         IconButton(
                           onPressed: () {
                             // Lógica opcional para marcar "thumb up"
-                            // Por ejemplo: controller.markThumbUp();
+                            // Ejemplo: controller.markThumbUp();
                           },
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.thumb_up,
-                            color: Colors.green,
+                            color: colorScheme.primary, // color principal
                             size: 28,
                           ),
                         ),
@@ -99,11 +102,11 @@ class EvaluationPage extends StatelessWidget {
                         IconButton(
                           onPressed: () {
                             // Lógica opcional para marcar "thumb down"
-                            // Por ejemplo: controller.markThumbDown();
+                            // Ejemplo: controller.markThumbDown();
                           },
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.thumb_down,
-                            color: Colors.red,
+                            color: colorScheme.error, // color de error
                             size: 28,
                           ),
                         ),
@@ -119,13 +122,11 @@ class EvaluationPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       '¿Por qué no fue útil?',
-                      style: TextStyle(
-                        fontFamily: 'Roboto',
-                        fontSize: 16,
+                      style: textTheme.titleSmall?.copyWith(
+                        color: colorScheme.onBackground,
                         fontWeight: FontWeight.w600,
-                        color: Colors.black87,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -135,11 +136,11 @@ class EvaluationPage extends StatelessWidget {
                         return Container(
                           margin: const EdgeInsets.only(bottom: 8),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: colorScheme.surface,
                             borderRadius: BorderRadius.circular(8),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.03),
+                                color: colorScheme.onSurface.withOpacity(0.03),
                                 blurRadius: 2,
                                 offset: const Offset(0, 1),
                               ),
@@ -150,13 +151,11 @@ class EvaluationPage extends StatelessWidget {
                             groupValue: controller.selectedReasonIndex.value,
                             title: Text(
                               reasons[index],
-                              style: const TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: 14,
-                                color: Colors.black87,
+                              style: textTheme.bodyLarge?.copyWith(
+                                color: colorScheme.onSurface,
                               ),
                             ),
-                            activeColor: Colors.blueAccent,
+                            activeColor: colorScheme.primary,
                             onChanged: (value) {
                               controller.setReasonIndex(value!);
                             },
@@ -175,21 +174,19 @@ class EvaluationPage extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Comentario...',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 14,
-                    color: Colors.black54,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurface.withOpacity(0.7),
                   ),
                 ),
               ),
               const SizedBox(height: 8),
               Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFFFFF),
+                  color: colorScheme.surface,
                   borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.03),
+                      color: colorScheme.onSurface.withOpacity(0.03),
                       blurRadius: 2,
                       offset: const Offset(0, 1),
                     ),
@@ -198,16 +195,17 @@ class EvaluationPage extends StatelessWidget {
                 child: TextField(
                   controller: controller.commentController,
                   maxLines: 4,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Escribe un comentario...',
+                    hintStyle: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurface.withOpacity(0.5),
+                    ),
                     border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 12),
                   ),
-                  style: const TextStyle(
-                    fontFamily: 'Roboto',
-                    fontSize: 14,
-                    color: Colors.black87,
+                  style: textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -230,11 +228,8 @@ class EvaluationPage extends StatelessWidget {
                   ),
                   child: Text(
                     controller.message.value,
-                    style: TextStyle(
+                    style: textTheme.bodyMedium?.copyWith(
                       color: controller.messageColor.value,
-                      fontFamily: 'Roboto',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 );
@@ -247,18 +242,16 @@ class EvaluationPage extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => controller.submitEvaluation(context),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1E88E5),
+                    backgroundColor: colorScheme.primary,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'ENVIAR',
-                    style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontSize: 16,
+                    style: textTheme.labelLarge?.copyWith(
+                      color: colorScheme.onPrimary,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
                       letterSpacing: 1.0,
                     ),
                   ),

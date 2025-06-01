@@ -1,37 +1,50 @@
-// lib/pages/Chat/chat_page.dart
+// lib/pages/chat/chat_page.dart
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'chat_controller.dart'; // Ajusta la ruta si tu carpeta se llama "Chat"
+
+import 'chat_controller.dart';
+import '../../models/mensaje.dart';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Inyectamos con GetX nuestro controlador
+    // 1) Si ya estaba registrado un ChatController, elimínalo para forzar re-creación
+    if (Get.isRegistered<ChatController>()) {
+      Get.delete<ChatController>();
+    }
+
+    // 2) Ahora sí inyectamos uno nuevo, que recibirá los argumentos recién pasados
     final ChatController control = Get.put(ChatController());
 
-    // Accedemos al TextTheme y ColorScheme del tema global
-    final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     Widget _buildBody() {
       return SafeArea(
         child: Column(
           children: [
-            // Lista de mensajes
             Expanded(
               child: Obx(() {
+                if (control.mensajes.isEmpty) {
+                  return Center(
+                    child: Text(
+                      'No hay mensajes',
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onBackground.withOpacity(0.5),
+                      ),
+                    ),
+                  );
+                }
                 return ListView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 16,
-                  ),
-                  itemCount: control.messages.length,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                  itemCount: control.mensajes.length,
                   itemBuilder: (context, index) {
-                    final msg = control.messages[index];
-                    final isUser = (msg['sender'] == 'user');
+                    final msg = control.mensajes[index];
+                    final isUser = msg.remitente == RemitenteType.usuario;
 
                     return Align(
                       alignment:
@@ -40,22 +53,21 @@ class ChatPage extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         padding: const EdgeInsets.all(12),
                         constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.7,
+                          maxWidth: MediaQuery.of(context).size.width * 0.8,
                         ),
                         decoration: BoxDecoration(
                           color: isUser
                               ? colorScheme.primary
-                              : colorScheme.secondary.withOpacity(0.2),
+                              : colorScheme.surfaceVariant,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
-                          msg['text']!,
+                          msg.contenido_texto,
                           style: TextStyle(
                             color: isUser
                                 ? colorScheme.onPrimary
-                                : colorScheme.onSecondary,
+                                : colorScheme.onSurfaceVariant,
                             fontSize: 15,
-                            fontFamily: textTheme.bodyMedium?.fontFamily,
                           ),
                         ),
                       ),
@@ -65,34 +77,57 @@ class ChatPage extends StatelessWidget {
               }),
             ),
 
-            // Barra de entrada + botón enviar
+            // ───────────────────────────────────────────────────────────────
+            // Fila inferior: botón “Evaluar” a la izquierda, campo de texto y “Enviar”
+            // ───────────────────────────────────────────────────────────────
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
               color: colorScheme.background,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Row(
                 children: [
+                  // 1) Botón “Evaluar” (ícono) en la esquina inferior izquierda
+                  Container(
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon:
+                          Icon(Icons.rate_review, color: colorScheme.onPrimary),
+                      tooltip: 'Evaluar respuesta',
+                      onPressed: () {
+                        Get.toNamed('/evaluation');
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(width: 8),
+
+                  // 2) Campo de texto
                   Expanded(
                     child: TextField(
                       controller: control.messageTextController,
-                      style: textTheme.bodyMedium,
                       decoration: InputDecoration(
                         hintText: 'Escribe mensaje',
                         hintStyle: textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onBackground.withOpacity(0.5)),
+                          color: colorScheme.onBackground.withOpacity(0.5),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide(
-                              color: colorScheme.onSurface, width: 1),
+                          borderSide: BorderSide(color: colorScheme.outline),
                         ),
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 16),
                       ),
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: colorScheme.onBackground,
+                      ),
                     ),
                   ),
+
                   const SizedBox(width: 8),
+
+                  // 3) Botón “Enviar”
                   Container(
                     decoration: BoxDecoration(
                       color: colorScheme.primary,
@@ -114,32 +149,47 @@ class ChatPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
       appBar: AppBar(
-        backgroundColor: colorScheme.surface,
+        backgroundColor: colorScheme.background,
         elevation: 0,
-        leading: const BackButton(color: Colors.black),
+        // Aquí reemplazamos la flecha de “Back” por un botón de “Logout”
+        leading: IconButton(
+          icon: Icon(Icons.logout, color: colorScheme.onBackground),
+          tooltip: 'Cerrar sesión',
+          onPressed: () {
+            // Simplemente vamos al login (y borramos el histórico)
+            Get.offAllNamed('/login');
+          },
+        ),
         title: Text(
-          'Nueva conversación',
-          style: textTheme.titleLarge?.copyWith(color: Colors.black),
+          'Chat',
+          style: textTheme.titleLarge?.copyWith(
+            color: colorScheme.onBackground,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
         actions: [
-          // Tres iconos en la esquina superior derecha:
           IconButton(
-            icon: const Icon(Icons.settings, color: Colors.black),
-            onPressed: () => control.goToPreferences(context),
+            icon: Icon(Icons.settings, color: colorScheme.onBackground),
             tooltip: 'Preferencias',
+            onPressed: () {
+              Get.toNamed('/preferences', arguments: control.user);
+            },
           ),
           IconButton(
-            icon: const Icon(Icons.history, color: Colors.black),
-            onPressed: () => control.goToHistory(context),
-            tooltip: 'Historial',
+            icon: Icon(Icons.person, color: colorScheme.onBackground),
+            tooltip: 'Editar información',
+            onPressed: () {
+              Get.toNamed('/profile', arguments: control.user);
+            },
           ),
           IconButton(
-            icon: const Icon(Icons.person, color: Colors.black),
-            onPressed: () => control.goToProfile(context),
-            tooltip: 'Perfil',
+            icon: Icon(Icons.history, color: colorScheme.onBackground),
+            tooltip: 'Historial de chat',
+            onPressed: () {
+              Get.toNamed('/history', arguments: control.user);
+            },
           ),
         ],
       ),

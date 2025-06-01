@@ -26,3 +26,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/jsons/users.json
+    - assets/jsons/modelos_ia.json
+    - assets/jsons/preferencias_usuario.json
+    - assets/jsons/conversaciones.json
+    - assets/jsons/mensajes.json

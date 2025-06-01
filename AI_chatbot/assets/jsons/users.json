@@ -3,34 +3,56 @@
     {
       "usuario_id": 1,
       "email": "usuario1@gmail.com",
-      "password_hash": "contrasena123",
+      "password_hash": "1234",
       "nombre": "Usuario Uno",
       "fecha_registro": "2023-10-25",
-      "ultimo_acceso": null
+      "ultimo_acceso": null,
+      "imagen_url": "https://c0.klipartz.com/pngpicture/274/360/gratis-png-psyduck-pokemon-ir-pokemon-x-y-y-pikachu-pokemon-ir.png"
     },
     {
       "usuario_id": 2,
       "email": "usuario2@gmail.com",
-      "password_hash": "clave456",
+      "password_hash": "1234",
       "nombre": "Usuario Dos",
       "fecha_registro": "2023-10-26",
-      "ultimo_acceso": null
+      "ultimo_acceso": null,
+      "imagen_url": "https://c0.klipartz.com/pngpicture/274/360/gratis-png-psyduck-pokemon-ir-pokemon-x-y-y-pikachu-pokemon-ir.png"
     },
     {
       "usuario_id": 3,
       "email": "usuario3@gmail.com",
-      "password_hash": "password789",
+      "password_hash": "1234",
       "nombre": "Usuario Tres",
       "fecha_registro": "2023-10-27",
-      "ultimo_acceso": null
+      "ultimo_acceso": null,
+      "imagen_url": "https://c0.klipartz.com/pngpicture/274/360/gratis-png-psyduck-pokemon-ir-pokemon-x-y-y-pikachu-pokemon-ir.png"
     },
     {
       "usuario_id": 4,
+      "email": "usuario4@gmail.com",
+      "password_hash": "1234",
+      "nombre": "Usuario Cuatro",
+      "fecha_registro": "2023-10-28",
+      "ultimo_acceso": null,
+      "imagen_url": "https://c0.klipartz.com/pngpicture/274/360/gratis-png-psyduck-pokemon-ir-pokemon-x-y-y-pikachu-pokemon-ir.png"
+    },
+    {
+      "usuario_id": 5,
+      "email": "usuario5@gmail.com",
+      "password_hash": "1234",
+      "nombre": "Usuario Cinco",
+      "fecha_registro": "2023-10-29",
+      "ultimo_acceso": null,
+      "imagen_url": "https://c0.klipartz.com/pngpicture/274/360/gratis-png-psyduck-pokemon-ir-pokemon-x-y-y-pikachu-pokemon-ir.png"
+    },
+    {
+      "usuario_id": 6,
       "email": "usuario",
       "password_hash": "1234",
-      "nombre": "Usuario Dos",
-      "fecha_registro": "2023-10-26",
-      "ultimo_acceso": null
+      "nombre": "Usuario Seis",
+      "fecha_registro": "2023-10-30",
+      "ultimo_acceso": null,
+      "imagen_url": "https://c0.klipartz.com/pngpicture/274/360/gratis-png-psyduck-pokemon-ir-pokemon-x-y-y-pikachu-pokemon-ir.png"
     }
   ]
 }

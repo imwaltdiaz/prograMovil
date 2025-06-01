@@ -1,0 +1,28 @@
+{
+  "preferencias_usuario": [
+    {
+      "usuario_id": 1,
+      "modelo_ia_default_id": 2
+    },
+    {
+      "usuario_id": 2,
+      "modelo_ia_default_id": 1
+    },
+    {
+      "usuario_id": 3,
+      "modelo_ia_default_id": 3
+    },
+    {
+      "usuario_id": 4,
+      "modelo_ia_default_id": 1
+    },
+    {
+      "usuario_id": 5,
+      "modelo_ia_default_id": 2
+    },
+    {
+      "usuario_id": 6,
+      "modelo_ia_default_id": 3
+    }
+  ]
+}
