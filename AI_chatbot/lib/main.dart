@@ -7,6 +7,7 @@ import './pages/register/register.dart';
 import './pages/login/login.dart';
 import './pages/preferences/preferences_page.dart';
 import './pages/History/HistoryPage.dart';
+import './pages/evaluation/evaluation.dart';
 import 'package:intl/intl.dart';
 import './pages/Chat/chat_page.dart';
 import './pages/profile/profile_page.dart';
@@ -33,7 +34,7 @@ class _MyAppState extends State<MyApp> {
         theme: materialTheme.light(),
         darkTheme: materialTheme.dark(),
         themeMode: ThemeMode.system,
-        initialRoute: '/login', // Ruta inicial
+        initialRoute: '/evaluation', // Ruta inicial
         // Establece el soporte de localización de tu app
         localizationsDelegates: [
           GlobalMaterialLocalizations
@@ -55,8 +56,7 @@ class _MyAppState extends State<MyApp> {
           '/history': (context) => HistoryPage(),
           '/chat': (context) => ChatPage(),
           '/profile': (context) => ProfilePage(),
-          '/evaluation': (context) => EvaluationPage(), 
-
+          '/evaluation': (context) => EvaluationPage(),
         });
   }
 }
