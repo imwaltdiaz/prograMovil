@@ -1,0 +1,28 @@
+{
+  "conversaciones": [
+    {
+      "conversacion_id": 1,
+      "usuario_id": 1,
+      "modelo_ia_id": 2,
+      "titulo": "Ayuda con tarea",
+      "fecha_creacion": "2023-10-30T14:12:00Z",
+      "ultima_actualizacion": "2023-10-30T14:15:00Z"
+    },
+    {
+      "conversacion_id": 2,
+      "usuario_id": 1,
+      "modelo_ia_id": 1,
+      "titulo": "Plan de viaje",
+      "fecha_creacion": "2023-10-28T09:20:00Z",
+      "ultima_actualizacion": "2023-10-28T09:45:00Z"
+    },
+    {
+      "conversacion_id": 3,
+      "usuario_id": 2,
+      "modelo_ia_id": 2,
+      "titulo": "Receta de pizza",
+      "fecha_creacion": "2023-10-29T18:00:00Z",
+      "ultima_actualizacion": "2023-10-29T18:05:00Z"
+    }
+  ]
+}

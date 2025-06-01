@@ -1,37 +1,51 @@
-// lib/pages/Chat/chat_page.dart
+// lib/pages/chat/chat_page.dart
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'chat_controller.dart'; // Ajusta la ruta si tu carpeta se llama "Chat"
+
+import 'chat_controller.dart'; // Importa el controlador
+import '../../models/mensaje.dart'; // Para el enum RemitenteType
+import '../../models/conversacion.dart'; // Clase Conversacion
+import '../../models/user.dart'; // Clase Usuario
 
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Inyectamos con GetX nuestro controlador
+    // Inyectamos el controlador con Get.put()
     final ChatController control = Get.put(ChatController());
-
-    // Accedemos al TextTheme y ColorScheme del tema global
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
 
     Widget _buildBody() {
       return SafeArea(
         child: Column(
           children: [
-            // Lista de mensajes
-            Expanded(
-              child: Obx(() {
-                return ListView.builder(
+            // Si no hay mensajes, mostramos “No hay mensajes”
+            Obx(() {
+              if (control.mensajes.isEmpty) {
+                return Expanded(
+                  child: Center(
+                    child: Text(
+                      'No hay mensajes',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                );
+              }
+              // Lista de mensajes
+              return Expanded(
+                child: ListView.builder(
                   padding: const EdgeInsets.symmetric(
                     vertical: 8,
-                    horizontal: 16,
+                    horizontal: 20,
                   ),
-                  itemCount: control.messages.length,
+                  itemCount: control.mensajes.length,
                   itemBuilder: (context, index) {
-                    final msg = control.messages[index];
-                    final isUser = (msg['sender'] == 'user');
+                    final msg = control.mensajes[index];
+                    final isUser = msg.remitente == RemitenteType.usuario;
 
                     return Align(
                       alignment:
@@ -40,52 +54,44 @@ class ChatPage extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         padding: const EdgeInsets.all(12),
                         constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.7,
+                          maxWidth: MediaQuery.of(context).size.width * 0.8,
                         ),
                         decoration: BoxDecoration(
-                          color: isUser
-                              ? colorScheme.primary
-                              : colorScheme.secondary.withOpacity(0.2),
+                          color: isUser ? Colors.indigo : Colors.grey[300],
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
-                          msg['text']!,
+                          msg.contenido_texto,
                           style: TextStyle(
-                            color: isUser
-                                ? colorScheme.onPrimary
-                                : colorScheme.onSecondary,
+                            color: isUser ? Colors.white : Colors.black87,
                             fontSize: 15,
-                            fontFamily: textTheme.bodyMedium?.fontFamily,
                           ),
                         ),
                       ),
                     );
                   },
-                );
-              }),
-            ),
+                ),
+              );
+            }),
 
-            // Barra de entrada + botón enviar
+            // Línea de entrada de texto + botón “Enviar”
             Container(
               padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
+                horizontal: 20,
+                vertical: 12,
               ),
-              color: colorScheme.background,
+              color: Colors.white,
               child: Row(
                 children: [
                   Expanded(
                     child: TextField(
                       controller: control.messageTextController,
-                      style: textTheme.bodyMedium,
                       decoration: InputDecoration(
                         hintText: 'Escribe mensaje',
-                        hintStyle: textTheme.bodyMedium?.copyWith(
-                            color: colorScheme.onBackground.withOpacity(0.5)),
+                        hintStyle: const TextStyle(color: Colors.grey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
-                          borderSide: BorderSide(
-                              color: colorScheme.onSurface, width: 1),
+                          borderSide: const BorderSide(color: Colors.grey),
                         ),
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 16),
@@ -94,12 +100,12 @@ class ChatPage extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Container(
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary,
+                    decoration: const BoxDecoration(
+                      color: Colors.indigo,
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
-                      icon: Icon(Icons.send, color: colorScheme.onPrimary),
+                      icon: const Icon(Icons.send, color: Colors.white),
                       onPressed: () {
                         control.sendMessage();
                       },
@@ -114,33 +120,43 @@ class ChatPage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
       appBar: AppBar(
-        backgroundColor: colorScheme.surface,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: const BackButton(color: Colors.black),
-        title: Text(
-          'Nueva conversación',
-          style: textTheme.titleLarge?.copyWith(color: Colors.black),
+        title: const Text(
+          'Chat',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
         centerTitle: true,
+        // Botones rápidos para Perfil, Historial y Preferencias:
         actions: [
-          // Tres iconos en la esquina superior derecha:
           IconButton(
-            icon: const Icon(Icons.settings, color: Colors.black),
-            onPressed: () => control.goToPreferences(context),
-            tooltip: 'Preferencias',
+            icon: const Icon(Icons.person, color: Colors.black),
+            tooltip: 'Ver perfil',
+            onPressed: () {
+              Get.toNamed('/profile', arguments: control.user);
+            },
           ),
           IconButton(
             icon: const Icon(Icons.history, color: Colors.black),
-            onPressed: () => control.goToHistory(context),
             tooltip: 'Historial',
+            onPressed: () {
+              Get.toNamed('/history', arguments: control.user);
+            },
           ),
           IconButton(
-            icon: const Icon(Icons.person, color: Colors.black),
-            onPressed: () => control.goToProfile(context),
-            tooltip: 'Perfil',
+            icon: const Icon(Icons.settings, color: Colors.black),
+            tooltip: 'Preferencias',
+            onPressed: () {
+              Get.toNamed('/preferences', arguments: control.user);
+            },
           ),
+          const SizedBox(width: 8),
         ],
       ),
       resizeToAvoidBottomInset: false,

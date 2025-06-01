@@ -1,51 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../services/register_service.dart';
+import '../../services/usuario_service.dart';
+import '../../models/user.dart';
 
 class RegisterController extends GetxController {
-  TextEditingController txtEmail = TextEditingController();
-  TextEditingController txtPassword = TextEditingController();
-  TextEditingController txtName = TextEditingController();
+  final TextEditingController txtEmail = TextEditingController();
+  final TextEditingController txtName = TextEditingController();
+  final TextEditingController txtPassword = TextEditingController();
+
+  final RegisterService registerService = RegisterService();
+  final UsuarioService usuarioService = UsuarioService();
+
   RxString message = ''.obs;
   Rx<MaterialColor> messageColor = Colors.red.obs;
-  final RegisterService registerService = RegisterService();
 
-  Future<void> register(BuildContext context) async {
-    if (txtEmail.text.isEmpty ||
-        txtPassword.text.isEmpty ||
-        txtName.text.isEmpty) {
-      message.value = "Email, nombre y contraseña son requeridos";
+  Future<void> register() async {
+    final email = txtEmail.text.trim();
+    final nombre = txtName.text.trim();
+    final password = txtPassword.text.trim();
+
+    if (email.isEmpty || nombre.isEmpty || password.isEmpty) {
+      message.value = 'Todos los campos son obligatorios';
       messageColor.value = Colors.red;
       return;
     }
 
-    try {
-      await registerService.registerUser(
-          txtEmail.text, txtPassword.text, txtName.text);
+    // Llamo a registerUser con parámetros nombrados y recibo un bool
+    final bool registrado = await registerService.registerUser(
+      email: email,
+      nombre: nombre,
+      password: password,
+    );
 
-      message.value = "¡Registro exitoso!";
-      messageColor.value = Colors.green;
-
-      // Limpiar campos después del registro
-      txtEmail.clear();
-      txtPassword.clear();
-      txtName.clear();
-
-      // Redirigir después de 2 segundos
-      Future.delayed(Duration(seconds: 2), () {
-        Navigator.pushReplacementNamed(context, '/login');
-      });
-    } catch (e) {
-      message.value = "Error: ${e.toString()}";
+    if (!registrado) {
+      // Si devuelve false, significa que ya había un usuario con ese email
+      message.value = 'El correo ya está registrado';
       messageColor.value = Colors.red;
+      return;
     }
+
+    // Si llegamos aquí, el registro (mock) fue exitoso
+    final Usuario? usuario = await usuarioService.getUsuarioPorEmail(email);
+    if (usuario == null) {
+      message.value = 'Registrado, pero no se pudo cargar perfil';
+      messageColor.value = Colors.red;
+      return;
+    }
+
+    // Navegar a preferencias, pasando el objeto Usuario
+    Get.offNamed(
+      '/preferences',
+      arguments: usuario,
+    );
   }
 
-  void goToLogin(BuildContext context) {
-    Navigator.pushNamed(context, '/login');
+  void goToLogin() {
+    Get.toNamed('/login');
   }
 
-  void goToPreferences(BuildContext context) {
-    Navigator.pushNamed(context, '/preferences');
+  @override
+  void onClose() {
+    txtEmail.dispose();
+    txtName.dispose();
+    txtPassword.dispose();
+    super.onClose();
   }
 }

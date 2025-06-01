@@ -1,5 +1,3 @@
-// lib/pages/register/register_page.dart
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'register_controller.dart';
@@ -14,232 +12,153 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final RegisterController controller = Get.put(RegisterController());
 
-  Widget _form(BuildContext context) {
-    // Obtenemos los estilos del tema global
-    final textTheme = Theme.of(context).textTheme;
+  @override
+  Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.85,
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          // Título “Bienvenido”
-          Text(
-            'BIENVENIDO A AI CHATBOT',
-            style: textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onBackground,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 30),
-
-          // Campo Email
-          TextField(
-            controller: controller.txtEmail,
-            keyboardType: TextInputType.emailAddress,
-            style: textTheme.bodyMedium,
-            decoration: InputDecoration(
-              labelText: 'Email',
-              labelStyle: textTheme.titleSmall?.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.7),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide:
-                    BorderSide(color: colorScheme.onSurface.withOpacity(0.5)),
-              ),
-              prefixIcon: Icon(Icons.email,
-                  color: colorScheme.onSurface.withOpacity(0.7)),
-            ),
-          ),
-          const SizedBox(height: 15),
-
-          // Campo Nombre
-          TextField(
-            controller: controller.txtName,
-            style: textTheme.bodyMedium,
-            decoration: InputDecoration(
-              labelText: 'Nombre',
-              labelStyle: textTheme.titleSmall?.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.7),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide:
-                    BorderSide(color: colorScheme.onSurface.withOpacity(0.5)),
-              ),
-              prefixIcon: Icon(Icons.person,
-                  color: colorScheme.onSurface.withOpacity(0.7)),
-            ),
-          ),
-          const SizedBox(height: 15),
-
-          // Campo Contraseña
-          TextField(
-            controller: controller.txtPassword,
-            obscureText: true,
-            style: textTheme.bodyMedium,
-            decoration: InputDecoration(
-              labelText: 'Contraseña',
-              labelStyle: textTheme.titleSmall?.copyWith(
-                color: colorScheme.onSurface.withOpacity(0.7),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide:
-                    BorderSide(color: colorScheme.onSurface.withOpacity(0.5)),
-              ),
-              prefixIcon: Icon(Icons.lock,
-                  color: colorScheme.onSurface.withOpacity(0.7)),
-            ),
-          ),
-          const SizedBox(height: 25),
-
-          // Botón “Registrar”
-          ElevatedButton(
-            onPressed: () {
-              controller.register(context);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: colorScheme.primary,
-              foregroundColor: colorScheme.onPrimary,
-              minimumSize: const Size(double.infinity, 48),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: Text(
-              'Registrar',
-              style: textTheme.labelLarge?.copyWith(
-                color: colorScheme.onPrimary,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          const Divider(thickness: 1),
-          const SizedBox(height: 15),
-
-          // Texto “o continúa con”
-          Text(
-            'o continúa con',
-            style: textTheme.bodySmall?.copyWith(
-              color: colorScheme.onBackground.withOpacity(0.7),
-            ),
-          ),
-          const SizedBox(height: 15),
-
-          // Botones de “Google” y “Apple”
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () {},
-                  icon: Icon(Icons.g_mobiledata, color: colorScheme.onSurface),
-                  label: Text(
-                    'Google',
-                    style: textTheme.bodyMedium
-                        ?.copyWith(color: colorScheme.onSurface),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                        color: colorScheme.onSurface.withOpacity(0.5)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    foregroundColor: colorScheme.onSurface,
-                    backgroundColor: colorScheme.surface,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () {},
-                  icon: Icon(Icons.apple, color: colorScheme.onSurface),
-                  label: Text(
-                    'Apple',
-                    style: textTheme.bodyMedium
-                        ?.copyWith(color: colorScheme.onSurface),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                        color: colorScheme.onSurface.withOpacity(0.5)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    foregroundColor: colorScheme.onSurface,
-                    backgroundColor: colorScheme.surface,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 30),
-
-          // Texto “¿Ya tienes cuenta? Inicia sesión”
-          RichText(
-            text: TextSpan(
-              style: textTheme.bodyMedium
-                  ?.copyWith(color: colorScheme.onBackground),
+    return Scaffold(
+      backgroundColor: colorScheme.background,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
               children: [
-                const TextSpan(text: '¿Ya tienes cuenta? '),
-                TextSpan(
-                  text: 'Inicia sesión',
-                  style: textTheme.bodyMedium?.copyWith(
-                    decoration: TextDecoration.underline,
-                    color: colorScheme.primary,
+                const SizedBox(height: 48),
+
+                // Título de bienvenida
+                Text(
+                  'BIENVENIDO A AI CHATBOT',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onBackground,
                   ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      controller.goToLogin(context);
-                    },
+                  textAlign: TextAlign.center,
                 ),
+                const SizedBox(height: 32),
+
+                // Campo Email
+                TextField(
+                  controller: controller.txtEmail,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Campo Nombre
+                TextField(
+                  controller: controller.txtName,
+                  decoration: InputDecoration(
+                    labelText: 'Nombre',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Campo Contraseña
+                TextField(
+                  controller: controller.txtPassword,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Botón Registrar + mensaje reactivo
+                Obx(() {
+                  return Column(
+                    children: [
+                      ElevatedButton(
+                        onPressed: controller.register,
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 48),
+                          backgroundColor: colorScheme.primary,
+                          foregroundColor: colorScheme.onPrimary,
+                        ),
+                        child: const Text('Registrar'),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        controller.message.value,
+                        style: TextStyle(
+                          color: controller.messageColor.value,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+
+                const SizedBox(height: 16),
+                const Divider(),
+                const SizedBox(height: 16),
+                Text(
+                  'o continúa con',
+                  style: TextStyle(
+                    color: colorScheme.onBackground.withOpacity(0.6),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Botones “Google” y “Apple” (placeholder)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    OutlinedButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.email),
+                      label: const Text('Google'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: colorScheme.onBackground,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    OutlinedButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.phone_iphone),
+                      label: const Text('Apple'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: colorScheme.onBackground,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('¿Ya tienes cuenta? '),
+                    GestureDetector(
+                      onTap: controller.goToLogin,
+                      child: Text(
+                        'Inicia sesión',
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _layer1(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        children: [
-          const SizedBox(height: 50),
-          _form(context),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBody(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: _layer1(context),
         ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Solo devolvemos el Scaffold (sin MaterialApp interno)
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
-      resizeToAvoidBottomInset: false,
-      body: _buildBody(context),
+      ),
     );
   }
 }
