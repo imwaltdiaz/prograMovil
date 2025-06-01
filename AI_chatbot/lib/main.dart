@@ -55,6 +55,8 @@ class _MyAppState extends State<MyApp> {
           '/history': (context) => HistoryPage(),
           '/chat': (context) => ChatPage(),
           '/profile': (context) => ProfilePage(),
+          '/evaluation': (context) => EvaluationPage(), 
+
         });
   }
 }
