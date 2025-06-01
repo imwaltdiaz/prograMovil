@@ -27,7 +27,7 @@ class EvaluationPage extends StatelessWidget {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black87),
         title: const Text(
-          'CU7: Evaluar respuestas',
+          'Evaluar respuestas',
           style: TextStyle(
             color: Colors.black87,
             fontWeight: FontWeight.w600,
