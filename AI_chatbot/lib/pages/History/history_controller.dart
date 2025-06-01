@@ -2,43 +2,45 @@
 
 import 'package:get/get.dart';
 import '../../models/conversacion.dart';
-import '../../services/conversacion_service.dart';
 import '../../models/user.dart';
+import '../../services/conversacion_service.dart';
 
 class HistoryController extends GetxController {
-  final ConversacionService conversacionService = ConversacionService();
+  final ConversacionService _conversacionService = ConversacionService();
 
-  late final Usuario user; // Usuario que viene en los argumentos
+  /// El usuario que recibimos en Get.arguments
+  late final Usuario user;
+
+  /// Lista reactiva de todas las conversaciones de este usuario
   var conversaciones = <Conversacion>[].obs;
+
+  /// Indicador de carga
+  var isLoading = true.obs;
 
   @override
   void onInit() {
     super.onInit();
+
     final args = Get.arguments;
     if (args is Usuario) {
       user = args;
       _cargarConversaciones();
     } else {
-      // Si no recibimos un usuario válido, volvemos atrás
+      // Si no vino un Usuario válido, simplemente volvemos atrás
       Get.back();
     }
   }
 
   Future<void> _cargarConversaciones() async {
-    // Supongamos que el servicio retorna solo las conversaciones de ese usuario
+    isLoading.value = true;
     final lista =
-        await conversacionService.getConversacionesPorUsuario(user.usuario_id);
+        await _conversacionService.getConversacionesPorUsuario(user.usuario_id);
     conversaciones.assignAll(lista);
+    isLoading.value = false;
   }
 
-  /// Cuando el usuario toca una conversación, navegamos a Chat
-  void abrirConversacion(Conversacion conv) {
-    Get.toNamed(
-      '/chat',
-      arguments: {
-        'user': user,
-        'conversacion': conv,
-      },
-    );
+  /// Para hacer pull-to-refresh
+  Future<void> refrescar() async {
+    await _cargarConversaciones();
   }
 }

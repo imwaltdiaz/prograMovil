@@ -1,47 +1,40 @@
-// lib/pages/chat/chat_page.dart
+// lib/pages/Chat/chat_page.dart
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'chat_controller.dart'; // Importa el controlador
-import '../../models/mensaje.dart'; // Para el enum RemitenteType
-import '../../models/conversacion.dart'; // Clase Conversacion
-import '../../models/user.dart'; // Clase Usuario
+import 'chat_controller.dart'; // Tu ChatController
+import '../../models/mensaje.dart'; // Aquí defines RemitenteType y Mensaje
 
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Inyectamos el controlador con Get.put()
+    // Inyectamos (o recuperamos) el controlador
     final ChatController control = Get.put(ChatController());
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     Widget _buildBody() {
       return SafeArea(
         child: Column(
           children: [
-            // Si no hay mensajes, mostramos “No hay mensajes”
-            Obx(() {
-              if (control.mensajes.isEmpty) {
-                return Expanded(
-                  child: Center(
+            Expanded(
+              child: Obx(() {
+                if (control.mensajes.isEmpty) {
+                  return Center(
                     child: Text(
                       'No hay mensajes',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 16,
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.onBackground.withOpacity(0.5),
                       ),
                     ),
-                  ),
-                );
-              }
-              // Lista de mensajes
-              return Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 20,
-                  ),
+                  );
+                }
+                return ListView.builder(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
                   itemCount: control.mensajes.length,
                   itemBuilder: (context, index) {
                     final msg = control.mensajes[index];
@@ -57,55 +50,86 @@ class ChatPage extends StatelessWidget {
                           maxWidth: MediaQuery.of(context).size.width * 0.8,
                         ),
                         decoration: BoxDecoration(
-                          color: isUser ? Colors.indigo : Colors.grey[300],
+                          color: isUser
+                              ? colorScheme.primary
+                              : colorScheme.surfaceVariant,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
                           msg.contenido_texto,
                           style: TextStyle(
-                            color: isUser ? Colors.white : Colors.black87,
+                            color: isUser
+                                ? colorScheme.onPrimary
+                                : colorScheme.onSurfaceVariant,
                             fontSize: 15,
                           ),
                         ),
                       ),
                     );
                   },
-                ),
-              );
-            }),
+                );
+              }),
+            ),
 
-            // Línea de entrada de texto + botón “Enviar”
+            // ───────────────────────────────────────────────────────────────
+            // Fila inferior: botón “Evaluar” a la izquierda, campo de texto y “Enviar”
+            // ───────────────────────────────────────────────────────────────
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 12,
-              ),
-              color: Colors.white,
+              color: colorScheme.background,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Row(
                 children: [
+                  // 1) Botón “Evaluar” (icono) en la esquina inferior izquierda
+                  Container(
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon:
+                          Icon(Icons.rate_review, color: colorScheme.onPrimary),
+                      tooltip: 'Evaluar respuesta',
+                      onPressed: () {
+                        // Abre la página de evaluación
+                        Get.toNamed('/evaluation');
+                      },
+                    ),
+                  ),
+
+                  const SizedBox(width: 8),
+
+                  // 2) Campo de texto
                   Expanded(
                     child: TextField(
                       controller: control.messageTextController,
                       decoration: InputDecoration(
                         hintText: 'Escribe mensaje',
-                        hintStyle: const TextStyle(color: Colors.grey),
+                        hintStyle: textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.onBackground.withOpacity(0.5),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
-                          borderSide: const BorderSide(color: Colors.grey),
+                          borderSide: BorderSide(color: colorScheme.outline),
                         ),
                         contentPadding:
                             const EdgeInsets.symmetric(horizontal: 16),
                       ),
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: colorScheme.onBackground,
+                      ),
                     ),
                   ),
+
                   const SizedBox(width: 8),
+
+                  // 3) Botón “Enviar”
                   Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.indigo,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
-                      icon: const Icon(Icons.send, color: Colors.white),
+                      icon: Icon(Icons.send, color: colorScheme.onPrimary),
                       onPressed: () {
                         control.sendMessage();
                       },
@@ -121,42 +145,52 @@ class ChatPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: colorScheme.background,
         elevation: 0,
-        leading: const BackButton(color: Colors.black),
-        title: const Text(
+        // ─── Aquí reemplazamos el BackButton por un ícono de Logout ────
+        leading: IconButton(
+          icon: Icon(Icons.logout, color: colorScheme.onBackground),
+          tooltip: 'Cerrar sesión',
+          onPressed: () {
+            // Volvemos a la pantalla de login (limpiando la pila de pantallas)
+            Get.offAllNamed('/login');
+          },
+        ),
+        title: Text(
           'Chat',
-          style: TextStyle(
-            fontSize: 20,
+          style: textTheme.titleLarge?.copyWith(
+            color: colorScheme.onBackground,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
           ),
         ),
         centerTitle: true,
-        // Botones rápidos para Perfil, Historial y Preferencias:
+
+        // ─── Aquí agregamos el resto de iconos en el AppBar ────────────
         actions: [
           IconButton(
-            icon: const Icon(Icons.person, color: Colors.black),
-            tooltip: 'Ver perfil',
+            icon: Icon(Icons.settings, color: colorScheme.onBackground),
+            tooltip: 'Preferencias',
             onPressed: () {
+              // Llamamos a la ruta de preferencias PASANDO el usuario actual
+              Get.toNamed('/preferences', arguments: control.user);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.person, color: colorScheme.onBackground),
+            tooltip: 'Editar información',
+            onPressed: () {
+              // Abrir perfil pasando el usuario
               Get.toNamed('/profile', arguments: control.user);
             },
           ),
           IconButton(
-            icon: const Icon(Icons.history, color: Colors.black),
-            tooltip: 'Historial',
+            icon: Icon(Icons.history, color: colorScheme.onBackground),
+            tooltip: 'Historial de chat',
             onPressed: () {
+              // Abrir historial pasando el usuario
               Get.toNamed('/history', arguments: control.user);
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.settings, color: Colors.black),
-            tooltip: 'Preferencias',
-            onPressed: () {
-              Get.toNamed('/preferences', arguments: control.user);
-            },
-          ),
-          const SizedBox(width: 8),
         ],
       ),
       resizeToAvoidBottomInset: false,

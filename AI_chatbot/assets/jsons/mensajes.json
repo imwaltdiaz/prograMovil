@@ -1,53 +1,206 @@
 {
   "mensajes": [
     {
-      "mensaje_id": 1,
-      "conversacion_id": 1,
+      "mensaje_id": 1001,
+      "conversacion_id": 101,
       "remitente": "usuario",
-      "contenido_texto": "Hola, ¿podrías ayudarme con la tarea de matemáticas?",
-      "timestamp_envio": "2023-10-30T14:12:00Z"
+      "contenido_texto": "Hola, quiero ayuda para crear una página de login en Flutter.",
+      "timestamp_envio": "2023-10-30T14:15:10Z"
     },
     {
-      "mensaje_id": 2,
-      "conversacion_id": 1,
+      "mensaje_id": 1002,
+      "conversacion_id": 101,
       "remitente": "ia",
-      "contenido_texto": "Claro, ¿en qué problema estás trabado?",
-      "timestamp_envio": "2023-10-30T14:12:30Z"
+      "contenido_texto": "Claro, te puedo guiar. Primero, crea un StatefulWidget que contenga TextFields para email y contraseña...",
+      "timestamp_envio": "2023-10-30T14:16:00Z"
     },
     {
-      "mensaje_id": 3,
-      "conversacion_id": 1,
+      "mensaje_id": 1003,
+      "conversacion_id": 101,
       "remitente": "usuario",
-      "contenido_texto": "Necesito entender la derivada de funciones polinómicas.",
-      "timestamp_envio": "2023-10-30T14:13:00Z"
+      "contenido_texto": "Perfecto, gracias. ¿Cómo hago la validación?",
+      "timestamp_envio": "2023-10-30T14:16:30Z"
     },
     {
-      "mensaje_id": 4,
-      "conversacion_id": 2,
-      "remitente": "usuario",
-      "contenido_texto": "Quiero planear un viaje a Perú en diciembre.",
-      "timestamp_envio": "2023-10-28T09:20:00Z"
-    },
-    {
-      "mensaje_id": 5,
-      "conversacion_id": 2,
+      "mensaje_id": 1004,
+      "conversacion_id": 101,
       "remitente": "ia",
-      "contenido_texto": "Genial, ¿prefieres costa o sierra?",
-      "timestamp_envio": "2023-10-28T09:20:30Z"
+      "contenido_texto": "Para validar, puedes usar un servicio que revise tu JSON de usuarios y compare email/contraseña...",
+      "timestamp_envio": "2023-10-30T14:17:00Z"
+    },
+
+    {
+      "mensaje_id": 1101,
+      "conversacion_id": 102,
+      "remitente": "usuario",
+      "contenido_texto": "Quiero planear un viaje a París, ¿qué debo visitar?",
+      "timestamp_envio": "2023-10-28T10:00:30Z"
     },
     {
-      "mensaje_id": 6,
-      "conversacion_id": 3,
+      "mensaje_id": 1102,
+      "conversacion_id": 102,
+      "remitente": "ia",
+      "contenido_texto": "En París te recomiendo: la Torre Eiffel, el Museo del Louvre, un paseo por el Sena y el barrio de Montmartre.",
+      "timestamp_envio": "2023-10-28T10:02:00Z"
+    },
+    {
+      "mensaje_id": 1103,
+      "conversacion_id": 102,
+      "remitente": "usuario",
+      "contenido_texto": "¿Y dónde puedo comer algo típico?",
+      "timestamp_envio": "2023-10-28T10:03:00Z"
+    },
+    {
+      "mensaje_id": 1104,
+      "conversacion_id": 102,
+      "remitente": "ia",
+      "contenido_texto": "Busca bistrós cerca de la Rue Cler para probar un croissant y un café au lait, o un buen coq au vin en Le Procope.",
+      "timestamp_envio": "2023-10-28T10:05:00Z"
+    },
+
+    {
+      "mensaje_id": 1201,
+      "conversacion_id": 103,
       "remitente": "usuario",
       "contenido_texto": "¿Cómo hago una pizza casera?",
-      "timestamp_envio": "2023-10-29T18:00:00Z"
+      "timestamp_envio": "2023-10-29T18:30:10Z"
     },
     {
-      "mensaje_id": 7,
-      "conversacion_id": 3,
+      "mensaje_id": 1202,
+      "conversacion_id": 103,
       "remitente": "ia",
-      "contenido_texto": "Empieza con una buena harina y así sucesivamente...",
-      "timestamp_envio": "2023-10-29T18:00:30Z"
+      "contenido_texto": "Para la masa, mezcla harina, agua, levadura y sal. Déjala reposar 1 hora. Luego extiéndela y agrega salsa de tomate, queso mozzarella...",
+      "timestamp_envio": "2023-10-29T18:32:00Z"
+    },
+    {
+      "mensaje_id": 1203,
+      "conversacion_id": 103,
+      "remitente": "usuario",
+      "contenido_texto": "¿Y a qué temperatura horneo?",
+      "timestamp_envio": "2023-10-29T18:33:00Z"
+    },
+    {
+      "mensaje_id": 1204,
+      "conversacion_id": 103,
+      "remitente": "ia",
+      "contenido_texto": "Precalienta el horno a 250 °C y hornea la pizza 8–10 minutos, hasta que el queso burbujee y quede dorado.",
+      "timestamp_envio": "2023-10-29T18:35:00Z"
+    },
+
+    {
+      "mensaje_id": 1301,
+      "conversacion_id": 104,
+      "remitente": "usuario",
+      "contenido_texto": "¿Cómo calculo la velocidad final en caída libre?",
+      "timestamp_envio": "2023-10-27T09:20:30Z"
+    },
+    {
+      "mensaje_id": 1302,
+      "conversacion_id": 104,
+      "remitente": "ia",
+      "contenido_texto": "La fórmula es v = g · t si desprecias la resistencia del aire, donde g = 9.8 m/s² y t es el tiempo de caída.",
+      "timestamp_envio": "2023-10-27T09:21:00Z"
+    },
+    {
+      "mensaje_id": 1303,
+      "conversacion_id": 104,
+      "remitente": "usuario",
+      "contenido_texto": "¿Qué pasa si hay resistencia del aire?",
+      "timestamp_envio": "2023-10-27T09:21:30Z"
+    },
+    {
+      "mensaje_id": 1304,
+      "conversacion_id": 104,
+      "remitente": "ia",
+      "contenido_texto": "En ese caso usarías la ecuación v = √(2gh) para velocidad terminal o integrarías la fuerza de fricción proporcional a v².",
+      "timestamp_envio": "2023-10-27T09:22:00Z"
+    },
+
+    {
+      "mensaje_id": 1401,
+      "conversacion_id": 105,
+      "remitente": "usuario",
+      "contenido_texto": "Busco ideas de negocio online en 2023, ¿alguna recomendación?",
+      "timestamp_envio": "2023-10-30T11:45:20Z"
+    },
+    {
+      "mensaje_id": 1402,
+      "conversacion_id": 105,
+      "remitente": "ia",
+      "contenido_texto": "Un e-commerce de productos sostenibles, cursos en línea sobre programación o marketing digital, o servicios de consultoría remota.",
+      "timestamp_envio": "2023-10-30T11:48:00Z"
+    },
+    {
+      "mensaje_id": 1403,
+      "conversacion_id": 105,
+      "remitente": "usuario",
+      "contenido_texto": "¿Qué plataforma me conviene para vender cursos?",
+      "timestamp_envio": "2023-10-30T11:49:30Z"
+    },
+    {
+      "mensaje_id": 1404,
+      "conversacion_id": 105,
+      "remitente": "ia",
+      "contenido_texto": "Podrías usar Teachable, Udemy o Thinkific. Cada una tiene comisiones distintas y herramientas de promoción integradas.",
+      "timestamp_envio": "2023-10-30T11:50:00Z"
+    },
+
+    {
+      "mensaje_id": 1501,
+      "conversacion_id": 106,
+      "remitente": "usuario",
+      "contenido_texto": "¿Cómo resuelvo integrales definidas?",
+      "timestamp_envio": "2023-10-30T08:00:10Z"
+    },
+    {
+      "mensaje_id": 1502,
+      "conversacion_id": 106,
+      "remitente": "ia",
+      "contenido_texto": "Para ∫ₐᵇ f(x) dx, primero encuentras la antiderivada F(x) y luego calculas F(b) – F(a).",
+      "timestamp_envio": "2023-10-30T08:01:00Z"
+    },
+    {
+      "mensaje_id": 1503,
+      "conversacion_id": 106,
+      "remitente": "usuario",
+      "contenido_texto": "Un ejemplo con f(x)=2x sería ∫₀² 2x dx = ?",
+      "timestamp_envio": "2023-10-30T08:01:30Z"
+    },
+    {
+      "mensaje_id": 1504,
+      "conversacion_id": 106,
+      "remitente": "ia",
+      "contenido_texto": "La antiderivada de 2x es x². Entonces F(2)–F(0) = 2² – 0² = 4.",
+      "timestamp_envio": "2023-10-30T08:02:00Z"
+    },
+
+    {
+      "mensaje_id": 1601,
+      "conversacion_id": 107,
+      "remitente": "usuario",
+      "contenido_texto": "¿Cuáles son los huesos principales del cráneo?",
+      "timestamp_envio": "2023-10-29T14:10:15Z"
+    },
+    {
+      "mensaje_id": 1602,
+      "conversacion_id": 107,
+      "remitente": "ia",
+      "contenido_texto": "Entre los huesos principales están el frontal, parietales, temporales, occipital y esfenoides.",
+      "timestamp_envio": "2023-10-29T14:12:00Z"
+    },
+    {
+      "mensaje_id": 1603,
+      "conversacion_id": 107,
+      "remitente": "usuario",
+      "contenido_texto": "¿Algún consejo para estudiar anatomía?",
+      "timestamp_envio": "2023-10-29T14:13:00Z"
+    },
+    {
+      "mensaje_id": 1604,
+      "conversacion_id": 107,
+      "remitente": "ia",
+      "contenido_texto": "Usa modelos 3D interactivos, esquemas de colores y practica dibujando cada estructura para recordar mejor los huesos.",
+      "timestamp_envio": "2023-10-29T14:15:00Z"
     }
   ]
 }

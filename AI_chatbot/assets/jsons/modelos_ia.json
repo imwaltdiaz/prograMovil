@@ -8,14 +8,20 @@
     },
     {
       "modelo_ia_id": 2,
-      "nombre": "Asistente Avanzado",
-      "identificador_interno_modelo": "gpt-4",
+      "nombre": "Avanzado GPT-4",
+      "identificador_interno_modelo": "gpt-4o",
       "activo": true
     },
     {
       "modelo_ia_id": 3,
-      "nombre": "Asistente Experimental",
-      "identificador_interno_modelo": "gpt-4-experimental",
+      "nombre": "Azure OpenAI",
+      "identificador_interno_modelo": "azure-gpt-35",
+      "activo": true
+    },
+    {
+      "modelo_ia_id": 4,
+      "nombre": "Google Gemini",
+      "identificador_interno_modelo": "gemini-pro",
       "activo": false
     }
   ]

@@ -1,3 +1,5 @@
+// lib/models/conversacion.dart
+
 class Conversacion {
   int conversacion_id;
   int usuario_id;

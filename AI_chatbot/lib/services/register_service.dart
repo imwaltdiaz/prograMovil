@@ -24,6 +24,10 @@ class RegisterService {
     }
 
     // 3) Si no existe, creo mi nuevo objeto Usuario
+    //    Asigno la misma imagen por defecto para todos los nuevos:
+    const defaultImageUrl =
+        'https://images.seeklogo.com/logo-png/28/1/psyduck-logo-png_seeklogo-286537.png';
+
     final nuevoUsuario = Usuario(
       usuario_id: usuariosJson.length + 1,
       email: email,
@@ -31,6 +35,7 @@ class RegisterService {
       nombre: nombre,
       fecha_registro: DateTime.now().toUtc(),
       ultimo_acceso: null,
+      imagen_url: defaultImageUrl, // ← aquí ponemos el URL por defecto
     );
 
     // 4) Agrego el nuevo usuario al arreglo del JSON en memoria

@@ -15,6 +15,7 @@ import './pages/evaluation/evaluation.dart';
 import 'package:intl/intl.dart';
 import './pages/Chat/chat_page.dart';
 import './pages/profile/profile_page.dart';
+import './pages/share/share_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -66,6 +67,8 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/history', page: () => const HistoryPage()),
         GetPage(name: '/chat', page: () => const ChatPage()),
         GetPage(name: '/profile', page: () => const ProfilePage()),
+        GetPage(name: '/evaluation', page: () => const EvaluationPage()),
+        GetPage(name: '/share', page: () => const SharePage()),
       ],
     );
   }

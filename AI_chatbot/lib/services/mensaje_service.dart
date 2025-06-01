@@ -5,26 +5,28 @@ import 'package:flutter/services.dart';
 import '../models/mensaje.dart';
 
 class MensajeService {
-  /// Carga todos los mensajes desde JSON.
-  Future<List<Mensaje>> _loadAllMensajes() async {
-    final raw = await rootBundle.loadString('assets/jsons/mensajes.json');
-    final Map<String, dynamic> jsonMap =
-        json.decode(raw) as Map<String, dynamic>;
-    final List<dynamic> listaJson = jsonMap['mensajes'] as List<dynamic>;
-    return listaJson
+  /// Carga todos los mensajes del JSON y filtra por el conversacion_id
+  Future<List<Mensaje>> getMensajesPorConversacion(int conversacionId) async {
+    // 1) Leer el JSON completo de mensajes
+    final jsonData = await rootBundle.loadString('assets/jsons/mensajes.json');
+    final Map<String, dynamic> dataMap = json.decode(jsonData);
+
+    // 2) Tomar la lista de objetos “mensajes”
+    final List mensajesJson = dataMap['mensajes'] as List;
+
+    // 3) Filtrar sólo aquellos cuyo campo “conversacion_id” coincida
+    final List<Mensaje> resultado = mensajesJson
+        .where((m) => (m['conversacion_id'] as int) == conversacionId)
         .map((m) => Mensaje.fromJson(m as Map<String, dynamic>))
         .toList();
+
+    return resultado;
   }
 
-  /// Filtra y retorna únicamente los mensajes de esa conversación.
-  Future<List<Mensaje>> getMensajesPorConversacion(int conversacionId) async {
-    final todos = await _loadAllMensajes();
-    return todos.where((m) => m.conversacion_id == conversacionId).toList();
-  }
-
-  /// “Guarda” un nuevo mensaje (simulado). Retorna true si “exitoso”.
-  Future<bool> guardarMensaje(Mensaje mensaje) async {
-    // En entorno real, insertarías en la base de datos. Aquí devolvemos true:
-    return true;
+  /// En este mock, simplemente devolvemos true. (No reescribimos JSON real.)
+  Future<void> guardarMensaje(Mensaje mensaje) async {
+    // En un backend real harías un POST o modificarías la base de datos.
+    // Aquí no hacemos nada, sólo simulamos que “se guardó”.
+    return;
   }
 }

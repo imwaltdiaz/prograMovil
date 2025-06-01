@@ -1,18 +1,20 @@
+// lib/pages/evaluation/evaluation_controller.dart
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class EvaluationController extends GetxController {
-  // Controladores para el campo de comentario
-  TextEditingController commentController = TextEditingController();
+  /// Controlador para el TextField del comentario
+  final TextEditingController commentController = TextEditingController();
 
-  // Índice de la razón seleccionada (-1 = ninguna)
-  RxInt selectedReasonIndex = (-1).obs;
+  /// Índice de la razón seleccionada (-1 = ninguna)
+  final RxInt selectedReasonIndex = (-1).obs;
 
-  // Mensaje de validación / confirmación
-  RxString message = ''.obs;
+  /// Mensaje de validación o confirmación
+  final RxString message = ''.obs;
 
-  // Color del mensaje (por defecto, rojo para errores)
-  Rx<MaterialColor> messageColor = Colors.red.obs;
+  /// Color del texto del mensaje
+  final Rx<MaterialColor> messageColor = Colors.red.obs;
 
   @override
   void onClose() {
@@ -20,47 +22,45 @@ class EvaluationController extends GetxController {
     super.onClose();
   }
 
-  /// Llama a esta función al presionar el botón “ENVIAR”
+  /// Se invoca al presionar “ENVIAR”
   Future<void> submitEvaluation(BuildContext context) async {
-    // Validar que hayan seleccionado una razón
+    // 1) Validar que haya seleccionado una razón
     if (selectedReasonIndex.value < 0) {
       message.value = 'Por favor, selecciona una razón.';
       messageColor.value = Colors.red;
       return;
     }
 
-    // Obtener el texto del comentario (puede estar vacío)
+    // 2) Tomamos el texto del comentario (opcional)
     final commentText = commentController.text.trim();
 
-    // Simular envío a un servicio (por ejemplo, llamar a un API REST, base de datos local, etc.)
-    // Aquí solo haremos una pequeña demora para simular una petición asíncrona.
+    // 3) Simular llamada a servicio (p.ej. HTTP, DB local, etc.)
     try {
-      // Limpiar mensaje previo
+      // Limpiamos mensaje previo
       message.value = '';
-      
-      // Simulación de espera (por ejemplo, llamada HTTP)
+
+      // Simulación de demora / petición real
       await Future.delayed(const Duration(seconds: 1));
 
-      // Si se envió correctamente, mostramos mensaje de éxito
+      // Si todo sale bien:
       message.value = '¡Evaluación enviada correctamente!';
       messageColor.value = Colors.green;
 
-      // Opcional: Limpiar campos después del envío
+      // 4) Limpiar campos
       selectedReasonIndex.value = -1;
       commentController.clear();
 
-      // (Opcional) Si quieres redirigir o hacer algo más después de un tiempo
+      // (Opcional) Redirigir o cerrar pantalla luego de unos segundos
       // Future.delayed(const Duration(seconds: 2), () {
-      //   Navigator.pushReplacementNamed(context, '/otraRuta');
+      //   Get.back();
       // });
     } catch (e) {
-      // En caso de error al enviar
       message.value = 'Error al enviar: ${e.toString()}';
       messageColor.value = Colors.red;
     }
   }
 
-  /// Lógica para actualizar la razón seleccionada desde la UI
+  /// Actualizar la razón seleccionada
   void setReasonIndex(int index) {
     selectedReasonIndex.value = index;
   }

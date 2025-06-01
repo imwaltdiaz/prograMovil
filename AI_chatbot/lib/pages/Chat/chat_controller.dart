@@ -2,45 +2,35 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../models/mensaje.dart'; // Enum y clase Mensaje
-import '../../models/conversacion.dart'; // Clase Conversacion
-import '../../models/user.dart'; // Clase Usuario
-import '../../services/mensaje_service.dart'; // MensajeService que lee/guarda en JSON
+import '../../models/mensaje.dart';
+import '../../models/conversacion.dart';
+import '../../models/user.dart';
+import '../../services/mensaje_service.dart';
 
 class ChatController extends GetxController {
   final MensajeService _mensajeService = MensajeService();
 
-  /// El usuario que inició sesión (viene en Get.arguments['user'])
   late final Usuario user;
-
-  /// La conversación activa (viene en Get.arguments['conversacion'])
   late final Conversacion conversacion;
 
-  /// Lista reactiva de Mensaje para la conversación actual
   var mensajes = <Mensaje>[].obs;
-
-  /// Controller para el TextField de entrada de texto
   final TextEditingController messageTextController = TextEditingController();
 
   @override
   void onInit() {
     super.onInit();
-
     final args = Get.arguments;
     if (args is Map<String, dynamic>) {
       user = args['user'] as Usuario;
       conversacion = args['conversacion'] as Conversacion;
       _cargarMensajesDeConversacion(conversacion.conversacion_id);
     } else {
-      // Si no se recibieron argumentos válidos, volvemos atrás
-      mensajes.clear();
       Get.back();
     }
   }
 
-  Future<void> _cargarMensajesDeConversacion(int convId) async {
-    final lista = await _mensajeService.getMensajesPorConversacion(convId);
+  Future<void> _cargarMensajesDeConversacion(int converId) async {
+    final lista = await _mensajeService.getMensajesPorConversacion(converId);
     mensajes.assignAll(lista);
   }
 
@@ -48,17 +38,28 @@ class ChatController extends GetxController {
     final texto = messageTextController.text.trim();
     if (texto.isEmpty) return;
 
-    final nuevoMensaje = Mensaje(
+    final mensajeUsuario = Mensaje(
       mensaje_id: DateTime.now().millisecondsSinceEpoch,
       conversacion_id: conversacion.conversacion_id,
-      remitente: RemitenteType.usuario, // Aquí usamos el enum, no 'String'
+      remitente: RemitenteType.usuario,
       contenido_texto: texto,
-      timestamp_envio: DateTime.now(), // Aquí pasamos DateTime, no String
+      timestamp_envio: DateTime.now(),
     );
-
-    await _mensajeService.guardarMensaje(nuevoMensaje);
-    mensajes.add(nuevoMensaje);
+    mensajes.add(mensajeUsuario);
+    await _mensajeService.guardarMensaje(mensajeUsuario);
     messageTextController.clear();
+
+    final respuestaBot = Mensaje(
+      mensaje_id: DateTime.now().millisecondsSinceEpoch + 1,
+      conversacion_id: conversacion.conversacion_id,
+      remitente: RemitenteType.ia,
+      contenido_texto: 'Este es un mensaje predeterminado del modelo IA.',
+      timestamp_envio: DateTime.now().add(const Duration(milliseconds: 200)),
+    );
+    Future.delayed(const Duration(milliseconds: 300), () async {
+      mensajes.add(respuestaBot);
+      await _mensajeService.guardarMensaje(respuestaBot);
+    });
   }
 
   @override
