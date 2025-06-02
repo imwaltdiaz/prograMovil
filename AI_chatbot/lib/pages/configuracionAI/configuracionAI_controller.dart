@@ -22,7 +22,7 @@ class AIConfigController extends GetxController {
 
   /// API Key (placeholder inicial “••••••••••••”)
   final TextEditingController apiKeyController =
-      TextEditingController(text: '••••••••••••');
+      TextEditingController(text: 'xddxddxddxddxdd');
 
   /// Controla la visibilidad de la API Key
   RxBool isApiKeyVisible = false.obs;

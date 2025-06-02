@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'preferences_controller.dart';
-import '../../models/modelo_ia.dart';
 
 class PreferencesPage extends StatelessWidget {
   const PreferencesPage({super.key});
@@ -33,15 +32,7 @@ class PreferencesPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ─── Sección Perfil ─────────────────────────────────────────────
-              Text(
-                'Perfil',
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: colorScheme.onBackground,
-                ),
-              ),
-              const SizedBox(height: 12),
+              _buildSectionTitle('Perfil', textTheme, colorScheme),
               _buildNavigationTile(
                 icon: Icons.person,
                 title: 'Editar información',
@@ -50,15 +41,30 @@ class PreferencesPage extends StatelessWidget {
               ),
               const SizedBox(height: 32),
 
-              // ─── Sección Chatbot / Modelo IA ─────────────────────────────────
-              Text(
-                'Chatbot',
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: colorScheme.onBackground,
-                ),
-              ),
-              const SizedBox(height: 12),
+              _buildSectionTitle('Apariencia', textTheme, colorScheme),
+              Obx(() {
+                return Column(
+                  children: [
+                    RadioListTile<bool>(
+                      title: const Text('Tema claro'),
+                      value: false,
+                      groupValue: controller.isDarkMode.value,
+                      onChanged: (value) =>
+                          controller.isDarkMode.value = value!,
+                    ),
+                    RadioListTile<bool>(
+                      title: const Text('Tema oscuro'),
+                      value: true,
+                      groupValue: controller.isDarkMode.value,
+                      onChanged: (value) =>
+                          controller.isDarkMode.value = value!,
+                    ),
+                  ],
+                );
+              }),
+              const SizedBox(height: 32),
+
+              _buildSectionTitle('Chatbot', textTheme, colorScheme),
               _buildNavigationTile(
                 icon: Icons.memory,
                 title: 'Modelo de IA predeterminado',
@@ -67,15 +73,7 @@ class PreferencesPage extends StatelessWidget {
               ),
               const SizedBox(height: 32),
 
-              // ─── Sección Historial ────────────────────────────────────────────
-              Text(
-                'Historial',
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: colorScheme.onBackground,
-                ),
-              ),
-              const SizedBox(height: 12),
+              _buildSectionTitle('Historial', textTheme, colorScheme),
               _buildNavigationTile(
                 icon: Icons.history,
                 title: 'Historial de chat',
@@ -84,7 +82,36 @@ class PreferencesPage extends StatelessWidget {
               ),
               const SizedBox(height: 32),
 
-              // ─── Mensaje reactivo de confirmación/error ───────────────────────
+              _buildSectionTitle('Notificaciones', textTheme, colorScheme),
+              Obx(() {
+                return Column(
+                  children: [
+                    SwitchListTile(
+                      title: const Text('Mensajes nuevos'),
+                      value: controller.mensajesNuevos.value,
+                      onChanged: (value) =>
+                          controller.mensajesNuevos.value = value,
+                    ),
+                    SwitchListTile(
+                      title: const Text('Actualizaciones'),
+                      value: controller.actualizaciones.value,
+                      onChanged: (value) =>
+                          controller.actualizaciones.value = value,
+                    ),
+                  ],
+                );
+              }),
+              const SizedBox(height: 32),
+
+              _buildSectionTitle('Privacidad', textTheme, colorScheme),
+              _buildNavigationTile(
+                icon: Icons.privacy_tip,
+                title: 'Información de privacidad',
+                onTap: controller.goToPrivacy,
+                colorScheme: colorScheme,
+              ),
+              const SizedBox(height: 32),
+
               Obx(() {
                 if (controller.message.value.isEmpty) {
                   return const SizedBox.shrink();
@@ -108,19 +135,38 @@ class PreferencesPage extends StatelessWidget {
                 );
               }),
 
-              // ─── (Opcional) Botón “Guardar modelo IA” si quisieras mostrar combo aquí ─
-              // ElevatedButton(
-              //   onPressed: controller.guardarPreferencia,
-              //   style: ElevatedButton.styleFrom(
-              //     minimumSize: const Size(double.infinity, 48),
-              //     backgroundColor: colorScheme.primary,
-              //     foregroundColor: colorScheme.onPrimary,
-              //   ),
-              //   child: const Text('Guardar modelo IA'),
-              // ),
+              // ─── Botón Guardar cambios ─────────────────────────────────────
+              Center(
+                child: ElevatedButton(
+                  onPressed: controller.guardarPreferencia,
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 48),
+                    backgroundColor: colorScheme.primary,
+                    foregroundColor: colorScheme.onPrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: const Text('Guardar cambios'),
+                ),
+              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildSectionTitle(
+    String title,
+    TextTheme textTheme,
+    ColorScheme colorScheme,
+  ) {
+    return Text(
+      title,
+      style: textTheme.titleMedium?.copyWith(
+        fontWeight: FontWeight.w600,
+        color: colorScheme.onBackground,
       ),
     );
   }

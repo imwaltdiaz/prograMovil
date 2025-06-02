@@ -1,9 +1,10 @@
-// lib/pages/configuracionAI/configuracionAI_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'configuracionAI_controller.dart';
 import '../../models/modelo_ia.dart';
+
+// Color marrón personalizado
+const Color customPrimaryColor = Color(0xFF8B4513); // <- Marrón consistente
 
 class AIConfigPage extends StatelessWidget {
   const AIConfigPage({super.key});
@@ -51,7 +52,7 @@ class AIConfigPage extends StatelessWidget {
                     title: Text(label, style: textTheme.bodyMedium),
                     value: prov,
                     groupValue: ctrl.selectedProvider.value,
-                    activeColor: colorScheme.secondary,
+                    activeColor: customPrimaryColor, // Color marrón
                     onChanged: (v) {
                       if (v != null) ctrl.onProviderChanged(v);
                     },
@@ -107,8 +108,9 @@ class AIConfigPage extends StatelessWidget {
                   value: ctrl.selectedModelKey.value,
                   hint: Text(
                     'Selecciona un modelo',
-                    style: textTheme.bodyMedium
-                        ?.copyWith(color: colorScheme.onBackground),
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onBackground,
+                    ),
                   ),
                   underline: const SizedBox.shrink(),
                   dropdownColor: colorScheme.surface,
@@ -133,7 +135,6 @@ class AIConfigPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            // Campo con toggle de visibilidad
             Obx(() {
               return TextField(
                 controller: ctrl.apiKeyController,
@@ -160,8 +161,9 @@ class AIConfigPage extends StatelessWidget {
                     },
                   ),
                 ),
-                style: textTheme.bodyMedium
-                    ?.copyWith(color: colorScheme.onBackground),
+                style: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onBackground,
+                ),
               );
             }),
             const SizedBox(height: 24),
@@ -186,7 +188,7 @@ class AIConfigPage extends StatelessWidget {
                     ctrl.temperature.value.toStringAsFixed(1),
                     style: textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: colorScheme.secondary,
+                      color: customPrimaryColor, // Marrón en temperatura
                     ),
                   );
                 }),
@@ -195,11 +197,10 @@ class AIConfigPage extends StatelessWidget {
             Obx(() {
               return SliderTheme(
                 data: Theme.of(context).sliderTheme.copyWith(
-                      activeTrackColor: colorScheme.secondary,
-                      inactiveTrackColor:
-                          colorScheme.secondary.withOpacity(0.3),
-                      thumbColor: colorScheme.secondary,
-                      overlayColor: colorScheme.secondary.withAlpha(32),
+                      activeTrackColor: customPrimaryColor,
+                      inactiveTrackColor: customPrimaryColor.withOpacity(0.3),
+                      thumbColor: customPrimaryColor,
+                      overlayColor: customPrimaryColor.withAlpha(32),
                     ),
                 child: Slider(
                   value: ctrl.temperature.value,
@@ -223,7 +224,7 @@ class AIConfigPage extends StatelessWidget {
                     ctrl.maxTokens.value.round().toString(),
                     style: textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: colorScheme.secondary,
+                      color: customPrimaryColor, // Marrón en tokens
                     ),
                   );
                 }),
@@ -232,11 +233,10 @@ class AIConfigPage extends StatelessWidget {
             Obx(() {
               return SliderTheme(
                 data: Theme.of(context).sliderTheme.copyWith(
-                      activeTrackColor: colorScheme.secondary,
-                      inactiveTrackColor:
-                          colorScheme.secondary.withOpacity(0.3),
-                      thumbColor: colorScheme.secondary,
-                      overlayColor: colorScheme.secondary.withAlpha(32),
+                      activeTrackColor: customPrimaryColor,
+                      inactiveTrackColor: customPrimaryColor.withOpacity(0.3),
+                      thumbColor: customPrimaryColor,
+                      overlayColor: customPrimaryColor.withAlpha(32),
                     ),
                 child: Slider(
                   value: ctrl.maxTokens.value,
@@ -260,7 +260,7 @@ class AIConfigPage extends StatelessWidget {
                 ),
                 onPressed: () => ctrl.saveConfig(),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.secondary,
+                  backgroundColor: customPrimaryColor, // Marrón consistente
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 14),
                   textStyle: textTheme.labelLarge,
@@ -268,7 +268,7 @@ class AIConfigPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                   ),
                   elevation: 5,
-                  shadowColor: colorScheme.secondary.withOpacity(0.5),
+                  shadowColor: customPrimaryColor.withOpacity(0.5),
                 ),
               ),
             ),

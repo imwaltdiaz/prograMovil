@@ -17,10 +17,9 @@ import './pages/evaluation/evaluation.dart';
 import 'package:intl/intl.dart';
 import './pages/Chat/chat_page.dart';
 import './pages/profile/profile_page.dart';
-import './pages/share/share_page.dart';
-import './pages/evaluation/evaluation.dart';
 import './pages/compartir/compartir.dart';
 import './pages/configuracionAI/configuracionAI_page.dart';
+import './pages/privacidad/privacy_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -75,6 +74,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/evaluation', page: () => const EvaluationPage()),
         GetPage(name: '/compartir', page: () => const CompartirPage()),
         GetPage(name: '/configuracionAI', page: () => const AIConfigPage()),
+        GetPage(name: '/privacidad', page: () => const PrivacyPage()),
       ],
     );
   }
