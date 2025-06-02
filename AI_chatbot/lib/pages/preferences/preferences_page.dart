@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'preferences_controller.dart';
+import '../../models/modelo_ia.dart';
 
 class PreferencesPage extends StatelessWidget {
   const PreferencesPage({super.key});
@@ -31,13 +32,9 @@ class PreferencesPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-<<<<<<< Updated upstream
               // Sección Perfil
               _buildSectionTitle('Perfil', colorScheme),
               const SizedBox(height: 12),
-=======
-              _buildSectionTitle('Perfil', textTheme, colorScheme),
->>>>>>> Stashed changes
               _buildNavigationTile(
                 icon: Icons.person,
                 title: 'Editar información',
@@ -46,7 +43,6 @@ class PreferencesPage extends StatelessWidget {
               ),
               const SizedBox(height: 32),
 
-<<<<<<< Updated upstream
               // Sección Apariencia
               _buildSectionTitle('Apariencia', colorScheme),
               const SizedBox(height: 12),
@@ -68,30 +64,10 @@ class PreferencesPage extends StatelessWidget {
                       onChanged: (value) =>
                           controller.selectedTheme.value = value!,
                       colorScheme: colorScheme,
-=======
-              _buildSectionTitle('Apariencia', textTheme, colorScheme),
-              Obx(() {
-                return Column(
-                  children: [
-                    RadioListTile<bool>(
-                      title: const Text('Tema claro'),
-                      value: false,
-                      groupValue: controller.isDarkMode.value,
-                      onChanged: (value) =>
-                          controller.isDarkMode.value = value!,
-                    ),
-                    RadioListTile<bool>(
-                      title: const Text('Tema oscuro'),
-                      value: true,
-                      groupValue: controller.isDarkMode.value,
-                      onChanged: (value) =>
-                          controller.isDarkMode.value = value!,
->>>>>>> Stashed changes
                     ),
                   ],
                 );
               }),
-<<<<<<< Updated upstream
               const SizedBox(height: 32),
 
               // Sección Chatbot
@@ -148,20 +124,6 @@ class PreferencesPage extends StatelessWidget {
               const SizedBox(height: 8),
 
               // Historial de chat
-=======
-              const SizedBox(height: 32),
-
-              _buildSectionTitle('Chatbot', textTheme, colorScheme),
-              _buildNavigationTile(
-                icon: Icons.memory,
-                title: 'Modelo de IA predeterminado',
-                onTap: controller.goToAIConfig,
-                colorScheme: colorScheme,
-              ),
-              const SizedBox(height: 32),
-
-              _buildSectionTitle('Historial', textTheme, colorScheme),
->>>>>>> Stashed changes
               _buildNavigationTile(
                 icon: Icons.history,
                 title: 'Historial de chat',
@@ -170,42 +132,9 @@ class PreferencesPage extends StatelessWidget {
               ),
               const SizedBox(height: 32),
 
-<<<<<<< Updated upstream
               // Sección Notificaciones
               _buildSectionTitle('Notificaciones', colorScheme),
               const SizedBox(height: 12),
-=======
-              _buildSectionTitle('Notificaciones', textTheme, colorScheme),
-              Obx(() {
-                return Column(
-                  children: [
-                    SwitchListTile(
-                      title: const Text('Mensajes nuevos'),
-                      value: controller.mensajesNuevos.value,
-                      onChanged: (value) =>
-                          controller.mensajesNuevos.value = value,
-                    ),
-                    SwitchListTile(
-                      title: const Text('Actualizaciones'),
-                      value: controller.actualizaciones.value,
-                      onChanged: (value) =>
-                          controller.actualizaciones.value = value,
-                    ),
-                  ],
-                );
-              }),
-              const SizedBox(height: 32),
-
-              _buildSectionTitle('Privacidad', textTheme, colorScheme),
-              _buildNavigationTile(
-                icon: Icons.privacy_tip,
-                title: 'Información de privacidad',
-                onTap: controller.goToPrivacy,
-                colorScheme: colorScheme,
-              ),
-              const SizedBox(height: 32),
-
->>>>>>> Stashed changes
               Obx(() {
                 return Column(
                   children: [
@@ -228,7 +157,6 @@ class PreferencesPage extends StatelessWidget {
               }),
               const SizedBox(height: 32),
 
-<<<<<<< Updated upstream
               // Sección Privacidad
               _buildSectionTitle('Privacidad', colorScheme),
               const SizedBox(height: 12),
@@ -265,23 +193,6 @@ class PreferencesPage extends StatelessWidget {
                   ],
                 );
               }),
-=======
-              // ─── Botón Guardar cambios ─────────────────────────────────────
-              Center(
-                child: ElevatedButton(
-                  onPressed: controller.guardarPreferencia,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 48),
-                    backgroundColor: colorScheme.primary,
-                    foregroundColor: colorScheme.onPrimary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  child: const Text('Guardar cambios'),
-                ),
-              ),
->>>>>>> Stashed changes
             ],
           ),
         ),
@@ -289,24 +200,12 @@ class PreferencesPage extends StatelessWidget {
     );
   }
 
-<<<<<<< Updated upstream
   Widget _buildSectionTitle(String title, ColorScheme colorScheme) {
     return Text(
       title,
       style: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
-=======
-  Widget _buildSectionTitle(
-    String title,
-    TextTheme textTheme,
-    ColorScheme colorScheme,
-  ) {
-    return Text(
-      title,
-      style: textTheme.titleMedium?.copyWith(
-        fontWeight: FontWeight.w600,
->>>>>>> Stashed changes
         color: colorScheme.onBackground,
       ),
     );

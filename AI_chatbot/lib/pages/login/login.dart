@@ -1,3 +1,5 @@
+// lib/pages/login/login.dart
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'login_controller.dart';
@@ -26,25 +28,13 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 const SizedBox(height: 48),
                 Text(
-                  'BROER-BOT',
+                  'AI CHATBOT',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: colorScheme.onBackground,
                   ),
                 ),
-                const SizedBox(height: 24),
-
-                // Imagen circular debajo del título (sin sombra)
-                ClipOval(
-                  child: Image.asset(
-                    'assets/images/logo.png', // <-- Asegúrate que esté en tu carpeta assets
-                    width: 160,
-                    height: 160,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-
                 const SizedBox(height: 32),
 
                 // Campo Email

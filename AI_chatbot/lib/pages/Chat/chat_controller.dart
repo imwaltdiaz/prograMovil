@@ -58,7 +58,7 @@ class ChatController extends GetxController {
       mensaje_id: DateTime.now().millisecondsSinceEpoch + 1,
       conversacion_id: conversacion.conversacion_id,
       remitente: RemitenteType.ia,
-      contenido_texto: 'Hola soy BROER-BOT en que puedo ayudarte?',
+      contenido_texto: 'Este es un mensaje predeterminado del modelo IA.',
       timestamp_envio: DateTime.now().add(const Duration(milliseconds: 200)),
     );
     Future.delayed(const Duration(milliseconds: 300), () async {

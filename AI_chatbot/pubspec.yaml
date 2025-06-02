@@ -30,4 +30,3 @@ flutter:
     - assets/jsons/preferencias_usuario.json
     - assets/jsons/conversaciones.json
     - assets/jsons/mensajes.json
-    - assets/images/logo.png

@@ -26,21 +26,9 @@ class _RegisterPageState extends State<RegisterPage> {
               children: [
                 const SizedBox(height: 48),
 
-                // Logo circular (igual que en Login)
-                ClipOval(
-                  child: Image.asset(
-                    'assets/images/logo.png', // Asegúrate que esté en assets
-                    width: 160,
-                    height: 160,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
                 // Título de bienvenida
                 Text(
-                  'BIENVENIDO A BROER-BOT',
+                  'BIENVENIDO A AI CHATBOT',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,

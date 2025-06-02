@@ -21,7 +21,6 @@ import './pages/share/share_page.dart';
 import './pages/evaluation/evaluation.dart';
 import './pages/compartir/compartir.dart';
 import './pages/configuracionAI/configuracionAI_page.dart';
-import './pages/privacidad/privacidad_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -75,12 +74,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/profile', page: () => const ProfilePage()),
         GetPage(name: '/evaluation', page: () => const EvaluationPage()),
         GetPage(name: '/compartir', page: () => const CompartirPage()),
-<<<<<<< Updated upstream
         GetPage(name: '/configuracionAI', page: () => const AIConfigScreen()),
-=======
-        GetPage(name: '/configuracionAI', page: () => const AIConfigPage()),
-        GetPage(name: '/privacidad', page: () => const PrivacyPage()),
->>>>>>> Stashed changes
       ],
     );
   }
