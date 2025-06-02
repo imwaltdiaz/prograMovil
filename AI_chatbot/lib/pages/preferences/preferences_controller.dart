@@ -15,12 +15,17 @@ class PreferencesController extends GetxController {
   /// El usuario que vino en los argumentos de la ruta:
   late final Usuario user;
 
+<<<<<<< Updated upstream
   /// Lista de modelos IA disponibles:
+=======
+  /// Lista de modelos IA disponibles
+>>>>>>> Stashed changes
   var modelosIA = <ModeloIA>[].obs;
 
   /// Modelo IA seleccionado:
   Rx<ModeloIA?> modeloSeleccionado = Rx<ModeloIA?>(null);
 
+<<<<<<< Updated upstream
   /// Para mostrar mensaje de éxito/error:
   RxString message = ''.obs;
   Rx<MaterialColor> messageColor = Colors.red.obs;
@@ -29,11 +34,26 @@ class PreferencesController extends GetxController {
   final selectedTheme = 'dark'.obs; // 'light' o 'dark'
   final newMessagesNotifications = true.obs;
   final updatesNotifications = false.obs;
+=======
+  /// Mensaje de éxito/error
+  RxString message = ''.obs;
+  Rx<MaterialColor> messageColor = Colors.red.obs;
+
+  /// Estado de tema claro/oscuro
+  RxBool isDarkMode = false.obs;
+
+  /// Estado de notificaciones
+  RxBool mensajesNuevos = true.obs;
+  RxBool actualizaciones = false.obs;
+>>>>>>> Stashed changes
 
   @override
   void onInit() {
     super.onInit();
+<<<<<<< Updated upstream
     // 1) Leer los argumentos que nos pasó Get.toNamed('/preferences', arguments: usuario)
+=======
+>>>>>>> Stashed changes
     final args = Get.arguments;
     if (args is Usuario) {
       user = args;
@@ -41,23 +61,27 @@ class PreferencesController extends GetxController {
       _cargarPreferenciaUsuario();
       _cargarPreferenciasAdicionales();
     } else {
-      // Si no recibimos un Usuario válido, simplemente volvemos atrás
       Get.back();
     }
   }
 
+<<<<<<< Updated upstream
   /// Carga todos los modelos IA activos para la lista de selección
+=======
+>>>>>>> Stashed changes
   Future<void> _cargarModelosIA() async {
     final lista = await modeloIAService.getTodosModelosIA();
     modelosIA.assignAll(lista);
   }
 
-  /// Consulta la preferencia del usuario actual (su modelo IA por defecto)
   Future<void> _cargarPreferenciaUsuario() async {
     final PreferenciaUsuario? pref =
         await preferenciaService.getPreferenciaPorUsuario(user.usuario_id);
     if (pref != null) {
+<<<<<<< Updated upstream
       // Buscamos el objeto ModeloIA en la colección para asignarlo al Rx
+=======
+>>>>>>> Stashed changes
       final seleccionado = modelosIA.firstWhereOrNull(
         (m) => m.modelo_ia_id == pref.modelo_ia_default_id,
       );
@@ -65,6 +89,7 @@ class PreferencesController extends GetxController {
     }
   }
 
+<<<<<<< Updated upstream
   /// Carga las preferencias adicionales del usuario
   Future<void> _cargarPreferenciasAdicionales() async {
     // Aquí puedes cargar las preferencias adicionales desde tu servicio
@@ -78,14 +103,14 @@ class PreferencesController extends GetxController {
   }
 
   /// Cuando el usuario selecciona un nuevo modelo de la lista, lo guardamos:
+=======
+>>>>>>> Stashed changes
   Future<void> guardarPreferencia() async {
-    final seleccion = modeloSeleccionado.value;
-    if (seleccion == null) {
-      message.value = 'Debes elegir un modelo de IA.';
-      messageColor.value = Colors.red;
-      return;
-    }
+    // Por ahora este método solo muestra un mensaje de que se guardaron cambios
+    message.value = 'Cambios guardados (demo)';
+    messageColor.value = Colors.green;
 
+<<<<<<< Updated upstream
     try {
       // Guardar preferencia del modelo IA
       final bool exitoModelo =
@@ -113,11 +138,14 @@ class PreferencesController extends GetxController {
     }
 
     // Limpiar el mensaje después de 3 segundos
+=======
+>>>>>>> Stashed changes
     Future.delayed(const Duration(seconds: 3), () {
       message.value = '';
     });
   }
 
+<<<<<<< Updated upstream
   /// Guarda las preferencias adicionales del usuario
   Future<bool> _guardarPreferenciasAdicionales() async {
     try {
@@ -148,15 +176,17 @@ class PreferencesController extends GetxController {
   }
 
   /// Navegar a Historial
+=======
+>>>>>>> Stashed changes
   void goToHistory() {
     Get.toNamed('/history', arguments: user);
   }
 
-  /// Navegar a Editar Perfil
   void goToProfile() {
     Get.toNamed('/profile', arguments: user);
   }
 
+<<<<<<< Updated upstream
   // Nuevos métodos de navegación
   void goToResponseStyle() {
     Get.toNamed('/configuracionAI', arguments: user);
@@ -168,5 +198,14 @@ class PreferencesController extends GetxController {
 
   void goToPrivacySettings() {
     Get.toNamed('/privacy-settings', arguments: user);
+=======
+  void goToAIConfig() {
+    Get.toNamed('/configuracionAI', arguments: user);
+  }
+
+  void goToPrivacy() {
+    // Por ahora este podría ser un TODO, navegación sin implementar
+    Get.toNamed('/privacidad', arguments: user);
+>>>>>>> Stashed changes
   }
 }

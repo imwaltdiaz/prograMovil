@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+<<<<<<< Updated upstream
 // AIConfigScreen remains largely the same, but it's now a separate route
 class AIConfigScreen extends StatefulWidget {
   const AIConfigScreen({super.key});
@@ -52,6 +53,13 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
     _apiKeyController.dispose();
     super.dispose();
   }
+=======
+// Color marrón personalizado
+const Color customPrimaryColor = Color(0xFF8B4513); // <- Marrón consistente
+
+class AIConfigPage extends StatelessWidget {
+  const AIConfigPage({super.key});
+>>>>>>> Stashed changes
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +87,7 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
                   textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 10),
+<<<<<<< Updated upstream
             _buildProviderRadioListTile(
                 AIProvider.openAI, 'OpenAI', colorScheme.secondary),
             _buildProviderRadioListTile(
@@ -88,6 +97,26 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
             _buildProviderRadioListTile(AIProvider.googleGemini,
                 'Google Gemini', colorScheme.secondary),
             const SizedBox(height: 25),
+=======
+            Obx(() {
+              return Column(
+                children: AIProvider.values.map((prov) {
+                  final label = _labelForProvider(prov);
+                  return RadioListTile<AIProvider>(
+                    title: Text(label, style: textTheme.bodyMedium),
+                    value: prov,
+                    groupValue: ctrl.selectedProvider.value,
+                    activeColor: customPrimaryColor, // Color marrón
+                    onChanged: (v) {
+                      if (v != null) ctrl.onProviderChanged(v);
+                    },
+                    contentPadding: EdgeInsets.zero,
+                  );
+                }).toList(),
+              );
+            }),
+            const SizedBox(height: 24),
+>>>>>>> Stashed changes
 
             // Model Selection Section
             Text(
@@ -107,6 +136,7 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
                   border: Border.all(
                       color: colorScheme.onSurface.withOpacity(0.1), width: 1),
                 ),
+<<<<<<< Updated upstream
                 child: DropdownButtonFormField<String>(
                   value: _selectedModel,
                   icon: Icon(Icons.arrow_drop_down_rounded,
@@ -114,6 +144,16 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.zero,
+=======
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  value: ctrl.selectedModelKey.value,
+                  hint: Text(
+                    'Selecciona un modelo',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onBackground,
+                    ),
+>>>>>>> Stashed changes
                   ),
                   dropdownColor: colorScheme.surface,
                   borderRadius: BorderRadius.circular(8.0),
@@ -155,6 +195,7 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
                   textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 10),
+<<<<<<< Updated upstream
             TextField(
               controller: _apiKeyController,
               obscureText: true,
@@ -188,6 +229,40 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
               style: textTheme.bodyMedium,
             ),
             const SizedBox(height: 25),
+=======
+            Obx(() {
+              return TextField(
+                controller: ctrl.apiKeyController,
+                obscureText: !ctrl.isApiKeyVisible.value,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: colorScheme.surfaceVariant,
+                  hintText: 'Ingresa tu API Key',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      ctrl.isApiKeyVisible.value
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                      color: colorScheme.onSurface.withOpacity(0.6),
+                    ),
+                    onPressed: () {
+                      ctrl.isApiKeyVisible.toggle();
+                    },
+                  ),
+                ),
+                style: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onBackground,
+                ),
+              );
+            }),
+            const SizedBox(height: 24),
+>>>>>>> Stashed changes
 
             // Parameters Section
             Text(
@@ -203,6 +278,7 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
                 const SizedBox(width: 5),
                 Text(_temperature.toStringAsFixed(1),
                     style: textTheme.bodyMedium?.copyWith(
+<<<<<<< Updated upstream
                         fontWeight: FontWeight.w500,
                         color: colorScheme.secondary)),
               ],
@@ -228,6 +304,34 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
               ),
             ),
             const SizedBox(height: 15),
+=======
+                      fontWeight: FontWeight.w500,
+                      color: customPrimaryColor, // Marrón en temperatura
+                    ),
+                  );
+                }),
+              ],
+            ),
+            Obx(() {
+              return SliderTheme(
+                data: Theme.of(context).sliderTheme.copyWith(
+                      activeTrackColor: customPrimaryColor,
+                      inactiveTrackColor: customPrimaryColor.withOpacity(0.3),
+                      thumbColor: customPrimaryColor,
+                      overlayColor: customPrimaryColor.withAlpha(32),
+                    ),
+                child: Slider(
+                  value: ctrl.temperature.value,
+                  min: 0.0,
+                  max: 1.0,
+                  divisions: 10,
+                  label: ctrl.temperature.value.toStringAsFixed(1),
+                  onChanged: ctrl.onTemperatureChanged,
+                ),
+              );
+            }),
+            const SizedBox(height: 20),
+>>>>>>> Stashed changes
 
             // Max Tokens Slider
             Row(
@@ -236,6 +340,7 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
                 const SizedBox(width: 5),
                 Text(_maxTokens.round().toString(),
                     style: textTheme.bodyMedium?.copyWith(
+<<<<<<< Updated upstream
                         fontWeight: FontWeight.w500,
                         color: colorScheme.secondary)),
               ],
@@ -261,6 +366,34 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
               ),
             ),
             const SizedBox(height: 40),
+=======
+                      fontWeight: FontWeight.w500,
+                      color: customPrimaryColor, // Marrón en tokens
+                    ),
+                  );
+                }),
+              ],
+            ),
+            Obx(() {
+              return SliderTheme(
+                data: Theme.of(context).sliderTheme.copyWith(
+                      activeTrackColor: customPrimaryColor,
+                      inactiveTrackColor: customPrimaryColor.withOpacity(0.3),
+                      thumbColor: customPrimaryColor,
+                      overlayColor: customPrimaryColor.withAlpha(32),
+                    ),
+                child: Slider(
+                  value: ctrl.maxTokens.value,
+                  min: 256,
+                  max: 8192,
+                  divisions: (8192 - 256) ~/ 256,
+                  label: ctrl.maxTokens.value.round().toString(),
+                  onChanged: ctrl.onMaxTokensChanged,
+                ),
+              );
+            }),
+            const SizedBox(height: 36),
+>>>>>>> Stashed changes
 
             // Save Button
             Center(
@@ -286,7 +419,7 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: colorScheme.secondary,
+                  backgroundColor: customPrimaryColor, // Marrón consistente
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   textStyle: textTheme.labelLarge,
@@ -294,7 +427,7 @@ class _AIConfigScreenState extends State<AIConfigScreen> {
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   elevation: 5,
-                  shadowColor: colorScheme.secondary.withOpacity(0.5),
+                  shadowColor: customPrimaryColor.withOpacity(0.5),
                 ),
               ),
             ),
