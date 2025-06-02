@@ -2,27 +2,66 @@
   "modelos_ia": [
     {
       "modelo_ia_id": 1,
-      "nombre": "Asistente Básico",
-      "identificador_interno_modelo": "gpt-3.5-turbo",
+      "nombre": "GPT-4O (OpenAI)",
+      "identificador_interno_modelo": "gpt-4o",
+      "proveedor": "openAI",
       "activo": true
     },
     {
       "modelo_ia_id": 2,
-      "nombre": "Avanzado GPT-4",
-      "identificador_interno_modelo": "gpt-4o",
+      "nombre": "GPT-4 (OpenAI)",
+      "identificador_interno_modelo": "gpt-4",
+      "proveedor": "openAI",
       "activo": true
     },
     {
       "modelo_ia_id": 3,
-      "nombre": "Azure OpenAI",
-      "identificador_interno_modelo": "azure-gpt-35",
+      "nombre": "GPT-3.5 Turbo (OpenAI)",
+      "identificador_interno_modelo": "gpt-3.5-turbo",
+      "proveedor": "openAI",
       "activo": true
     },
     {
       "modelo_ia_id": 4,
-      "nombre": "Google Gemini",
-      "identificador_interno_modelo": "gemini-pro",
+      "nombre": "Azure GPT-4O",
+      "identificador_interno_modelo": "azure-gpt-4o",
+      "proveedor": "azureOpenAI",
+      "activo": true
+    },
+    {
+      "modelo_ia_id": 5,
+      "nombre": "Azure GPT-3.5-Turbo",
+      "identificador_interno_modelo": "azure-gpt-35-turbo",
+      "proveedor": "azureOpenAI",
+      "activo": true
+    },
+    {
+      "modelo_ia_id": 6,
+      "nombre": "Claude-3 Opus (Anthropic)",
+      "identificador_interno_modelo": "claude-3-opus",
+      "proveedor": "anthropic",
+      "activo": true
+    },
+    {
+      "modelo_ia_id": 7,
+      "nombre": "Claude-3 Sonnet (Anthropic)",
+      "identificador_interno_modelo": "claude-3-sonnet",
+      "proveedor": "anthropic",
       "activo": false
+    },
+    {
+      "modelo_ia_id": 8,
+      "nombre": "Gemini-1.5 Pro (Google)",
+      "identificador_interno_modelo": "gemini-1.5-pro",
+      "proveedor": "googleGemini",
+      "activo": true
+    },
+    {
+      "modelo_ia_id": 9,
+      "nombre": "Gemini-1.0 Pro (Google)",
+      "identificador_interno_modelo": "gemini-1.0-pro",
+      "proveedor": "googleGemini",
+      "activo": true
     }
   ]
 }

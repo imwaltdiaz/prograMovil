@@ -10,30 +10,37 @@ class PreferencesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final PreferencesController controller = Get.put(PreferencesController());
     final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
+      backgroundColor: colorScheme.background,
       appBar: AppBar(
         backgroundColor: colorScheme.background,
         elevation: 0,
         leading: const BackButton(color: Colors.black),
         title: Text(
           'Configuración',
-          style: TextStyle(
+          style: textTheme.titleLarge?.copyWith(
             color: colorScheme.onBackground,
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
       ),
-      backgroundColor: colorScheme.background,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Sección Perfil
-              _buildSectionTitle('Perfil', colorScheme),
+              // ─── Sección Perfil ─────────────────────────────────────────────
+              Text(
+                'Perfil',
+                style: textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.onBackground,
+                ),
+              ),
               const SizedBox(height: 12),
               _buildNavigationTile(
                 icon: Icons.person,
@@ -43,87 +50,32 @@ class PreferencesPage extends StatelessWidget {
               ),
               const SizedBox(height: 32),
 
-              // Sección Apariencia
-              _buildSectionTitle('Apariencia', colorScheme),
-              const SizedBox(height: 12),
-              Obx(() {
-                return Column(
-                  children: [
-                    _buildRadioTile(
-                      title: 'Tema claro',
-                      value: 'light',
-                      groupValue: controller.selectedTheme.value,
-                      onChanged: (value) =>
-                          controller.selectedTheme.value = value!,
-                      colorScheme: colorScheme,
-                    ),
-                    _buildRadioTile(
-                      title: 'Tema oscuro',
-                      value: 'dark',
-                      groupValue: controller.selectedTheme.value,
-                      onChanged: (value) =>
-                          controller.selectedTheme.value = value!,
-                      colorScheme: colorScheme,
-                    ),
-                  ],
-                );
-              }),
-              const SizedBox(height: 32),
-
-              // Sección Chatbot
-              _buildSectionTitle('Chatbot', colorScheme),
-              const SizedBox(height: 12),
-
-              // Modelo de IA predeterminado
+              // ─── Sección Chatbot / Modelo IA ─────────────────────────────────
               Text(
-                'Modelo de IA predeterminado',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                'Chatbot',
+                style: textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
                   color: colorScheme.onBackground,
                 ),
               ),
-              const SizedBox(height: 8),
-              Obx(() {
-                final List<ModeloIA> lista = controller.modelosIA;
-                final seleccionado = controller.modeloSeleccionado.value;
-
-                return DropdownButton<ModeloIA>(
-                  isExpanded: true,
-                  value: seleccionado,
-                  hint: const Text('Selecciona un modelo'),
-                  items: lista.map((m) {
-                    return DropdownMenuItem(
-                      value: m,
-                      child: Text(m.nombre),
-                    );
-                  }).toList(),
-                  onChanged: (nuevo) {
-                    controller.modeloSeleccionado.value = nuevo;
-                  },
-                );
-              }),
-              const SizedBox(height: 16),
-
-              // Estilo de respuesta
+              const SizedBox(height: 12),
               _buildNavigationTile(
-                icon: Icons.chat_bubble_outline,
-                title: 'Estilo de respuesta',
-                onTap: controller.goToResponseStyle,
+                icon: Icons.memory,
+                title: 'Modelo de IA predeterminado',
+                onTap: controller.goToAIConfig,
                 colorScheme: colorScheme,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 32),
 
-              // Longitud preferida
-              _buildNavigationTile(
-                icon: Icons.format_size,
-                title: 'Longitud preferida',
-                onTap: controller.goToPreferredLength,
-                colorScheme: colorScheme,
+              // ─── Sección Historial ────────────────────────────────────────────
+              Text(
+                'Historial',
+                style: textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.onBackground,
+                ),
               ),
-              const SizedBox(height: 8),
-
-              // Historial de chat
+              const SizedBox(height: 12),
               _buildNavigationTile(
                 icon: Icons.history,
                 title: 'Historial de chat',
@@ -132,81 +84,43 @@ class PreferencesPage extends StatelessWidget {
               ),
               const SizedBox(height: 32),
 
-              // Sección Notificaciones
-              _buildSectionTitle('Notificaciones', colorScheme),
-              const SizedBox(height: 12),
+              // ─── Mensaje reactivo de confirmación/error ───────────────────────
               Obx(() {
-                return Column(
-                  children: [
-                    _buildSwitchTile(
-                      title: 'Mensajes nuevos',
-                      value: controller.newMessagesNotifications.value,
-                      onChanged: (value) =>
-                          controller.newMessagesNotifications.value = value,
-                      colorScheme: colorScheme,
+                if (controller.message.value.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+                return Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: controller.messageColor.value.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    controller.message.value,
+                    style: TextStyle(
+                      color: controller.messageColor.value,
+                      fontSize: 14,
                     ),
-                    _buildSwitchTile(
-                      title: 'Actualizaciones',
-                      value: controller.updatesNotifications.value,
-                      onChanged: (value) =>
-                          controller.updatesNotifications.value = value,
-                      colorScheme: colorScheme,
-                    ),
-                  ],
+                  ),
                 );
               }),
-              const SizedBox(height: 32),
 
-              // Sección Privacidad
-              _buildSectionTitle('Privacidad', colorScheme),
-              const SizedBox(height: 12),
-              _buildNavigationTile(
-                icon: Icons.privacy_tip_outlined,
-                title: 'Configuración de privacidad',
-                onTap: controller.goToPrivacySettings,
-                colorScheme: colorScheme,
-              ),
-              const SizedBox(height: 32),
-
-              // Botón Guardar + mensaje reactivo
-              Obx(() {
-                return Column(
-                  children: [
-                    ElevatedButton(
-                      onPressed: controller.guardarPreferencia,
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 48),
-                        backgroundColor: colorScheme.primary,
-                        foregroundColor: colorScheme.onPrimary,
-                      ),
-                      child: const Text('Guardar cambios'),
-                    ),
-                    const SizedBox(height: 12),
-                    if (controller.message.value.isNotEmpty)
-                      Text(
-                        controller.message.value,
-                        style: TextStyle(
-                          color: controller.messageColor.value,
-                          fontSize: 14,
-                        ),
-                      ),
-                  ],
-                );
-              }),
+              // ─── (Opcional) Botón “Guardar modelo IA” si quisieras mostrar combo aquí ─
+              // ElevatedButton(
+              //   onPressed: controller.guardarPreferencia,
+              //   style: ElevatedButton.styleFrom(
+              //     minimumSize: const Size(double.infinity, 48),
+              //     backgroundColor: colorScheme.primary,
+              //     foregroundColor: colorScheme.onPrimary,
+              //   ),
+              //   child: const Text('Guardar modelo IA'),
+              // ),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(String title, ColorScheme colorScheme) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-        color: colorScheme.onBackground,
       ),
     );
   }
@@ -220,15 +134,16 @@ class PreferencesPage extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
-      child: Padding(
+      child: Container(
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: colorScheme.outline),
+        ),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         child: Row(
           children: [
-            Icon(
-              icon,
-              color: colorScheme.primary,
-              size: 20,
-            ),
+            Icon(icon, color: colorScheme.primary, size: 20),
             const SizedBox(width: 16),
             Expanded(
               child: Text(
@@ -247,50 +162,6 @@ class PreferencesPage extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildRadioTile({
-    required String title,
-    required String value,
-    required String groupValue,
-    required ValueChanged<String?> onChanged,
-    required ColorScheme colorScheme,
-  }) {
-    return RadioListTile<String>(
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 16,
-          color: colorScheme.onBackground,
-        ),
-      ),
-      value: value,
-      groupValue: groupValue,
-      onChanged: onChanged,
-      activeColor: colorScheme.primary,
-      contentPadding: EdgeInsets.zero,
-    );
-  }
-
-  Widget _buildSwitchTile({
-    required String title,
-    required bool value,
-    required ValueChanged<bool> onChanged,
-    required ColorScheme colorScheme,
-  }) {
-    return SwitchListTile(
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 16,
-          color: colorScheme.onBackground,
-        ),
-      ),
-      value: value,
-      onChanged: onChanged,
-      activeColor: colorScheme.primary,
-      contentPadding: EdgeInsets.zero,
     );
   }
 }

@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/profile', page: () => const ProfilePage()),
         GetPage(name: '/evaluation', page: () => const EvaluationPage()),
         GetPage(name: '/compartir', page: () => const CompartirPage()),
-        GetPage(name: '/configuracionAI', page: () => const AIConfigScreen()),
+        GetPage(name: '/configuracionAI', page: () => const AIConfigPage()),
       ],
     );
   }

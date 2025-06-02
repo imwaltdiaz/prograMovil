@@ -15,38 +15,33 @@ class PreferencesController extends GetxController {
   /// El usuario que vino en los argumentos de la ruta:
   late final Usuario user;
 
-  /// Lista de modelos IA disponibles:
+  /// Lista de modelos IA disponibles (por si quisieras mostrar algo aquí)
   var modelosIA = <ModeloIA>[].obs;
 
-  /// Modelo IA seleccionado:
-  Rx<ModeloIA?> modeloSeleccionado = Rx<ModeloIA?>(null);
+  /// Modelo IA actualmente seleccionado como preferido
+  Rx<ModeloIA?> modeloSeleccionado = Rxn<ModeloIA>();
 
-  /// Para mostrar mensaje de éxito/error:
+  /// Mensaje de éxito/error para mostrar en la pantalla
   RxString message = ''.obs;
   Rx<MaterialColor> messageColor = Colors.red.obs;
-
-  // Nuevas variables para las preferencias expandidas
-  final selectedTheme = 'dark'.obs; // 'light' o 'dark'
-  final newMessagesNotifications = true.obs;
-  final updatesNotifications = false.obs;
 
   @override
   void onInit() {
     super.onInit();
+
     // 1) Leer los argumentos que nos pasó Get.toNamed('/preferences', arguments: usuario)
     final args = Get.arguments;
     if (args is Usuario) {
       user = args;
       _cargarModelosIA();
       _cargarPreferenciaUsuario();
-      _cargarPreferenciasAdicionales();
     } else {
       // Si no recibimos un Usuario válido, simplemente volvemos atrás
       Get.back();
     }
   }
 
-  /// Carga todos los modelos IA activos para la lista de selección
+  /// Carga todos los modelos IA activos en memoria
   Future<void> _cargarModelosIA() async {
     final lista = await modeloIAService.getTodosModelosIA();
     modelosIA.assignAll(lista);
@@ -57,7 +52,7 @@ class PreferencesController extends GetxController {
     final PreferenciaUsuario? pref =
         await preferenciaService.getPreferenciaPorUsuario(user.usuario_id);
     if (pref != null) {
-      // Buscamos el objeto ModeloIA en la colección para asignarlo al Rx
+      // Buscamos el objeto ModeloIA en la colección para asignarlo
       final seleccionado = modelosIA.firstWhereOrNull(
         (m) => m.modelo_ia_id == pref.modelo_ia_default_id,
       );
@@ -65,19 +60,7 @@ class PreferencesController extends GetxController {
     }
   }
 
-  /// Carga las preferencias adicionales del usuario
-  Future<void> _cargarPreferenciasAdicionales() async {
-    // Aquí puedes cargar las preferencias adicionales desde tu servicio
-    // Por ejemplo, si tienes una tabla de configuraciones adicionales:
-    // final config = await preferenciaService.getConfiguracionUsuario(user.usuario_id);
-    // if (config != null) {
-    //   selectedTheme.value = config.tema ?? 'dark';
-    //   newMessagesNotifications.value = config.notificacionesMensajes ?? true;
-    //   updatesNotifications.value = config.notificacionesActualizaciones ?? false;
-    // }
-  }
-
-  /// Cuando el usuario selecciona un nuevo modelo de la lista, lo guardamos:
+  /// Guarda en JSON la preferencia de modelo IA del usuario
   Future<void> guardarPreferencia() async {
     final seleccion = modeloSeleccionado.value;
     if (seleccion == null) {
@@ -86,68 +69,26 @@ class PreferencesController extends GetxController {
       return;
     }
 
-    try {
-      // Guardar preferencia del modelo IA
-      final bool exitoModelo =
-          await preferenciaService.guardarPreferenciaUsuario(
-        user.usuario_id,
-        seleccion.modelo_ia_id,
-      );
+    final bool exito = await preferenciaService.guardarPreferenciaUsuario(
+      user.usuario_id,
+      seleccion.modelo_ia_id,
+    );
 
-      // Guardar preferencias adicionales
-      final bool exitoAdicionales = await _guardarPreferenciasAdicionales();
-
-      if (exitoModelo && exitoAdicionales) {
-        message.value = 'Preferencias guardadas correctamente';
-        messageColor.value = Colors.green;
-
-        // Aplicar el cambio de tema si es necesario
-        _aplicarCambioTema();
-      } else {
-        message.value = 'Error al guardar algunas preferencias';
-        messageColor.value = Colors.orange;
-      }
-    } catch (e) {
-      message.value = 'Error al guardar preferencias';
+    if (exito) {
+      message.value = 'Preferencia guardada';
+      messageColor.value = Colors.green;
+    } else {
+      message.value = 'Error al guardar preferencia';
       messageColor.value = Colors.red;
     }
 
-    // Limpiar el mensaje después de 3 segundos
+    // Limpiar mensaje después de 3 segundos
     Future.delayed(const Duration(seconds: 3), () {
       message.value = '';
     });
   }
 
-  /// Guarda las preferencias adicionales del usuario
-  Future<bool> _guardarPreferenciasAdicionales() async {
-    try {
-      // Aquí implementarías el guardado de las preferencias adicionales
-      // Esto podría ser en la misma tabla de preferencias o en una tabla separada
-      // Por ejemplo:
-      // return await preferenciaService.guardarConfiguracionUsuario(
-      //   user.usuario_id,
-      //   tema: selectedTheme.value,
-      //   notificacionesMensajes: newMessagesNotifications.value,
-      //   notificacionesActualizaciones: updatesNotifications.value,
-      // );
-
-      // Por ahora retornamos true como placeholder
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  /// Aplica el cambio de tema inmediatamente
-  void _aplicarCambioTema() {
-    if (selectedTheme.value == 'dark') {
-      Get.changeTheme(ThemeData.dark());
-    } else {
-      Get.changeTheme(ThemeData.light());
-    }
-  }
-
-  /// Navegar a Historial
+  /// Navegar a Historial de chat
   void goToHistory() {
     Get.toNamed('/history', arguments: user);
   }
@@ -157,16 +98,8 @@ class PreferencesController extends GetxController {
     Get.toNamed('/profile', arguments: user);
   }
 
-  // Nuevos métodos de navegación
-  void goToResponseStyle() {
+  /// Navegar a Configuración de IA
+  void goToAIConfig() {
     Get.toNamed('/configuracionAI', arguments: user);
-  }
-
-  void goToPreferredLength() {
-    Get.toNamed('/preferred-length', arguments: user);
-  }
-
-  void goToPrivacySettings() {
-    Get.toNamed('/privacy-settings', arguments: user);
   }
 }
