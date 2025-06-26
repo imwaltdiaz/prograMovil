@@ -1,0 +1,189 @@
+### ============================================
+### PRUEBAS COMPLETAS DEL BACKEND - AI CHATBOT
+### ============================================
+
+### 1. Verificar que el servidor funciona
+GET http://localhost:3001
+
+### ============================================
+### AUTENTICACIÓN
+### ============================================
+
+### 2. Registrar un nuevo usuario
+POST http://localhost:3001/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Sebastian Test",
+  "email": "sebastian@test.com",
+  "password": "123456"
+}
+
+### 3. Iniciar sesión
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "sebastian@test.com",
+  "password": "123456"
+}
+
+### 4. Verificar token (reemplaza TU_TOKEN_AQUI con el token del login)
+GET http://localhost:3001/api/auth/verify
+Authorization: Bearer TU_TOKEN_AQUI
+
+### ============================================
+### USUARIOS
+### ============================================
+
+### 5. Obtener perfil de usuario
+GET http://localhost:3001/api/users/profile
+Authorization: Bearer TU_TOKEN_AQUI
+
+### ============================================
+### MODELOS DE IA
+### ============================================
+
+### 6. Obtener modelos de IA activos (público)
+GET http://localhost:3001/api/ai-models
+
+### 7. Obtener todos los modelos (requiere auth)
+GET http://localhost:3001/api/ai-models/all
+Authorization: Bearer TU_TOKEN_AQUI
+
+### 8. Obtener modelo específico
+GET http://localhost:3001/api/ai-models/1
+
+### 9. Obtener modelos por proveedor
+GET http://localhost:3001/api/ai-models/provider/OpenAI
+
+### 10. Obtener modelo por defecto
+GET http://localhost:3001/api/ai-models/default
+
+### ============================================
+### PREFERENCIAS DE USUARIO
+### ============================================
+
+### 11. Obtener preferencias del usuario
+GET http://localhost:3001/api/preferences
+Authorization: Bearer TU_TOKEN_AQUI
+
+### 12. Obtener modelo por defecto del usuario
+GET http://localhost:3001/api/preferences/default-model
+Authorization: Bearer TU_TOKEN_AQUI
+
+### 13. Establecer preferencias (modelo por defecto)
+POST http://localhost:3001/api/preferences
+Content-Type: application/json
+Authorization: Bearer TU_TOKEN_AQUI
+
+{
+  "modelo_ia_default_id": 1
+}
+
+### ============================================
+### CONVERSACIONES
+### ============================================
+
+### 14. Crear nueva conversación
+POST http://localhost:3001/api/conversations
+Content-Type: application/json
+Authorization: Bearer TU_TOKEN_AQUI
+
+{
+  "titulo": "Mi primera conversación",
+  "modelo_ia_id": 1
+}
+
+### 15. Obtener todas las conversaciones del usuario
+GET http://localhost:3001/api/conversations
+Authorization: Bearer TU_TOKEN_AQUI
+
+### 16. Obtener conversación específica (reemplaza 1 con ID real)
+GET http://localhost:3001/api/conversations/1
+Authorization: Bearer TU_TOKEN_AQUI
+
+### 17. Eliminar conversación (reemplaza 1 con ID real)
+DELETE http://localhost:3001/api/conversations/1
+Authorization: Bearer TU_TOKEN_AQUI
+
+### ============================================
+### MENSAJES
+### ============================================
+
+### 18. Crear mensaje en conversación existente
+POST http://localhost:3001/api/messages
+Content-Type: application/json
+Authorization: Bearer TU_TOKEN_AQUI
+
+{
+  "conversacion_id": 1,
+  "contenido_texto": "Hola, ¿cómo estás?"
+}
+
+### 19. Obtener mensajes de una conversación
+GET http://localhost:3001/api/messages/conversation/1
+Authorization: Bearer TU_TOKEN_AQUI
+
+### 20. Obtener mensajes recientes del usuario
+GET http://localhost:3001/api/messages/recent?limit=20
+Authorization: Bearer TU_TOKEN_AQUI
+
+### ============================================
+### CHAT INTEGRADO
+### ============================================
+
+### 21. Enviar mensaje al chatbot (crea conversación automáticamente)
+POST http://localhost:3001/api/chat/message
+Content-Type: application/json
+Authorization: Bearer TU_TOKEN_AQUI
+
+{
+  "message": "Hola, soy nuevo en este chatbot"
+}
+
+### 22. Enviar mensaje a conversación existente
+POST http://localhost:3001/api/chat/message
+Content-Type: application/json
+Authorization: Bearer TU_TOKEN_AQUI
+
+{
+  "message": "¿Puedes ayudarme con una pregunta?",
+  "conversacion_id": 1
+}
+
+### 23. Obtener historial de chat
+GET http://localhost:3001/api/chat/history?limit=10&offset=0
+Authorization: Bearer TU_TOKEN_AQUI
+
+### 24. Obtener conversación completa del chat
+GET http://localhost:3001/api/chat/conversation/1
+Authorization: Bearer TU_TOKEN_AQUI
+
+### ============================================
+### CASOS DE ERROR (para testing)
+### ============================================
+
+### 25. Endpoint que no existe (debería dar 404)
+GET http://localhost:3001/api/noexiste
+
+### 26. Acceso sin token (debería dar 401)
+GET http://localhost:3001/api/users/profile
+
+### 27. Token inválido (debería dar 403)
+GET http://localhost:3001/api/users/profile
+Authorization: Bearer token_invalido
+
+### 28. Conversación que no existe
+GET http://localhost:3001/api/conversations/999
+Authorization: Bearer TU_TOKEN_AQUI
+
+### ============================================
+### INSTRUCCIONES DE USO
+### ============================================
+
+# 1. Ejecuta primero el registro (#2) o login (#3) para obtener un token
+# 2. Copia el token de la respuesta
+# 3. Reemplaza "TU_TOKEN_AQUI" en todos los endpoints que lo requieren
+# 4. Los IDs de conversaciones y mensajes cambiarán según lo que crees
+# 5. Algunos endpoints requieren que crees datos primero (ej: conversaciones antes de mensajes)
