@@ -66,17 +66,27 @@ app.get('/', (req, res) => {
 // Ruta para interactuar con GPT
 app.post('/api/gpt', async (req, res) => {
   try {
-    const { input } = req.body;
-    if (!input) {
-      return res.status(400).json({ error: 'Input is required' });
+    const { input, conversacion_id } = req.body;
+    if (!input || !conversacion_id) {
+      return res.status(400).json({ error: 'Input and conversation ID are required' });
     }
 
+    // Interactuar con GPT
     const response = await client.responses.create({
       model: 'gpt-4.1',
       input,
     });
 
-    res.json({ output: response.output_text });
+    const outputText = response.output_text;
+
+    // Insertar el mensaje en la base de datos
+    const timestampEnvio = new Date().toISOString();
+    await database.query(
+      `INSERT INTO mensajes (conversacion_id, remitente, contenido_texto, timestamp_envio) VALUES (?, ?, ?, ?)`,
+      [conversacion_id, 'ia', outputText, timestampEnvio]
+    );
+
+    res.json({ output: outputText });
   } catch (error) {
     console.error('Error interacting with GPT:', error);
     res.status(500).json({ error: 'Failed to interact with GPT' });

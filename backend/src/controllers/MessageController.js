@@ -1,5 +1,7 @@
 const Message = require('../models/Message');
 const Conversation = require('../models/Conversation');
+const OpenAI = require('openai');
+const client = new OpenAI();
 
 class MessageController {
   // ============================================
@@ -298,6 +300,72 @@ class MessageController {
       res.status(500).json({
         error: 'Error interno del servidor',
         message: 'No se pudo eliminar el mensaje'
+      });
+    }
+  }
+
+  // Generar mensaje con GPT y registrar en la base de datos
+  static async generateMessageWithGPT(req, res) {
+    try {
+      const { input, conversacion_id } = req.body;
+      const usuario_id = req.user.userId;
+
+      // Validaciones
+      if (!input || !conversacion_id) {
+        return res.status(400).json({
+          error: 'Input and conversation ID are required',
+          message: 'Se requiere un texto de entrada y un ID de conversación válido'
+        });
+      }
+
+      // Verificar que la conversación existe y pertenece al usuario
+      const conversation = await Conversation.findById(parseInt(conversacion_id));
+      if (!conversation) {
+        return res.status(404).json({
+          error: 'Conversation not found',
+          message: 'La conversación especificada no existe'
+        });
+      }
+
+      if (conversation.usuario_id !== usuario_id) {
+        return res.status(403).json({
+          error: 'Unauthorized',
+          message: 'No tienes permiso para interactuar con esta conversación'
+        });
+      }
+
+      // Interactuar con GPT
+      const response = await client.responses.create({
+        model: 'gpt-4.1',
+        input,
+      });
+
+      const outputText = response.output_text;
+
+      // Registrar el mensaje en la base de datos
+      const newMessage = await Message.create({
+        conversacion_id: parseInt(conversacion_id),
+        remitente: 'ia',
+        contenido_texto: outputText,
+        timestamp_envio: new Date().toISOString()
+      });
+
+      res.status(201).json({
+        message: 'Mensaje generado y registrado exitosamente',
+        data: {
+          mensaje_id: newMessage.mensaje_id,
+          conversacion_id: newMessage.conversacion_id,
+          remitente: newMessage.remitente,
+          contenido_texto: newMessage.contenido_texto,
+          timestamp_envio: newMessage.timestamp_envio
+        }
+      });
+
+    } catch (error) {
+      console.error('Error generando mensaje con GPT:', error);
+      res.status(500).json({
+        error: 'Internal Server Error',
+        message: 'No se pudo generar el mensaje'
       });
     }
   }
