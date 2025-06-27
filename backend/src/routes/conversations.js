@@ -10,7 +10,7 @@ const router = express.Router();
 // GET /api/conversations - Obtener todas las conversaciones del usuario
 router.get('/', authenticateToken, async (req, res) => {
   try {
-    const conversations = await Conversation.findByUserId(req.user.userId);
+    const conversations = await Conversation.findByUserId(req.user.id);
     
     res.json({
       message: 'Conversaciones obtenidas exitosamente',
@@ -42,7 +42,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
     }
 
     // Verificar que la conversación pertenece al usuario
-    if (conversation.usuario_id !== req.user.userId) {
+    if (conversation.usuario_id !== req.user.id) {
       return res.status(403).json({
         error: 'Acceso denegado',
         message: 'No tienes permisos para acceder a esta conversación'
@@ -77,7 +77,7 @@ router.post('/', authenticateToken, async (req, res) => {
     // Si no se especifica modelo, usar el por defecto del usuario
     let modeloId = modelo_ia_id;
     if (!modeloId) {
-      const defaultModel = await UserPreference.getUserDefaultModel(req.user.userId);
+      const defaultModel = await UserPreference.getUserDefaultModel(req.user.id);
       modeloId = defaultModel?.modelo_ia_id;
       
       if (!modeloId) {
@@ -95,7 +95,7 @@ router.post('/', authenticateToken, async (req, res) => {
 
     // Crear conversación
     const conversation = await Conversation.create({
-      usuario_id: req.user.userId,
+      usuario_id: req.user.id,
       modelo_ia_id: modeloId,
       titulo: titulo || 'Nueva conversación'
     });
@@ -136,7 +136,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
       });
     }
 
-    if (conversation.usuario_id !== req.user.userId) {
+    if (conversation.usuario_id !== req.user.id) {
       return res.status(403).json({
         error: 'Acceso denegado',
         message: 'No tienes permisos para modificar esta conversación'
@@ -176,7 +176,7 @@ router.delete('/:id', authenticateToken, async (req, res) => {
       });
     }
 
-    if (conversation.usuario_id !== req.user.userId) {
+    if (conversation.usuario_id !== req.user.id) {
       return res.status(403).json({
         error: 'Acceso denegado',
         message: 'No tienes permisos para eliminar esta conversación'

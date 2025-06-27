@@ -27,7 +27,7 @@ router.post('/message', authenticateToken, async (req, res) => {
       
       // Si no se especifica modelo, usar el por defecto del usuario
       if (!modeloId) {
-        const defaultModel = await UserPreference.getUserDefaultModel(req.user.userId);
+        const defaultModel = await UserPreference.getUserDefaultModel(req.user.id);
         modeloId = defaultModel?.modelo_ia_id;
         
         if (!modeloId) {
@@ -45,7 +45,7 @@ router.post('/message', authenticateToken, async (req, res) => {
 
       // Crear nueva conversación
       const conversation = await Conversation.create({
-        usuario_id: req.user.userId,
+        usuario_id: req.user.id,
         modelo_ia_id: modeloId,
         titulo: message.substring(0, 50) + '...' // Usar el inicio del mensaje como título
       });
@@ -61,7 +61,7 @@ router.post('/message', authenticateToken, async (req, res) => {
         });
       }
 
-      if (conversation.usuario_id !== req.user.userId) {
+      if (conversation.usuario_id !== req.user.id) {
         return res.status(403).json({
           error: 'Acceso denegado',
           message: 'No tienes permisos para enviar mensajes a esta conversación'
@@ -112,7 +112,7 @@ router.get('/history', authenticateToken, async (req, res) => {
     const { limit = 10, offset = 0 } = req.query;
     
     // Obtener conversaciones del usuario
-    const conversations = await Conversation.findByUserId(req.user.userId);
+    const conversations = await Conversation.findByUserId(req.user.id);
     
     // Aplicar paginación
     const paginatedConversations = conversations.slice(
@@ -164,7 +164,7 @@ router.get('/conversation/:id', authenticateToken, async (req, res) => {
     }
 
     // Verificar que pertenece al usuario
-    if (conversation.usuario_id !== req.user.userId) {
+    if (conversation.usuario_id !== req.user.id) {
       return res.status(403).json({
         error: 'Acceso denegado',
         message: 'No tienes permisos para acceder a esta conversación'

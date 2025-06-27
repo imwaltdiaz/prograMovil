@@ -28,6 +28,24 @@ Content-Type: application/json
   "password": "123456"
 }
 
+### 3b. Iniciar sesión con usuario existente (Juan Pérez)
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "usuario1@example.com",
+  "password": "123456"
+}
+
+### 3c. Iniciar sesión con usuario existente (Ana Gómez)
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "usuario2@example.com",
+  "password": "123456"
+}
+
 ### 4. Verificar token (reemplaza TU_TOKEN_AQUI con el token del login)
 GET http://localhost:3001/api/auth/verify
 Authorization: Bearer TU_TOKEN_AQUI
@@ -73,13 +91,17 @@ GET http://localhost:3001/api/preferences/default-model
 Authorization: Bearer TU_TOKEN_AQUI
 
 ### 13. Establecer preferencias (modelo por defecto)
-POST http://localhost:3001/api/preferences
+PUT http://localhost:3001/api/preferences
 Content-Type: application/json
 Authorization: Bearer TU_TOKEN_AQUI
 
 {
   "modelo_ia_default_id": 1
 }
+
+### 13b. Restablecer preferencias a valores por defecto
+POST http://localhost:3001/api/preferences/reset
+Authorization: Bearer TU_TOKEN_AQUI
 
 ### ============================================
 ### CONVERSACIONES
@@ -118,7 +140,8 @@ Authorization: Bearer TU_TOKEN_AQUI
 
 {
   "conversacion_id": 1,
-  "contenido_texto": "Hola, ¿cómo estás?"
+  "contenido_texto": "Hola, ¿cómo estás?",
+  "remitente": "user"
 }
 
 ### 19. Obtener mensajes de una conversación
@@ -130,10 +153,16 @@ GET http://localhost:3001/api/messages/recent?limit=20
 Authorization: Bearer TU_TOKEN_AQUI
 
 ### ============================================
-### CHAT INTEGRADO
+### CHAT INTEGRADO (SIMULADOR)
 ### ============================================
 
 ### 21. Enviar mensaje al chatbot (crea conversación automáticamente)
+# Este endpoint simula un chatbot con respuestas de prueba
+# - Crea una nueva conversación si no se especifica conversacion_id
+# - Guarda el mensaje del usuario
+# - Genera una respuesta automática de prueba
+# - Guarda la respuesta del "asistente"
+# - Retorna ambos mensajes
 POST http://localhost:3001/api/chat/message
 Content-Type: application/json
 Authorization: Bearer TU_TOKEN_AQUI
@@ -143,6 +172,9 @@ Authorization: Bearer TU_TOKEN_AQUI
 }
 
 ### 22. Enviar mensaje a conversación existente
+# Similar al anterior, pero en una conversación que ya existe
+# - Requiere conversacion_id válido del usuario
+# - Útil para continuar conversaciones iniciadas
 POST http://localhost:3001/api/chat/message
 Content-Type: application/json
 Authorization: Bearer TU_TOKEN_AQUI
@@ -187,3 +219,68 @@ Authorization: Bearer TU_TOKEN_AQUI
 # 3. Reemplaza "TU_TOKEN_AQUI" en todos los endpoints que lo requieren
 # 4. Los IDs de conversaciones y mensajes cambiarán según lo que crees
 # 5. Algunos endpoints requieren que crees datos primero (ej: conversaciones antes de mensajes)
+
+### ============================================
+### USUARIOS DISPONIBLES PARA TESTING
+### ============================================
+
+# Todos los usuarios tienen la contraseña: 123456
+# Los usuarios fueron creados previamente y sus contraseñas han sido hasheadas correctamente
+
+# Usuario 1:
+# Email: usuario1@example.com
+# Password: 123456
+# Nombre: Juan Pérez
+
+# Usuario 2:
+# Email: usuario2@example.com
+# Password: 123456
+# Nombre: Ana Gómez
+
+# Usuario 3:
+# Email: user3@test.com
+# Password: 123456
+# Nombre: Carlos Ruiz
+
+# Usuario 4:
+# Email: user4@test.com
+# Password: 123456
+# Nombre: Luisa Mendoza
+
+# Usuario 5:
+# Email: user5@test.com
+# Password: 123456
+# Nombre: Miguel Ángel
+
+### ============================================
+### NOTAS IMPORTANTES SOBRE ENDPOINTS
+### ============================================
+
+# PREFERENCIAS DE USUARIO:
+# - Usa PUT (no POST) para establecer preferencias: PUT /api/preferences
+# - GET /api/preferences: Obtener preferencias del usuario
+# - GET /api/preferences/default-model: Obtener solo el modelo por defecto
+# - POST /api/preferences/reset: Restablecer a valores por defecto
+
+# CONVERSACIONES:
+# - POST /api/conversations: Crear nueva conversación
+# - Se requiere modelo_ia_id válido (1, 2, 4, 5 están activos)
+# - Si no se especifica título, se genera automáticamente
+
+# MENSAJES:
+# - POST /api/messages: Crear mensaje manual
+# - Campo remitente puede ser "user" o "assistant" (por defecto: "user")
+# - GET /api/messages/conversation/:id: Obtener mensajes de conversación
+# - GET /api/messages/recent: Obtener mensajes recientes del usuario
+
+# CHAT INTEGRADO (SIMULADOR):
+# - POST /api/chat/message: Simula chatbot con respuestas de prueba
+# - Crea conversación automáticamente si no se especifica conversacion_id
+# - Guarda mensaje del usuario + genera respuesta automática de prueba
+# - Ideal para desarrollo frontend sin IA real
+
+# SOLUCIÓN DE PROBLEMAS APLICADA:
+# - ✅ Agregado método isActive() al modelo AIModel
+# - ✅ Corregida inconsistencia req.user.userId → req.user.id en rutas
+# - ✅ Simplificado endpoint de mensajes (eliminada redundancia)
+# - ✅ Aclarada funcionalidad de endpoints de chat (simulador)

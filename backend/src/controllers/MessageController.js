@@ -64,22 +64,21 @@ class MessageController {
   // Crear un nuevo mensaje
   static async createMessage(req, res) {
     try {
-      const { conversationId } = req.params;
-      const { remitente, contenido_texto } = req.body;
-      const usuario_id = req.user.id; // Corregido: usar id en lugar de userId
+      const { conversacion_id, contenido_texto, remitente = 'user' } = req.body;
+      const usuario_id = req.user.id;
 
       // Validaciones de negocio
-      if (!conversationId || isNaN(conversationId)) {
+      if (!conversacion_id || isNaN(conversacion_id)) {
         return res.status(400).json({
           error: 'ID de conversación inválido',
           message: 'Se requiere un ID de conversación válido'
         });
       }
 
-      if (!remitente || !contenido_texto) {
+      if (!contenido_texto || contenido_texto.trim().length === 0) {
         return res.status(400).json({
-          error: 'Datos incompletos',
-          message: 'Remitente y contenido son requeridos'
+          error: 'Contenido requerido',
+          message: 'El contenido del mensaje es requerido'
         });
       }
 
@@ -90,15 +89,8 @@ class MessageController {
         });
       }
 
-      if (contenido_texto.trim().length === 0) {
-        return res.status(400).json({
-          error: 'Contenido vacío',
-          message: 'El mensaje no puede estar vacío'
-        });
-      }
-
       // Verificar que la conversación existe y pertenece al usuario
-      const conversation = await Conversation.findById(parseInt(conversationId));
+      const conversation = await Conversation.findById(parseInt(conversacion_id));
       if (!conversation) {
         return res.status(404).json({
           error: 'Conversación no encontrada',
@@ -115,27 +107,27 @@ class MessageController {
 
       // Crear mensaje
       const newMessage = await Message.create({
-        conversacion_id: parseInt(conversationId),
+        conversacion_id: parseInt(conversacion_id),
         remitente: remitente.trim(),
         contenido_texto: contenido_texto.trim()
       });
 
-      // Lógica de negocio: actualizar la última actividad de la conversación
-      await Conversation.updateLastActivity(parseInt(conversationId));
+      // Actualizar última actualización de la conversación
+      await Conversation.updateLastActivity(parseInt(conversacion_id));
 
       res.status(201).json({
         message: 'Mensaje creado exitosamente',
-        data: {
+        message_data: {
           mensaje_id: newMessage.mensaje_id,
           conversacion_id: newMessage.conversacion_id,
           remitente: newMessage.remitente,
           contenido_texto: newMessage.contenido_texto,
-          timestamp_envio: newMessage.timestamp_envio
+          fecha_envio: newMessage.fecha_envio
         }
       });
 
     } catch (error) {
-      console.error('Error creando mensaje:', error);
+      console.error('Error al crear mensaje:', error);
       res.status(500).json({
         error: 'Error interno del servidor',
         message: 'No se pudo crear el mensaje'

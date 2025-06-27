@@ -133,6 +133,11 @@ class AIModel {
   // MÉTODOS DE INSTANCIA (SOLO ACCESO A DATOS)
   // ============================================
 
+  // Verificar si el modelo está activo
+  isActive() {
+    return this.activo === 1;
+  }
+
   // Obtener datos públicos del modelo
   getPublicData() {
     return {
