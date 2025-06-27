@@ -83,12 +83,12 @@ async function startServer() {
     
     // Iniciar servidor HTTP
     app.listen(PORT, () => {
-      console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
-      console.log(`📱 Entorno: ${process.env.NODE_ENV || 'development'}`);
-      console.log(`🔗 URL: http://localhost:${PORT}`);
+      console.log(`Servidor corriendo en puerto ${PORT}`);
+      console.log(`Entorno: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`URL: http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error('❌ Error al iniciar el servidor:', error);
+    console.error('Error al iniciar el servidor:', error);
     process.exit(1);
   }
 }
