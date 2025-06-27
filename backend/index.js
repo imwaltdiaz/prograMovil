@@ -1,5 +1,3 @@
-import OpenAI from "openai";
-
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -19,8 +17,9 @@ const messageRoutes = require('./src/routes/messages');
 const aiModelRoutes = require('./src/routes/ai-models');
 const preferenceRoutes = require('./src/routes/preferences');
 
-const OpenAI = require('openai');
-const client = new OpenAI();
+// Solo si necesitas OpenAI, descomenta estas líneas:
+// const OpenAI = require('openai');
+// const client = new OpenAI();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -63,7 +62,8 @@ app.get('/', (req, res) => {
   });
 });
 
-// Ruta para interactuar con GPT
+// Ruta para interactuar con GPT (comentada hasta instalar OpenAI)
+/*
 app.post('/api/gpt', async (req, res) => {
   try {
     const { input, conversacion_id } = req.body;
@@ -92,6 +92,7 @@ app.post('/api/gpt', async (req, res) => {
     res.status(500).json({ error: 'Failed to interact with GPT' });
   }
 });
+*/
 
 // Manejo de errores 404
 app.use((req, res) => {
