@@ -9,7 +9,7 @@ class UserPreferenceController {
   // Obtener preferencias del usuario
   static async getUserPreferences(req, res) {
     try {
-      const usuario_id = req.user.userId;
+      const usuario_id = req.user.id;
 
       const preferences = await UserPreference.findByUserId(usuario_id);
       
@@ -42,7 +42,7 @@ class UserPreferenceController {
   // Crear o actualizar preferencias (lógica de negocio upsert)
   static async updateUserPreferences(req, res) {
     try {
-      const usuario_id = req.user.userId;
+      const usuario_id = req.user.id;
       const { modelo_ia_default_id } = req.body;
 
       // Validaciones de negocio
@@ -106,7 +106,7 @@ class UserPreferenceController {
   // Obtener modelo por defecto del usuario con fallback
   static async getUserDefaultModel(req, res) {
     try {
-      const usuario_id = req.user.userId;
+      const usuario_id = req.user.id;
 
       const defaultModel = await UserPreference.getUserDefaultModel(usuario_id);
       
@@ -141,7 +141,7 @@ class UserPreferenceController {
   // Restablecer preferencias a valores por defecto
   static async resetUserPreferences(req, res) {
     try {
-      const usuario_id = req.user.userId;
+      const usuario_id = req.user.id;
 
       // Obtener el modelo por defecto del sistema
       const defaultModel = await AIModel.getDefault();

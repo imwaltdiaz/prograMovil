@@ -1,8 +1,14 @@
-const jwt = require('jsonwebtoken');
+const AuthController = require('../controllers/AuthController');
 
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+
+  console.log('🔍 Auth Debug:', {
+    authHeader,
+    token,
+    headers: req.headers
+  });
 
   if (!token) {
     return res.status(401).json({
@@ -11,29 +17,32 @@ const authenticateToken = (req, res, next) => {
     });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({
-        error: 'Token inválido',
-        message: 'El token proporcionado no es válido o ha expirado'
-      });
-    }
+  // Validar token simple
+  const userId = AuthController.validateToken(token);
+  console.log('🔍 Token validation result:', { token, userId });
+  
+  if (!userId) {
+    return res.status(403).json({
+      error: 'Token inválido',
+      message: 'El token proporcionado no es válido o ha expirado'
+    });
+  }
 
-    req.user = user;
-    next();
-  });
+  req.user = { id: userId };
+  console.log('🔍 User set in request:', req.user);
+  next();
 };
+
 
 const optionalAuth = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
   if (token) {
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-      if (!err) {
-        req.user = user;
-      }
-    });
+    const userId = AuthController.validateToken(token);
+    if (userId) {
+      req.user = { id: userId };
+    }
   }
 
   next();

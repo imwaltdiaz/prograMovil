@@ -7,7 +7,11 @@ const router = express.Router();
 // GET /api/users/profile - Obtener perfil del usuario autenticado
 router.get('/profile', authenticateToken, async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId);
+    console.log('🔍 Profile route - req.user:', req.user);
+    
+    const user = await User.findById(req.user.id);
+    console.log('🔍 User found in DB:', user);
+    
     if (!user) {
       return res.status(404).json({
         error: 'Usuario no encontrado',
@@ -17,7 +21,12 @@ router.get('/profile', authenticateToken, async (req, res) => {
 
     res.json({
       message: 'Perfil obtenido exitosamente',
-      user: user.toJSON()
+      user: {
+        usuario_id: user.usuario_id,
+        nombre: user.nombre,
+        email: user.email,
+        fecha_registro: user.fecha_registro
+      }
     });
 
   } catch (error) {

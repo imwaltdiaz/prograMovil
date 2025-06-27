@@ -2,6 +2,9 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
+// Almacén simple de tokens en memoria
+const activeTokens = new Map(); // token -> userId
+
 class AuthController {
   // ============================================
   // LÓGICA DE NEGOCIO - REGISTRO
@@ -113,7 +116,7 @@ class AuthController {
   // ============================================
   static async verifyToken(req, res) {
     try {
-      const user = await User.findById(req.user.userId);
+      const user = await User.findById(req.user.id);
       if (!user) {
         return res.status(404).json({
           error: 'Usuario no encontrado',
@@ -167,16 +170,31 @@ class AuthController {
     return null; // Sin errores
   }
 
-  // Generar token JWT
+  // Generar token simple de 5 caracteres
   static _generateToken(user) {
-    return jwt.sign(
-      { 
-        userId: user.usuario_id || user.id, 
-        email: user.email 
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: '24h' }
-    );
+    // Token simple de 5 caracteres (números y letras)
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let token = '';
+    for (let i = 0; i < 5; i++) {
+      token += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    
+    // Guardar token en memoria
+    const userId = user.usuario_id || user.id;
+    activeTokens.set(token, userId);
+    
+    console.log(`🔑 Token generado para usuario ${user.email || userId}: ${token}`);
+    return token;
+  }
+
+  // Validar token simple
+  static validateToken(token) {
+    return activeTokens.has(token) ? activeTokens.get(token) : null;
+  }
+
+  // Limpiar token
+  static removeToken(token) {
+    activeTokens.delete(token);
   }
 }
 

@@ -10,7 +10,7 @@ class MessageController {
   static async getConversationMessages(req, res) {
     try {
       const { conversationId } = req.params;
-      const usuario_id = req.user.userId;
+      const usuario_id = req.user.id; // Corregido: usar id en lugar de userId
 
       // Validaciones de negocio
       if (!conversationId || isNaN(conversationId)) {
@@ -66,7 +66,7 @@ class MessageController {
     try {
       const { conversationId } = req.params;
       const { remitente, contenido_texto } = req.body;
-      const usuario_id = req.user.userId;
+      const usuario_id = req.user.id; // Corregido: usar id en lugar de userId
 
       // Validaciones de negocio
       if (!conversationId || isNaN(conversationId)) {
@@ -146,7 +146,7 @@ class MessageController {
   // Obtener mensajes recientes del usuario
   static async getUserRecentMessages(req, res) {
     try {
-      const usuario_id = req.user.userId;
+      const usuario_id = req.user.id; // Corregido: usar id en lugar de userId
       const { limit } = req.query;
 
       // Validación y lógica de negocio para el límite
@@ -197,7 +197,7 @@ class MessageController {
   static async getConversationStats(req, res) {
     try {
       const { conversationId } = req.params;
-      const usuario_id = req.user.userId;
+      const usuario_id = req.user.id; // Corregido: usar id en lugar de userId
 
       // Validaciones de negocio
       if (!conversationId || isNaN(conversationId)) {
@@ -250,7 +250,7 @@ class MessageController {
   static async deleteMessage(req, res) {
     try {
       const { messageId } = req.params;
-      const usuario_id = req.user.userId;
+      const usuario_id = req.user.id; // Corregido: usar id en lugar de userId
 
       // Validaciones de negocio
       if (!messageId || isNaN(messageId)) {

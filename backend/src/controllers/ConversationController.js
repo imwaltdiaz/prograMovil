@@ -10,7 +10,7 @@ class ConversationController {
   static async getAll(req, res) {
     try {
       // Solo acceso a datos
-      const conversations = await Conversation.findByUserId(req.user.userId);
+      const conversations = await Conversation.findByUserId(req.user.id);
       
       // Lógica de negocio: enriquecer con información adicional
       const enrichedConversations = await Promise.all(
@@ -66,7 +66,7 @@ class ConversationController {
       }
 
       // Lógica de negocio: verificar pertenencia
-      if (!ConversationController._userOwnsConversation(conversation, req.user.userId)) {
+      if (!ConversationController._userOwnsConversation(conversation, req.user.id)) {
         return res.status(403).json({
           error: 'Acceso denegado',
           message: 'No tienes permisos para acceder a esta conversación'
@@ -101,7 +101,7 @@ class ConversationController {
       const { titulo, modelo_ia_id } = req.body;
 
       // Lógica de negocio: determinar modelo a usar
-      const modeloId = await ConversationController._determineModelToUse(modelo_ia_id, req.user.userId);
+      const modeloId = await ConversationController._determineModelToUse(modelo_ia_id, req.user.id);
       
       if (!modeloId) {
         return res.status(400).json({
@@ -115,7 +115,7 @@ class ConversationController {
 
       // Acceso a datos
       const conversation = await Conversation.create({
-        usuario_id: req.user.userId,
+        usuario_id: req.user.id,
         modelo_ia_id: modeloId,
         titulo: finalTitle
       });
@@ -166,7 +166,7 @@ class ConversationController {
         });
       }
 
-      if (!ConversationController._userOwnsConversation(conversation, req.user.userId)) {
+      if (!ConversationController._userOwnsConversation(conversation, req.user.id)) {
         return res.status(403).json({
           error: 'Acceso denegado',
           message: 'No tienes permisos para modificar esta conversación'
@@ -224,7 +224,7 @@ class ConversationController {
         });
       }
 
-      if (!ConversationController._userOwnsConversation(conversation, req.user.userId)) {
+      if (!ConversationController._userOwnsConversation(conversation, req.user.id)) {
         return res.status(403).json({
           error: 'Acceso denegado',
           message: 'No tienes permisos para eliminar esta conversación'
