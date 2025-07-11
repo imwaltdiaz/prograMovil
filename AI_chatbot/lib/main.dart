@@ -15,6 +15,8 @@ import './pages/login/login.dart';
 import './pages/preferences/preferences_page.dart';
 import './pages/preferences/preferences_binding.dart';
 import './pages/theme_settings/theme_settings_binding.dart';
+import './pages/ai_config/ai_config_page.dart';
+import './pages/ai_config/ai_config_binding.dart';
 import './pages/History/HistoryPage.dart';
 import './pages/evaluation/evaluation.dart';
 import './pages/Chat/chat_page.dart';
@@ -22,7 +24,6 @@ import './pages/profile/profile_page.dart';
 import './pages/change_password/change_password_page.dart';
 import './pages/theme_settings/theme_settings_page.dart';
 import './pages/compartir/compartir.dart';
-import './pages/configuracionAI/configuracionAI_page.dart';
 import './pages/privacidad/privacy_page.dart';
 
 void main() async {
@@ -87,7 +88,11 @@ class MyApp extends StatelessWidget {
           ),
           GetPage(name: '/evaluation', page: () => const EvaluationPage()),
           GetPage(name: '/compartir', page: () => const CompartirPage()),
-          GetPage(name: '/configuracionAI', page: () => const AIConfigPage()),
+          GetPage(
+            name: '/configuracionAI',
+            page: () => const AIConfigPage(),
+            binding: AIConfigBinding(),
+          ),
           GetPage(name: '/privacidad', page: () => const PrivacyPage()),
         ],
       ),
