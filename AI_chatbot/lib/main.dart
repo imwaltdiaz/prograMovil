@@ -5,83 +5,92 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart'; // Import de GetX
 
 // Importa tu archivo de tema y utilitarios
-import './configs/theme_1.dart';
-import './configs/util.dart';
+import './configs/app_theme.dart';
 import './services/api_service.dart';
+import './services/theme_service.dart';
 
 // Importa todas tus páginas
 import './pages/register/register.dart';
 import './pages/login/login.dart';
 import './pages/preferences/preferences_page.dart';
+import './pages/preferences/preferences_binding.dart';
+import './pages/theme_settings/theme_settings_binding.dart';
 import './pages/History/HistoryPage.dart';
 import './pages/evaluation/evaluation.dart';
 import './pages/Chat/chat_page.dart';
 import './pages/profile/profile_page.dart';
 import './pages/change_password/change_password_page.dart';
+import './pages/theme_settings/theme_settings_page.dart';
 import './pages/compartir/compartir.dart';
 import './pages/configuracionAI/configuracionAI_page.dart';
 import './pages/privacidad/privacy_page.dart';
 
-void main() {
-  // Inicializar el servicio de API
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Inicializar servicios
   ApiService().initialize();
+  await Get.putAsync(() => ThemeService().onInit().then((_) => ThemeService()));
 
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme =
-        createTextTheme(context, 'Abril Fatface', 'Allerta');
-    final MaterialTheme materialTheme = MaterialTheme(textTheme);
+    final ThemeService themeService = Get.find<ThemeService>();
 
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Hello World',
+    return Obx(
+      () => GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'BROER-BOT',
 
-      // ─── Temas ───────────────────────────────────────────────────────────────
-      theme: materialTheme.light(),
-      darkTheme: materialTheme.dark(),
-      themeMode: ThemeMode.system,
+        // ─── Temas ───────────────────────────────────────────────────────────────
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: themeService.themeMode,
 
-      // ─── Localización ────────────────────────────────────────────────────────
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('es', 'ES'),
-      ],
-      locale: const Locale('es', 'ES'),
+        // ─── Localización ────────────────────────────────────────────────────────
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('en', 'US'), Locale('es', 'ES')],
+        locale: const Locale('es', 'ES'),
 
-      // ─── Ruta inicial ─────────────────────────────────────────────────────────
-      initialRoute: '/login',
+        // ─── Ruta inicial ─────────────────────────────────────────────────────────
+        initialRoute: '/login',
 
-      // ─── Definición de rutas usando GetPage ─────────────────────────────────
-      getPages: [
-        GetPage(name: '/login', page: () => const LoginPage()),
-        GetPage(name: '/register', page: () => const RegisterPage()),
-        GetPage(name: '/preferences', page: () => const PreferencesPage()),
-        GetPage(name: '/history', page: () => const HistoryPage()),
-        GetPage(name: '/chat', page: () => const ChatPage()),
-        GetPage(name: '/profile', page: () => const ProfilePage()),
-        GetPage(
-            name: '/change-password', page: () => const ChangePasswordPage()),
-        GetPage(name: '/evaluation', page: () => const EvaluationPage()),
-        GetPage(name: '/compartir', page: () => const CompartirPage()),
-        GetPage(name: '/configuracionAI', page: () => const AIConfigPage()),
-        GetPage(name: '/privacidad', page: () => const PrivacyPage()),
-      ],
+        // ─── Definición de rutas usando GetPage ─────────────────────────────────
+        getPages: [
+          GetPage(name: '/login', page: () => const LoginPage()),
+          GetPage(name: '/register', page: () => const RegisterPage()),
+          GetPage(
+            name: '/preferences',
+            page: () => const PreferencesPage(),
+            binding: PreferencesBinding(),
+          ),
+          GetPage(name: '/history', page: () => const HistoryPage()),
+          GetPage(name: '/chat', page: () => const ChatPage()),
+          GetPage(name: '/profile', page: () => const ProfilePage()),
+          GetPage(
+            name: '/change-password',
+            page: () => const ChangePasswordPage(),
+          ),
+          GetPage(
+            name: '/theme-settings',
+            page: () => const ThemeSettingsPage(),
+            binding: ThemeSettingsBinding(),
+          ),
+          GetPage(name: '/evaluation', page: () => const EvaluationPage()),
+          GetPage(name: '/compartir', page: () => const CompartirPage()),
+          GetPage(name: '/configuracionAI', page: () => const AIConfigPage()),
+          GetPage(name: '/privacidad', page: () => const PrivacyPage()),
+        ],
+      ),
     );
   }
 }

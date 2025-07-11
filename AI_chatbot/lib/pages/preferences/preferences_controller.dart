@@ -83,6 +83,10 @@ class PreferencesController extends GetxController {
     Get.toNamed('/configuracionAI', arguments: user);
   }
 
+  void goToThemeSettings() {
+    Get.toNamed('/theme-settings');
+  }
+
   void goToPrivacy() {
     Get.toNamed('/privacidad', arguments: user);
   }

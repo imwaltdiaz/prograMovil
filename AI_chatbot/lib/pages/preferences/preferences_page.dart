@@ -7,7 +7,7 @@ class PreferencesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PreferencesController controller = Get.put(PreferencesController());
+    final PreferencesController controller = Get.find<PreferencesController>();
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
@@ -16,7 +16,7 @@ class PreferencesPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: colorScheme.background,
         elevation: 0,
-        leading: const BackButton(color: Colors.black),
+        leading: BackButton(color: colorScheme.onBackground),
         title: Text(
           'Configuración',
           style: textTheme.titleLarge?.copyWith(
@@ -42,26 +42,12 @@ class PreferencesPage extends StatelessWidget {
               const SizedBox(height: 32),
 
               _buildSectionTitle('Apariencia', textTheme, colorScheme),
-              Obx(() {
-                return Column(
-                  children: [
-                    RadioListTile<bool>(
-                      title: const Text('Tema claro'),
-                      value: false,
-                      groupValue: controller.isDarkMode.value,
-                      onChanged: (value) =>
-                          controller.isDarkMode.value = value!,
-                    ),
-                    RadioListTile<bool>(
-                      title: const Text('Tema oscuro'),
-                      value: true,
-                      groupValue: controller.isDarkMode.value,
-                      onChanged: (value) =>
-                          controller.isDarkMode.value = value!,
-                    ),
-                  ],
-                );
-              }),
+              _buildNavigationTile(
+                icon: Icons.palette,
+                title: 'Configuración de tema',
+                onTap: controller.goToThemeSettings,
+                colorScheme: colorScheme,
+              ),
               const SizedBox(height: 32),
 
               _buildSectionTitle('Chatbot', textTheme, colorScheme),
@@ -89,14 +75,14 @@ class PreferencesPage extends StatelessWidget {
                     SwitchListTile(
                       title: const Text('Mensajes nuevos'),
                       value: controller.mensajesNuevos.value,
-                      onChanged: (value) =>
-                          controller.mensajesNuevos.value = value,
+                      onChanged:
+                          (value) => controller.mensajesNuevos.value = value,
                     ),
                     SwitchListTile(
                       title: const Text('Actualizaciones'),
                       value: controller.actualizaciones.value,
-                      onChanged: (value) =>
-                          controller.actualizaciones.value = value,
+                      onChanged:
+                          (value) => controller.actualizaciones.value = value,
                     ),
                   ],
                 );
@@ -118,8 +104,10 @@ class PreferencesPage extends StatelessWidget {
                 }
                 return Container(
                   width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 12,
+                  ),
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
                     color: controller.messageColor.value.withOpacity(0.1),
@@ -194,10 +182,7 @@ class PreferencesPage extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: colorScheme.onBackground,
-                ),
+                style: TextStyle(fontSize: 16, color: colorScheme.onBackground),
               ),
             ),
             Icon(

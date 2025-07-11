@@ -39,8 +39,10 @@ class ChatPage extends StatelessWidget {
                   );
                 }
                 return ListView.builder(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 20,
+                  ),
                   itemCount: control.mensajes.length,
                   itemBuilder: (context, index) {
                     final msg = control.mensajes[index];
@@ -56,17 +58,19 @@ class ChatPage extends StatelessWidget {
                           maxWidth: MediaQuery.of(context).size.width * 0.8,
                         ),
                         decoration: BoxDecoration(
-                          color: isUser
-                              ? colorScheme.primary
-                              : colorScheme.surfaceVariant,
+                          color:
+                              isUser
+                                  ? colorScheme.primary
+                                  : colorScheme.surfaceVariant,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Text(
                           msg.contenido_texto,
                           style: TextStyle(
-                            color: isUser
-                                ? colorScheme.onPrimary
-                                : colorScheme.onSurfaceVariant,
+                            color:
+                                isUser
+                                    ? colorScheme.onPrimary
+                                    : colorScheme.onSurfaceVariant,
                             fontSize: 15,
                           ),
                         ),
@@ -92,8 +96,10 @@ class ChatPage extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
-                      icon:
-                          Icon(Icons.rate_review, color: colorScheme.onPrimary),
+                      icon: Icon(
+                        Icons.rate_review,
+                        color: colorScheme.onPrimary,
+                      ),
                       tooltip: 'Evaluar respuesta',
                       onPressed: () {
                         Get.toNamed('/evaluation');
@@ -116,8 +122,9 @@ class ChatPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(24),
                           borderSide: BorderSide(color: colorScheme.outline),
                         ),
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 16),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                        ),
                       ),
                       style: textTheme.bodyLarge?.copyWith(
                         color: colorScheme.onBackground,
