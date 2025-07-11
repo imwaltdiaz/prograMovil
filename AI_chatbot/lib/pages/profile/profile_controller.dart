@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/user.dart';
-import '../../services/usuario_service.dart';
+import '../../services/user_service.dart';
 
 class ProfileController extends GetxController {
-  final UsuarioService usuarioService = UsuarioService();
+  final UserService _userService = UserService();
 
   late final Usuario user;
 
@@ -18,6 +18,7 @@ class ProfileController extends GetxController {
 
   RxString message = ''.obs;
   Rx<MaterialColor> messageColor = Colors.red.obs;
+  RxBool isLoading = false.obs;
 
   @override
   void onInit() {
@@ -49,19 +50,33 @@ class ProfileController extends GetxController {
       return;
     }
 
+    isLoading.value = true;
+    message.value = '';
+
     // Actualizamos localmente el objeto user y luego persistimos
-    user.nombre = nuevoNombre;
-    user.email = nuevoEmail;
-    // Si hubieras agregado teléfono: user.telefono = txtPhone.text.trim();
+    try {
+      // Llamar al backend para actualizar el perfil
+      final response = await _userService.updateProfile(
+        nombre: nuevoNombre,
+        email: nuevoEmail,
+      );
 
-    final bool exito = await usuarioService.actualizarUsuario(user);
-
-    if (exito) {
-      message.value = 'Perfil actualizado';
-      messageColor.value = Colors.green;
-    } else {
-      message.value = 'Error al actualizar';
+      if (response.success && response.data != null) {
+        // Actualizar el objeto user local con los datos del backend
+        user.nombre = response.data!.nombre;
+        user.email = response.data!.email;
+        
+        message.value = 'Perfil actualizado exitosamente';
+        messageColor.value = Colors.green;
+      } else {
+        message.value = response.error ?? 'Error al actualizar perfil';
+        messageColor.value = Colors.red;
+      }
+    } catch (e) {
+      message.value = 'Error de conexión: $e';
       messageColor.value = Colors.red;
+    } finally {
+      isLoading.value = false;
     }
   }
 

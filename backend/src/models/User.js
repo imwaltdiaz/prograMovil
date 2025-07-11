@@ -106,6 +106,21 @@ class User {
     });
   }
 
+  // Actualizar perfil (nombre y email)
+  static async updateProfile(usuario_id, { nombre, email }) {
+    return new Promise((resolve, reject) => {
+      const query = `UPDATE usuarios SET nombre = ?, email = ? WHERE usuario_id = ?`;
+      
+      database.getDb().run(query, [nombre, email, usuario_id], function(err) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(this.changes > 0);
+        }
+      });
+    });
+  }
+
   // ============================================
   // MÉTODOS DE INSTANCIA (SOLO ACCESO A DATOS)
   // ============================================
