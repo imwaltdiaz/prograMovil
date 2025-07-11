@@ -42,23 +42,6 @@ class Database {
       }
     });
   }
-
-  close() {
-    return new Promise((resolve, reject) => {
-      if (this.db) {
-        this.db.close((err) => {
-          if (err) {
-            reject(err);
-          } else {
-            console.log('🔒 Conexión a la base de datos cerrada');
-            resolve();
-          }
-        });
-      } else {
-        resolve();
-      }
-    });
-  }
 }
 
 // Singleton instance

@@ -1,5 +1,6 @@
 const express = require('express');
 const { authenticateToken } = require('../middleware/auth');
+const { validateConversation, validateUpdateConversation, validateId } = require('../middleware/validation');
 const Conversation = require('../models/Conversation');
 const Message = require('../models/Message');
 const AIModel = require('../models/AIModel');
@@ -28,7 +29,7 @@ router.get('/', authenticateToken, async (req, res) => {
 });
 
 // GET /api/conversations/:id - Obtener una conversación específica con mensajes
-router.get('/:id', authenticateToken, async (req, res) => {
+router.get('/:id', authenticateToken, validateId, async (req, res) => {
   try {
     const { id } = req.params;
     
@@ -70,7 +71,7 @@ router.get('/:id', authenticateToken, async (req, res) => {
 });
 
 // POST /api/conversations - Crear nueva conversación
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken, validateConversation, async (req, res) => {
   try {
     const { titulo, modelo_ia_id } = req.body;
 
@@ -115,7 +116,7 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 // PUT /api/conversations/:id - Actualizar título de conversación
-router.put('/:id', authenticateToken, async (req, res) => {
+router.put('/:id', authenticateToken, validateUpdateConversation, async (req, res) => {
   try {
     const { id } = req.params;
     const { titulo } = req.body;
@@ -163,7 +164,7 @@ router.put('/:id', authenticateToken, async (req, res) => {
 });
 
 // DELETE /api/conversations/:id - Eliminar conversación
-router.delete('/:id', authenticateToken, async (req, res) => {
+router.delete('/:id', authenticateToken, validateId, async (req, res) => {
   try {
     const { id } = req.params;
 

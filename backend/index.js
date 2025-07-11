@@ -2,11 +2,15 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
 require('dotenv').config();
 
 // Importar configuración de base de datos
 const database = require('./src/config/database');
+
+// Importar middleware de errores
+const { globalErrorHandler } = require('./src/middleware/errorHandler');
 
 // Importar rutas
 const authRoutes = require('./src/routes/auth');
@@ -23,15 +27,30 @@ const PORT = process.env.PORT || 3001;
 // Middlewares de seguridad
 app.use(helmet());
 
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutos
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100, // límite de requests por IP
+  message: {
+    error: 'Demasiadas solicitudes',
+    message: 'Has excedido el límite de solicitudes. Intenta de nuevo más tarde.'
+  },
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+app.use('/api/', limiter);
+
 // CORS
 const corsOptions = {
   origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
   credentials: true,
+  optionsSuccessStatus: 200 // Para compatibilidad con navegadores legacy
 };
 app.use(cors(corsOptions));
 
 // Logging
-app.use(morgan('combined'));
+const logLevel = process.env.LOG_LEVEL || 'combined';
+app.use(morgan(logLevel));
 
 // Parseo de JSON
 app.use(express.json({ limit: '10mb' }));
@@ -59,21 +78,15 @@ app.get('/', (req, res) => {
 });
 
 // Manejo de errores 404
-app.use((req, res) => {
+app.use((req, res, next) => {
   res.status(404).json({
-    error: 'Endpoint not found',
-    message: `Route ${req.originalUrl} not found`
+    error: 'Endpoint no encontrado',
+    message: `La ruta ${req.originalUrl} no existe`
   });
 });
 
 // Manejo de errores globales
-app.use((error, req, res, next) => {
-  console.error('Error:', error);
-  res.status(error.status || 500).json({
-    error: 'Internal Server Error',
-    message: process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'
-  });
-});
+app.use(globalErrorHandler);
 
 // Iniciar servidor
 async function startServer() {

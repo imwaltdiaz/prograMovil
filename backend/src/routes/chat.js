@@ -1,5 +1,6 @@
 const express = require('express');
 const { authenticateToken } = require('../middleware/auth');
+const { validateMessage, validateId, validatePagination } = require('../middleware/validation');
 const Conversation = require('../models/Conversation');
 const Message = require('../models/Message');
 const UserPreference = require('../models/UserPreference');
@@ -8,7 +9,7 @@ const AIModel = require('../models/AIModel');
 const router = express.Router();
 
 // POST /api/chat/message - Enviar mensaje al chatbot
-router.post('/message', authenticateToken, async (req, res) => {
+router.post('/message', authenticateToken, validateMessage, async (req, res) => {
   try {
     const { message, conversacion_id, modelo_ia_id } = req.body;
 
@@ -107,7 +108,7 @@ router.post('/message', authenticateToken, async (req, res) => {
 });
 
 // GET /api/chat/history - Obtener historial de conversaciones
-router.get('/history', authenticateToken, async (req, res) => {
+router.get('/history', authenticateToken, validatePagination, async (req, res) => {
   try {
     const { limit = 10, offset = 0 } = req.query;
     
@@ -150,7 +151,7 @@ router.get('/history', authenticateToken, async (req, res) => {
 });
 
 // GET /api/chat/conversation/:id - Obtener conversación completa con mensajes
-router.get('/conversation/:id', authenticateToken, async (req, res) => {
+router.get('/conversation/:id', authenticateToken, validateId, async (req, res) => {
   try {
     const { id } = req.params;
     

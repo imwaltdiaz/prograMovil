@@ -2,9 +2,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
-// Almacén simple de tokens en memoria
-const activeTokens = new Map(); // token -> userId
-
 class AuthController {
   // ============================================
   // LÓGICA DE NEGOCIO - REGISTRO
@@ -29,7 +26,7 @@ class AuthController {
       }
 
       // Hash de la contraseña (lógica de negocio)
-      const saltRounds = 10;
+      const saltRounds = parseInt(process.env.BCRYPT_ROUNDS) || 10;
       const password_hash = await bcrypt.hash(password, saltRounds);
 
       // Crear usuario (solo acceso a datos)
@@ -170,31 +167,52 @@ class AuthController {
     return null; // Sin errores
   }
 
-  // Generar token simple de 5 caracteres
+  // Generar token JWT
   static _generateToken(user) {
-    // Token simple de 5 caracteres (números y letras)
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let token = '';
-    for (let i = 0; i < 5; i++) {
-      token += chars.charAt(Math.floor(Math.random() * chars.length));
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      throw new Error('JWT_SECRET no está configurado en las variables de entorno');
     }
+
+    const payload = {
+      userId: user.usuario_id || user.id,
+      email: user.email
+    };
     
-    // Guardar token en memoria
-    const userId = user.usuario_id || user.id;
-    activeTokens.set(token, userId);
+    const token = jwt.sign(
+      payload, 
+      jwtSecret,
+      { 
+        expiresIn: '24h',
+        issuer: 'ai-chatbot-backend'
+      }
+    );
     
-    console.log(`🔑 Token generado para usuario ${user.email || userId}: ${token}`);
+    console.log(`🔑 Token JWT generado para usuario ${user.email || payload.userId}`);
     return token;
   }
 
-  // Validar token simple
+  // Validar token JWT
   static validateToken(token) {
-    return activeTokens.has(token) ? activeTokens.get(token) : null;
+    try {
+      const jwtSecret = process.env.JWT_SECRET;
+      if (!jwtSecret) {
+        console.log('❌ JWT_SECRET no configurado');
+        return null;
+      }
+
+      const decoded = jwt.verify(token, jwtSecret);
+      return decoded.userId;
+    } catch (error) {
+      console.log('❌ Token inválido:', error.message);
+      return null;
+    }
   }
 
-  // Limpiar token
+  // Limpiar token (no necesario con JWT, pero mantenemos por compatibilidad)
   static removeToken(token) {
-    activeTokens.delete(token);
+    // Con JWT no necesitamos eliminar tokens del servidor
+    console.log('🗑️ Token eliminado (logout)');
   }
 }
 

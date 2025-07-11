@@ -1,5 +1,6 @@
 const express = require('express');
 const { authenticateToken } = require('../middleware/auth');
+const { validateId } = require('../middleware/validation');
 const AIModelController = require('../controllers/AIModelController');
 
 const router = express.Router();
@@ -17,9 +18,9 @@ router.get('/default', AIModelController.getDefaultModel);
 router.get('/provider/:provider', AIModelController.getModelsByProvider);
 
 // GET /api/ai-models/:id - Obtener modelo específico
-router.get('/:id', AIModelController.getModelById);
+router.get('/:id', validateId, AIModelController.getModelById);
 
 // GET /api/ai-models/:id/status - Verificar estado del modelo
-router.get('/:id/status', AIModelController.checkModelStatus);
+router.get('/:id/status', validateId, AIModelController.checkModelStatus);
 
 module.exports = router;
