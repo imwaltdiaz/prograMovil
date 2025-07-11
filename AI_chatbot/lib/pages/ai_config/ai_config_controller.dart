@@ -13,24 +13,24 @@ class AIConfigController extends GetxController {
 
   // Lista de proveedores disponibles
   var proveedores = <String>[].obs;
-  
+
   // Lista de modelos disponibles para el proveedor seleccionado
   var modelosDisponibles = <ModeloIA>[].obs;
-  
+
   // Proveedor seleccionado
   var proveedorSeleccionado = 'OpenAI'.obs;
-  
+
   // Modelo seleccionado
   Rx<ModeloIA?> modeloSeleccionado = Rxn<ModeloIA>();
-  
+
   // API Key del usuario (almacenada localmente)
   var apiKey = ''.obs;
   var apiKeyVisible = false.obs;
-  
+
   // Parámetros de IA
   var temperatura = 0.7.obs;
   var maxTokens = 4096.obs;
-  
+
   // Estados
   var isLoading = false.obs;
   var message = ''.obs;
@@ -53,13 +53,12 @@ class AIConfigController extends GetxController {
     try {
       // Cargar modelos y obtener proveedores únicos
       await _cargarModelos();
-      
+
       // Cargar preferencias del usuario
       await _cargarPreferenciasUsuario();
-      
+
       // Cargar configuración local (API Key y parámetros)
       await _cargarConfiguracionLocal();
-      
     } catch (e) {
       message.value = 'Error al cargar la configuración: $e';
       isSuccess.value = false;
@@ -71,14 +70,13 @@ class AIConfigController extends GetxController {
   Future<void> _cargarModelos() async {
     try {
       final modelos = await modeloIAService.getTodosModelosIA();
-      
+
       // Extraer proveedores únicos
       final providersSet = modelos.map((m) => m.proveedor).toSet();
       proveedores.assignAll(providersSet.toList());
-      
+
       // Cargar modelos para el proveedor por defecto
       await _cargarModelosPorProveedor(proveedorSeleccionado.value);
-      
     } catch (e) {
       print('Error cargando modelos: $e');
     }
@@ -87,9 +85,10 @@ class AIConfigController extends GetxController {
   Future<void> _cargarModelosPorProveedor(String proveedor) async {
     try {
       final modelos = await modeloIAService.getTodosModelosIA();
-      final modelosProveedor = modelos.where((m) => m.proveedor == proveedor).toList();
+      final modelosProveedor =
+          modelos.where((m) => m.proveedor == proveedor).toList();
       modelosDisponibles.assignAll(modelosProveedor);
-      
+
       // Si no hay modelo seleccionado, seleccionar el primero
       if (modeloSeleccionado.value == null && modelosProveedor.isNotEmpty) {
         modeloSeleccionado.value = modelosProveedor.first;
@@ -101,11 +100,13 @@ class AIConfigController extends GetxController {
 
   Future<void> _cargarPreferenciasUsuario() async {
     try {
-      final preferencia = await preferenciaService.getPreferenciaPorUsuario(user.usuario_id);
+      final preferencia =
+          await preferenciaService.getPreferenciaPorUsuario(user.usuario_id);
       if (preferencia != null) {
         // Buscar el modelo por ID en la lista de modelos cargados
         final modelos = await modeloIAService.getTodosModelosIA();
-        final modelo = modelos.firstWhereOrNull((m) => m.modelo_ia_id == preferencia.modelo_ia_default_id);
+        final modelo = modelos.firstWhereOrNull(
+            (m) => m.modelo_ia_id == preferencia.modelo_ia_default_id);
         if (modelo != null) {
           modeloSeleccionado.value = modelo;
           proveedorSeleccionado.value = modelo.proveedor;
@@ -187,7 +188,6 @@ class AIConfigController extends GetxController {
       Future.delayed(const Duration(seconds: 3), () {
         message.value = '';
       });
-
     } catch (e) {
       message.value = 'Error al guardar: $e';
       isSuccess.value = false;
@@ -213,12 +213,14 @@ class AIConfigController extends GetxController {
     if (modeloSeleccionado.value != null) {
       return '${modeloSeleccionado.value!.nombre} (${modeloSeleccionado.value!.proveedor})';
     }
-    return modelosDisponibles.isNotEmpty 
-      ? '${modelosDisponibles.first.nombre} (${modelosDisponibles.first.proveedor})'
-      : 'GPT-4O (OpenAI)';
+    return modelosDisponibles.isNotEmpty
+        ? '${modelosDisponibles.first.nombre} (${modelosDisponibles.first.proveedor})'
+        : 'GPT-4O (OpenAI)';
   }
 
   List<String> get modelosNombres {
-    return modelosDisponibles.map((m) => '${m.nombre} (${m.proveedor})').toList();
+    return modelosDisponibles
+        .map((m) => '${m.nombre} (${m.proveedor})')
+        .toList();
   }
 }
