@@ -11,7 +11,7 @@ class ChatController extends GetxController {
   final MensajeService _mensajeService = MensajeService();
 
   late final Usuario user;
-  late final Conversacion conversacion;
+  Conversacion? conversacion; // Permitir que sea null
   var mensajes = <Mensaje>[].obs;
   final TextEditingController messageTextController = TextEditingController();
 
@@ -21,10 +21,16 @@ class ChatController extends GetxController {
     final args = Get.arguments;
     if (args is Map<String, dynamic>) {
       user = args['user'] as Usuario;
-      conversacion = args['conversacion'] as Conversacion;
-      print(
-          '>> [ChatController] Usuario=${user.email}, ConversacionId=${conversacion.conversacion_id}');
-      _cargarMensajesDeConversacion(conversacion.conversacion_id);
+      conversacion = args['conversacion'] as Conversacion?; // Permitir null
+      
+      if (conversacion != null) {
+        print(
+            '>> [ChatController] Usuario=${user.email}, ConversacionId=${conversacion!.conversacion_id}');
+        _cargarMensajesDeConversacion(conversacion!.conversacion_id);
+      } else {
+        print('>> [ChatController] No hay conversación específica, creando nueva...');
+        // Aquí podrías crear una nueva conversación o mostrar un estado vacío
+      }
     } else {
       print(
           '>> [ChatController] No recibí argumentos válidos. Volviendo atrás.');
@@ -41,11 +47,11 @@ class ChatController extends GetxController {
 
   Future<void> sendMessage() async {
     final texto = messageTextController.text.trim();
-    if (texto.isEmpty) return;
+    if (texto.isEmpty || conversacion == null) return;
 
     final mensajeUsuario = Mensaje(
       mensaje_id: DateTime.now().millisecondsSinceEpoch,
-      conversacion_id: conversacion.conversacion_id,
+      conversacion_id: conversacion!.conversacion_id,
       remitente: RemitenteType.usuario,
       contenido_texto: texto,
       timestamp_envio: DateTime.now(),
@@ -56,7 +62,7 @@ class ChatController extends GetxController {
 
     final respuestaBot = Mensaje(
       mensaje_id: DateTime.now().millisecondsSinceEpoch + 1,
-      conversacion_id: conversacion.conversacion_id,
+      conversacion_id: conversacion!.conversacion_id,
       remitente: RemitenteType.ia,
       contenido_texto: 'Hola soy Broer-Bot, ¿en qué puedo ayudarte?',
       timestamp_envio: DateTime.now().add(const Duration(milliseconds: 200)),
@@ -65,7 +71,7 @@ class ChatController extends GetxController {
       mensajes.add(respuestaBot);
       await _mensajeService.guardarMensaje(respuestaBot);
       print(
-          '>> [ChatController] Se añadió mensaje IA para conversacion ${conversacion.conversacion_id}');
+          '>> [ChatController] Se añadió mensaje IA para conversacion ${conversacion!.conversacion_id}');
     });
   }
 

@@ -93,13 +93,22 @@ class _RegisterPageState extends State<RegisterPage> {
                   return Column(
                     children: [
                       ElevatedButton(
-                        onPressed: controller.register,
+                        onPressed: controller.isLoading.value ? null : controller.register,
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size(double.infinity, 48),
                           backgroundColor: colorScheme.primary,
                           foregroundColor: colorScheme.onPrimary,
                         ),
-                        child: const Text('Registrar'),
+                        child: controller.isLoading.value
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : const Text('Registrar'),
                       ),
                       const SizedBox(height: 12),
                       Text(

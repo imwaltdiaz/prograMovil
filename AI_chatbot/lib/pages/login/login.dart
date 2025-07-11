@@ -73,18 +73,45 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 24),
 
+                // DEBUG: Mostrar URL actual
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.only(bottom: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    'Debug: API URL = ${controller.getApiUrl()}',
+                    style: const TextStyle(fontSize: 10),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+
                 // Botón Ingresar + Mensaje reactivo
                 Obx(() {
                   return Column(
                     children: [
                       ElevatedButton(
-                        onPressed: controller.login,
+                        onPressed: controller.isLoading.value
+                            ? null
+                            : controller.login,
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size(double.infinity, 48),
                           backgroundColor: colorScheme.primary,
                           foregroundColor: colorScheme.onPrimary,
                         ),
-                        child: const Text('Ingresar'),
+                        child: controller.isLoading.value
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                ),
+                              )
+                            : const Text('Ingresar'),
                       ),
                       const SizedBox(height: 12),
                       Text(
@@ -93,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                           color: controller.messageColor.value,
                           fontSize: 14,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   );

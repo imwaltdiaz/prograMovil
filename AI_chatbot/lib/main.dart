@@ -7,6 +7,7 @@ import 'package:get/get.dart'; // Import de GetX
 // Importa tu archivo de tema y utilitarios
 import './configs/theme_1.dart';
 import './configs/util.dart';
+import './services/api_service.dart';
 
 // Importa todas tus páginas
 import './pages/register/register.dart';
@@ -14,7 +15,6 @@ import './pages/login/login.dart';
 import './pages/preferences/preferences_page.dart';
 import './pages/History/HistoryPage.dart';
 import './pages/evaluation/evaluation.dart';
-import 'package:intl/intl.dart';
 import './pages/Chat/chat_page.dart';
 import './pages/profile/profile_page.dart';
 import './pages/compartir/compartir.dart';
@@ -22,6 +22,9 @@ import './pages/configuracionAI/configuracionAI_page.dart';
 import './pages/privacidad/privacy_page.dart';
 
 void main() {
+  // Inicializar el servicio de API
+  ApiService().initialize();
+
   runApp(const MyApp());
 }
 

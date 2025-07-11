@@ -1,0 +1,2 @@
+C:/Users/Marcelo/Desktop/Progra. Movil/prograMovil/AI_chatbot/android/app/.cxx/Debug/703y2kxf/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/Marcelo/Desktop/Progra. Movil/prograMovil/AI_chatbot/android/app/.cxx/Debug/703y2kxf/armeabi-v7a/CMakeFiles/rebuild_cache.dir
