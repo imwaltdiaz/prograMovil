@@ -50,9 +50,9 @@ class RegisterController extends GetxController {
         message.value = 'Registro exitoso';
         messageColor.value = Colors.green;
 
-        // Navegar al historial
+        // Navegar directamente al chat
         await Future.delayed(const Duration(milliseconds: 500));
-        Get.offNamed('/history', arguments: {
+        Get.offNamed('/chat', arguments: {
           'user': response.data,
         });
       } else {

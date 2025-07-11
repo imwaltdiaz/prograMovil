@@ -54,9 +54,9 @@ class LoginController extends GetxController {
         message.value = 'Login exitoso';
         messageColor.value = Colors.green;
 
-        // Navegar al historial donde el usuario puede elegir una conversación
+        // Navegar directamente al chat
         await Future.delayed(const Duration(milliseconds: 500));
-        Get.offNamed('/history', arguments: {
+        Get.offNamed('/chat', arguments: {
           'user': response.data,
         });
       } else {

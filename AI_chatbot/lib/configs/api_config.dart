@@ -5,14 +5,15 @@ class ApiConfig {
   // Diferentes opciones para diferentes dispositivos
   static const String _localhost = 'http://localhost:3001';
   static const String _emulatorAndroid = 'http://10.0.2.2:3001';
-  static const String _realDevice = 'http://192.168.1.100:3001'; // Cambiar por tu IP local
-  
+  static const String _realDevice =
+      'http://192.168.1.100:3001'; // Cambiar por tu IP local
+
   // URL actual - cambiar según el dispositivo
   static String get baseUrl {
     // Puedes cambiar esto dinámicamente o usar _localhost, _realDevice
-    return _emulatorAndroid; 
+    return _emulatorAndroid;
   }
-  
+
   static const String apiVersion = '/api';
   static String get fullBaseUrl => '$baseUrl$apiVersion';
 

@@ -1,29 +1,85 @@
 // lib/services/mensaje_service.dart
 
-import 'dart:convert';
-import 'package:flutter/services.dart';
 import '../models/mensaje.dart';
+import '../configs/api_config.dart';
+import 'api_service.dart';
 
 class MensajeService {
+  final ApiService _apiService = ApiService();
+
   Future<List<Mensaje>> getMensajesPorConversacion(int conversacionId) async {
-    final jsonData = await rootBundle.loadString('assets/jsons/mensajes.json');
-    final Map<String, dynamic> dataMap = json.decode(jsonData);
-    final List mensajesJson = dataMap['mensajes'] as List;
+    try {
+      print(
+          '>> [MensajeService] Cargando mensajes para conversación $conversacionId desde API...');
 
-    print('>> [MensajeService] total mensajes en JSON: ${mensajesJson.length}');
-    final filtro = mensajesJson
-        .where((m) => (m['conversacion_id'] as int) == conversacionId);
-    print(
-        '>> [MensajeService] filtrados para conversacion $conversacionId: ${filtro.length}');
+      final response = await _apiService
+          .get('${ApiConfig.messages}/conversation/$conversacionId');
 
-    final List<Mensaje> resultado =
-        filtro.map((m) => Mensaje.fromJson(m as Map<String, dynamic>)).toList();
+      print('>> [MensajeService] Status Code: ${response.statusCode}');
+      print('>> [MensajeService] Response Data: ${response.data}');
 
-    return resultado;
+      if (response.statusCode == 200) {
+        final responseData = response.data;
+
+        // Manejar diferentes formatos de respuesta
+        List<dynamic> mensajesJson = [];
+
+        if (responseData is List) {
+          mensajesJson = responseData;
+        } else if (responseData is Map<String, dynamic>) {
+          mensajesJson = responseData['messages'] ??
+              responseData['data'] ??
+              responseData['mensajes'] ??
+              [];
+        }
+
+        final mensajes = mensajesJson
+            .map((json) => Mensaje.fromJson(json as Map<String, dynamic>))
+            .toList();
+
+        print(
+            '>> [MensajeService] ${mensajes.length} mensajes cargados desde API');
+        return mensajes;
+      } else {
+        print('>> [MensajeService] Error del servidor: ${response.statusCode}');
+        return [];
+      }
+    } catch (e) {
+      print('>> [MensajeService] Error cargando mensajes desde API: $e');
+      return [];
+    }
   }
 
-  Future<void> guardarMensaje(Mensaje mensaje) async {
-    // En este mock no escribimos nada en disco, sólo simulamos.
-    return;
+  Future<bool> guardarMensaje(Mensaje mensaje) async {
+    try {
+      print(
+          '>> [MensajeService] Guardando mensaje: ${mensaje.contenido_texto}');
+
+      final response = await _apiService.post(
+        ApiConfig.messages,
+        data: {
+          'conversacion_id': mensaje.conversacion_id,
+          'remitente':
+              mensaje.remitente.toString().split('.').last, // 'usuario' o 'ia'
+          'contenido_texto': mensaje.contenido_texto,
+          'timestamp_envio': mensaje.timestamp_envio.toIso8601String(),
+        },
+      );
+
+      print('>> [MensajeService] Status Code: ${response.statusCode}');
+      print('>> [MensajeService] Response Data: ${response.data}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('>> [MensajeService] Mensaje guardado exitosamente');
+        return true;
+      } else {
+        print(
+            '>> [MensajeService] Error guardando mensaje: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('>> [MensajeService] Error guardando mensaje: $e');
+      return false;
+    }
   }
 }

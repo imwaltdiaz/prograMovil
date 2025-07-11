@@ -14,7 +14,7 @@ class HistoryController extends GetxController {
   void onInit() {
     super.onInit();
     final args = Get.arguments;
-    
+
     // Manejar tanto Usuario directo como Map con 'user'
     if (args is Usuario) {
       user = args;
@@ -27,7 +27,7 @@ class HistoryController extends GetxController {
       Get.back();
       return;
     }
-    
+
     print(
         '>> [HistoryController] Usuario logueado: ${user.email} (id=${user.usuario_id})');
     _cargarConversaciones();
