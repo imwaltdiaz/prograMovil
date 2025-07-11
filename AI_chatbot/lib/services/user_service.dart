@@ -12,7 +12,7 @@ class UserService {
   Future<ApiResponse<Usuario>> getProfile() async {
     try {
       print('>> [UserService] Obteniendo perfil del usuario...');
-      
+
       final response = await _apiService.get(ApiConfig.usersProfile);
 
       print('>> [UserService] Status Code: ${response.statusCode}');
@@ -20,11 +20,12 @@ class UserService {
 
       if (response.statusCode == 200) {
         final responseData = response.data;
-        
-        if (responseData is Map<String, dynamic> && responseData['user'] != null) {
+
+        if (responseData is Map<String, dynamic> &&
+            responseData['user'] != null) {
           final userData = responseData['user'] as Map<String, dynamic>;
           final usuario = Usuario.fromJson(userData);
-          
+
           print('>> [UserService] Perfil obtenido: ${usuario.email}');
           return ApiResponse.success(usuario, 'Perfil obtenido exitosamente');
         } else {
@@ -49,7 +50,7 @@ class UserService {
   }) async {
     try {
       print('>> [UserService] Actualizando perfil: $nombre, $email');
-      
+
       final response = await _apiService.put(
         ApiConfig.usersProfile,
         data: {
@@ -63,15 +64,18 @@ class UserService {
 
       if (response.statusCode == 200) {
         final responseData = response.data;
-        
-        if (responseData is Map<String, dynamic> && responseData['user'] != null) {
+
+        if (responseData is Map<String, dynamic> &&
+            responseData['user'] != null) {
           final userData = responseData['user'] as Map<String, dynamic>;
           final usuario = Usuario.fromJson(userData);
-          
+
           print('>> [UserService] Perfil actualizado: ${usuario.email}');
-          return ApiResponse.success(usuario, 'Perfil actualizado exitosamente');
+          return ApiResponse.success(
+              usuario, 'Perfil actualizado exitosamente');
         } else {
-          return ApiResponse.error('Error: No se recibieron datos de usuario actualizados');
+          return ApiResponse.error(
+              'Error: No se recibieron datos de usuario actualizados');
         }
       } else {
         final errorData = response.data as Map<String, dynamic>?;
@@ -81,6 +85,45 @@ class UserService {
       }
     } catch (e) {
       print('>> [UserService] Error actualizando perfil: $e');
+      return ApiResponse.error('Error de conexión: $e');
+    }
+  }
+
+  /// Cambiar contraseña del usuario
+  Future<ApiResponse<String>> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    try {
+      print('>> [UserService] Cambiando contraseña...');
+
+      final response = await _apiService.put(
+        ApiConfig.usersChangePassword,
+        data: {
+          'currentPassword': currentPassword,
+          'newPassword': newPassword,
+        },
+      );
+
+      print('>> [UserService] Status Code: ${response.statusCode}');
+      print('>> [UserService] Response Data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        final responseData = response.data;
+        final message = responseData is Map<String, dynamic>
+            ? responseData['message'] ?? 'Contraseña cambiada exitosamente'
+            : 'Contraseña cambiada exitosamente';
+
+        print('>> [UserService] Contraseña cambiada exitosamente');
+        return ApiResponse.success(message, message);
+      } else {
+        final errorData = response.data as Map<String, dynamic>?;
+        return ApiResponse.error(
+          errorData?['message'] ?? 'Error cambiando contraseña',
+        );
+      }
+    } catch (e) {
+      print('>> [UserService] Error cambiando contraseña: $e');
       return ApiResponse.error('Error de conexión: $e');
     }
   }

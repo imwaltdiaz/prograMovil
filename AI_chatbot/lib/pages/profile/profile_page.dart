@@ -182,34 +182,65 @@ class ProfilePage extends StatelessWidget {
                   width: double.infinity,
                   height: 48,
                   child: Obx(() => ElevatedButton(
-                    onPressed: controller.isLoading.value 
-                        ? null 
-                        : () {
-                            controller.saveProfile();
-                          },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorScheme.primary,
+                        onPressed: controller.isLoading.value
+                            ? null
+                            : () {
+                                controller.saveProfile();
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colorScheme.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: controller.isLoading.value
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                ),
+                              )
+                            : Text(
+                                'Guardar cambios',
+                                style: textTheme.labelLarge?.copyWith(
+                                  color: colorScheme.onPrimary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                      )),
+                ),
+
+                const SizedBox(height: 16),
+
+                // ─── Botón "Cambiar contraseña" ────────────────────────────
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: OutlinedButton.icon(
+                    onPressed: () {
+                      controller.goToChangePassword();
+                    },
+                    icon: Icon(
+                      Icons.security,
+                      color: colorScheme.primary,
+                    ),
+                    label: Text(
+                      'Cambiar Contraseña',
+                      style: textTheme.labelLarge?.copyWith(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: colorScheme.primary),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: controller.isLoading.value
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          )
-                        : Text(
-                            'Guardar cambios',
-                            style: textTheme.labelLarge?.copyWith(
-                              color: colorScheme.onPrimary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                  )),
+                  ),
                 ),
 
                 const SizedBox(height: 16),

@@ -17,6 +17,7 @@ import './pages/History/HistoryPage.dart';
 import './pages/evaluation/evaluation.dart';
 import './pages/Chat/chat_page.dart';
 import './pages/profile/profile_page.dart';
+import './pages/change_password/change_password_page.dart';
 import './pages/compartir/compartir.dart';
 import './pages/configuracionAI/configuracionAI_page.dart';
 import './pages/privacidad/privacy_page.dart';
@@ -74,6 +75,8 @@ class _MyAppState extends State<MyApp> {
         GetPage(name: '/history', page: () => const HistoryPage()),
         GetPage(name: '/chat', page: () => const ChatPage()),
         GetPage(name: '/profile', page: () => const ProfilePage()),
+        GetPage(
+            name: '/change-password', page: () => const ChangePasswordPage()),
         GetPage(name: '/evaluation', page: () => const EvaluationPage()),
         GetPage(name: '/compartir', page: () => const CompartirPage()),
         GetPage(name: '/configuracionAI', page: () => const AIConfigPage()),

@@ -65,7 +65,7 @@ class ProfileController extends GetxController {
         // Actualizar el objeto user local con los datos del backend
         user.nombre = response.data!.nombre;
         user.email = response.data!.email;
-        
+
         message.value = 'Perfil actualizado exitosamente';
         messageColor.value = Colors.green;
       } else {
@@ -82,6 +82,11 @@ class ProfileController extends GetxController {
 
   void goToPreferences() {
     Get.offNamed('/preferences', arguments: user);
+  }
+
+  /// Navegar a la página de cambio de contraseña
+  void goToChangePassword() {
+    Get.toNamed('/change-password');
   }
 
   @override

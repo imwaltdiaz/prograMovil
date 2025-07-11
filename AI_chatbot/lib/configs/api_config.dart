@@ -24,6 +24,7 @@ class ApiConfig {
 
   // Endpoints de usuarios
   static const String usersProfile = '/users/profile';
+  static const String usersChangePassword = '/users/change-password';
 
   // Endpoints de chat
   static const String chatMessage = '/chat/message';
