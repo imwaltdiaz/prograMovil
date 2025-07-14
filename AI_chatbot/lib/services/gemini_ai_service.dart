@@ -7,7 +7,7 @@ class GeminiAIService {
       'https://generativelanguage.googleapis.com/v1beta';
 
   // 🔑 COLOCA TU API KEY AQUÍ (Para pruebas rápidas)
-  static const String _hardcodedApiKey = 'xddddddddd';
+  static const String _hardcodedApiKey = 'xddddddddddddddddddddddddddddddddddd';
 
   /// Obtener la configuración del usuario desde SharedPreferences
   Future<Map<String, dynamic>> _getUserConfig() async {

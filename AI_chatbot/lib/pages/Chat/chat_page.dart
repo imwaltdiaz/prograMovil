@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 import 'chat_controller.dart';
 import '../../models/mensaje.dart';
@@ -64,15 +65,39 @@ class ChatPage extends StatelessWidget {
                                 : colorScheme.surfaceVariant,
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child: Text(
-                            msg.contenido_texto,
-                            style: TextStyle(
-                              color: isUser
-                                  ? colorScheme.onPrimary
-                                  : colorScheme.onSurfaceVariant,
-                              fontSize: 15,
-                            ),
-                          ),
+                          child: isUser 
+                              ? Text(
+                                  msg.contenido_texto,
+                                  style: TextStyle(
+                                    color: colorScheme.onPrimary,
+                                    fontSize: 15,
+                                  ),
+                                )
+                              : MarkdownBody(
+                                  data: msg.contenido_texto,
+                                  styleSheet: MarkdownStyleSheet(
+                                    p: TextStyle(
+                                      color: colorScheme.onSurfaceVariant,
+                                      fontSize: 15,
+                                    ),
+                                    strong: TextStyle(
+                                      color: colorScheme.onSurfaceVariant,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    em: TextStyle(
+                                      color: colorScheme.onSurfaceVariant,
+                                      fontSize: 15,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                    code: TextStyle(
+                                      color: colorScheme.onSurfaceVariant,
+                                      fontSize: 14,
+                                      fontFamily: 'monospace',
+                                      backgroundColor: colorScheme.surface,
+                                    ),
+                                  ),
+                                ),
                         ),
                       );
                     }).toList(),

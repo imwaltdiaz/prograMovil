@@ -12,8 +12,7 @@ class ConversacionService {
       print(
           '>> [ConversacionService] Cargando conversaciones para usuario $usuarioId desde API...');
 
-      final response = await _apiService
-          .get('${ApiConfig.conversations}?usuario_id=$usuarioId');
+      final response = await _apiService.get(ApiConfig.conversations);
 
       print('>> [ConversacionService] Status Code: ${response.statusCode}');
       print('>> [ConversacionService] Response Data: ${response.data}');
@@ -98,6 +97,37 @@ class ConversacionService {
     } catch (e) {
       print('>> [ConversacionService] Error creando conversación: $e');
       return null;
+    }
+  }
+
+  /// Actualizar una conversación existente
+  Future<bool> actualizarConversacion(int conversacionId,
+      {String? titulo}) async {
+    try {
+      print(
+          '>> [ConversacionService] Actualizando conversación $conversacionId');
+
+      final response = await _apiService.put(
+        '${ApiConfig.conversations}/$conversacionId',
+        data: {
+          if (titulo != null) 'titulo': titulo,
+        },
+      );
+
+      print(
+          '>> [ConversacionService] Update Status Code: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        print('>> [ConversacionService] Conversación actualizada exitosamente');
+        return true;
+      } else {
+        print(
+            '>> [ConversacionService] Error actualizando: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print('>> [ConversacionService] Error actualizando conversación: $e');
+      return false;
     }
   }
 }

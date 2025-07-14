@@ -54,7 +54,7 @@ class LoginController extends GetxController {
         message.value = 'Login exitoso';
         messageColor.value = Colors.green;
 
-        // Navegar directamente al chat
+        // Navegar directamente al chat (nueva conversación)
         await Future.delayed(const Duration(milliseconds: 500));
         Get.offNamed('/chat', arguments: {
           'user': response.data,

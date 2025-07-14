@@ -26,23 +26,54 @@ class ChatController extends GetxController {
   void onInit() {
     super.onInit();
     final args = Get.arguments;
+
     if (args is Map<String, dynamic>) {
       user = args['user'] as Usuario;
-      conversacion = args['conversacion'] as Conversacion?; // Permitir null
+      final conversacionId = args['conversacionId'] as int?;
 
-      if (conversacion != null) {
+      if (conversacionId != null) {
         print(
-            '>> [ChatController] Usuario=${user.email}, ConversacionId=${conversacion!.conversacion_id}');
-        _cargarMensajesDeConversacion(conversacion!.conversacion_id);
+            '>> [ChatController] Cargando conversación existente: $conversacionId');
+        _cargarConversacionExistente(conversacionId);
       } else {
-        print(
-            '>> [ChatController] No hay conversación específica, creando nueva...');
+        print('>> [ChatController] Creando nueva conversación...');
         _crearNuevaConversacion();
       }
+    } else if (args is Usuario) {
+      // Compatibilidad con el formato anterior
+      user = args;
+      print(
+          '>> [ChatController] Usuario recibido, creando nueva conversación...');
+      _crearNuevaConversacion();
     } else {
       print(
           '>> [ChatController] No recibí argumentos válidos. Volviendo atrás.');
       Get.back();
+    }
+  }
+
+  /// Cargar una conversación existente con sus mensajes
+  Future<void> _cargarConversacionExistente(int conversacionId) async {
+    try {
+      // Primero obtenemos la conversación
+      final conversaciones = await _conversacionService
+          .getConversacionesPorUsuario(user.usuario_id);
+      conversacion = conversaciones
+          .firstWhereOrNull((c) => c.conversacion_id == conversacionId);
+
+      if (conversacion != null) {
+        // Luego cargamos los mensajes
+        await _cargarMensajesDeConversacion(conversacionId);
+        print(
+            '>> [ChatController] Conversación cargada: ${conversacion!.titulo}');
+      } else {
+        print(
+            '>> [ChatController] Conversación no encontrada, creando nueva...');
+        _crearNuevaConversacion();
+      }
+    } catch (e) {
+      print('>> [ChatController] Error cargando conversación: $e');
+      _crearNuevaConversacion();
     }
   }
 
@@ -57,6 +88,9 @@ class ChatController extends GetxController {
     final texto = messageTextController.text.trim();
     if (texto.isEmpty || conversacion == null) return;
 
+    // Si es el primer mensaje, actualizar el título de la conversación
+    final esElPrimerMensaje = mensajes.isEmpty;
+
     // Crear mensaje del usuario
     final mensajeUsuario = Mensaje(
       mensaje_id: DateTime.now().millisecondsSinceEpoch,
@@ -69,6 +103,13 @@ class ChatController extends GetxController {
     // Agregar mensaje del usuario a la UI inmediatamente
     mensajes.add(mensajeUsuario);
     messageTextController.clear();
+
+    // Actualizar título de conversación si es el primer mensaje
+    if (esElPrimerMensaje) {
+      final nuevoTitulo =
+          texto.length > 30 ? '${texto.substring(0, 30)}...' : texto;
+      await _actualizarTituloConversacion(nuevoTitulo);
+    }
 
     // Guardar mensaje del usuario en el backend
     final guardadoUsuario =
@@ -123,6 +164,26 @@ class ChatController extends GetxController {
     } finally {
       // Ocultar indicador de procesamiento
       isAIResponding.value = false;
+    }
+  }
+
+  /// Actualizar el título de la conversación con el primer mensaje
+  Future<void> _actualizarTituloConversacion(String nuevoTitulo) async {
+    try {
+      if (conversacion != null) {
+        // Actualizar localmente
+        conversacion!.titulo = nuevoTitulo;
+
+        // Intentar actualizar en el backend (sin bloquear si falla)
+        await _conversacionService.actualizarConversacion(
+          conversacion!.conversacion_id,
+          titulo: nuevoTitulo,
+        );
+        print('✅ Título de conversación actualizado: $nuevoTitulo');
+      }
+    } catch (e) {
+      print('⚠️ Error actualizando título de conversación: $e');
+      // No es crítico si falla
     }
   }
 

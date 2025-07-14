@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../models/conversacion.dart';
-import '../../models/user.dart';
 import 'history_controller.dart';
 
 class HistoryPage extends StatelessWidget {
@@ -98,7 +97,7 @@ class HistoryPage extends StatelessWidget {
                       '/chat',
                       arguments: {
                         'user': controller.user,
-                        'conversacion': conv,
+                        'conversacionId': conv.conversacion_id,
                       },
                     );
                   },
@@ -116,6 +115,21 @@ class HistoryPage extends StatelessWidget {
           ),
         );
       }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print('>> [HistoryPage] Creando nueva conversación...');
+          Get.toNamed(
+            '/chat',
+            arguments: {
+              'user': controller.user,
+            },
+          );
+        },
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
+        child: const Icon(Icons.add),
+        tooltip: 'Nueva conversación',
+      ),
     );
   }
 }
