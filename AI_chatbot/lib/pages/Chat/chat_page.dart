@@ -65,7 +65,7 @@ class ChatPage extends StatelessWidget {
                                 : colorScheme.surfaceVariant,
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child: isUser 
+                          child: isUser
                               ? Text(
                                   msg.contenido_texto,
                                   style: TextStyle(
