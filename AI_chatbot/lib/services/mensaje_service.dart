@@ -60,7 +60,7 @@ class MensajeService {
         data: {
           'conversacion_id': mensaje.conversacion_id,
           'remitente':
-              mensaje.remitente.toString().split('.').last, // 'usuario' o 'ia'
+              mensaje.remitente == RemitenteType.usuario ? 'user' : 'assistant',
           'contenido_texto': mensaje.contenido_texto,
           'timestamp_envio': mensaje.timestamp_envio.toIso8601String(),
         },

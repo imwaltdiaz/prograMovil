@@ -1,4 +1,4 @@
-// lib/pages/chat/chat_page.dart
+// lib/pages/Chat/chat_page.dart
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,7 +28,7 @@ class ChatPage extends StatelessWidget {
           children: [
             Expanded(
               child: Obx(() {
-                if (control.mensajes.isEmpty) {
+                if (control.mensajes.isEmpty && !control.isAIResponding.value) {
                   return Center(
                     child: Text(
                       'No hay mensajes',
@@ -38,58 +38,97 @@ class ChatPage extends StatelessWidget {
                     ),
                   );
                 }
-                return ListView.builder(
+                return ListView(
                   padding: const EdgeInsets.symmetric(
                     vertical: 8,
                     horizontal: 20,
                   ),
-                  itemCount: control.mensajes.length,
-                  itemBuilder: (context, index) {
-                    final msg = control.mensajes[index];
-                    final isUser = msg.remitente == RemitenteType.usuario;
+                  children: [
+                    // Lista de mensajes existentes
+                    ...control.mensajes.map((msg) {
+                      final isUser = msg.remitente == RemitenteType.usuario;
 
-                    return Align(
-                      alignment:
-                          isUser ? Alignment.centerRight : Alignment.centerLeft,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 4),
-                        padding: const EdgeInsets.all(12),
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.8,
+                      return Align(
+                        alignment: isUser
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          padding: const EdgeInsets.all(12),
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isUser
+                                ? colorScheme.primary
+                                : colorScheme.surfaceVariant,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Text(
+                            msg.contenido_texto,
+                            style: TextStyle(
+                              color: isUser
+                                  ? colorScheme.onPrimary
+                                  : colorScheme.onSurfaceVariant,
+                              fontSize: 15,
+                            ),
+                          ),
                         ),
-                        decoration: BoxDecoration(
-                          color:
-                              isUser
-                                  ? colorScheme.primary
-                                  : colorScheme.surfaceVariant,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Text(
-                          msg.contenido_texto,
-                          style: TextStyle(
-                            color:
-                                isUser
-                                    ? colorScheme.onPrimary
-                                    : colorScheme.onSurfaceVariant,
-                            fontSize: 15,
+                      );
+                    }).toList(),
+
+                    // Indicador de "escribiendo..." cuando la IA está procesando
+                    if (control.isAIResponding.value)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          padding: const EdgeInsets.all(12),
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: colorScheme.surfaceVariant,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: colorScheme.primary,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'BROER-BOT está escribiendo...',
+                                style: TextStyle(
+                                  color: colorScheme.onSurfaceVariant,
+                                  fontSize: 15,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    );
-                  },
+                  ],
                 );
               }),
             ),
 
             // ───────────────────────────────────────────────────────────────
-            // Fila inferior: botón “Evaluar” a la izquierda, campo de texto y “Enviar”
+            // Fila inferior: botón "Evaluar" a la izquierda, campo de texto y "Enviar"
             // ───────────────────────────────────────────────────────────────
             Container(
               color: colorScheme.background,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Row(
                 children: [
-                  // 1) Botón “Evaluar” (ícono) en la esquina inferior izquierda
+                  // 1) Botón "Evaluar" (ícono) en la esquina inferior izquierda
                   Container(
                     decoration: BoxDecoration(
                       color: colorScheme.primary,
@@ -134,19 +173,28 @@ class ChatPage extends StatelessWidget {
 
                   const SizedBox(width: 8),
 
-                  // 3) Botón “Enviar”
-                  Container(
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary,
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      icon: Icon(Icons.send, color: colorScheme.onPrimary),
-                      onPressed: () {
-                        control.sendMessage();
-                      },
-                    ),
-                  ),
+                  // 3) Botón "Enviar"
+                  Obx(() => Container(
+                        decoration: BoxDecoration(
+                          color: control.isAIResponding.value
+                              ? colorScheme.primary.withOpacity(0.5)
+                              : colorScheme.primary,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: Icon(
+                            control.isAIResponding.value
+                                ? Icons.hourglass_empty
+                                : Icons.send,
+                            color: colorScheme.onPrimary,
+                          ),
+                          onPressed: control.isAIResponding.value
+                              ? null
+                              : () {
+                                  control.sendMessage();
+                                },
+                        ),
+                      )),
                 ],
               ),
             ),
@@ -159,7 +207,7 @@ class ChatPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: colorScheme.background,
         elevation: 0,
-        // Aquí reemplazamos la flecha de “Back” por un botón de “Logout”
+        // Aquí reemplazamos la flecha de "Back" por un botón de "Logout"
         leading: IconButton(
           icon: Icon(Icons.logout, color: colorScheme.onBackground),
           tooltip: 'Cerrar sesión',
@@ -169,7 +217,7 @@ class ChatPage extends StatelessWidget {
           },
         ),
         title: Text(
-          'Chat',
+          'BROER-BOT',
           style: textTheme.titleLarge?.copyWith(
             color: colorScheme.onBackground,
             fontWeight: FontWeight.bold,
@@ -177,30 +225,16 @@ class ChatPage extends StatelessWidget {
         ),
         centerTitle: true,
         actions: [
+          // Ícono de configuración (engranaje) en la parte superior derecha
           IconButton(
             icon: Icon(Icons.settings, color: colorScheme.onBackground),
-            tooltip: 'Preferencias',
+            tooltip: 'Configuración',
             onPressed: () {
               Get.toNamed('/preferences', arguments: control.user);
             },
           ),
-          IconButton(
-            icon: Icon(Icons.person, color: colorScheme.onBackground),
-            tooltip: 'Editar información',
-            onPressed: () {
-              Get.toNamed('/profile', arguments: control.user);
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.history, color: colorScheme.onBackground),
-            tooltip: 'Historial de chat',
-            onPressed: () {
-              Get.toNamed('/history', arguments: control.user);
-            },
-          ),
         ],
       ),
-      resizeToAvoidBottomInset: false,
       body: _buildBody(),
     );
   }

@@ -4,7 +4,12 @@
 enum RemitenteType { usuario, ia }
 
 RemitenteType remitenteTypeFromString(String s) {
-  return s == 'ia' ? RemitenteType.ia : RemitenteType.usuario;
+  // Manejar tanto el formato viejo (usuario/ia) como el nuevo (user/assistant)
+  if (s == 'ia' || s == 'assistant') {
+    return RemitenteType.ia;
+  } else {
+    return RemitenteType.usuario; // user, usuario, o cualquier otro valor
+  }
 }
 
 String remitenteTypeToString(RemitenteType t) {

@@ -7,15 +7,20 @@ import '../../models/conversacion.dart';
 import '../../models/user.dart';
 import '../../services/mensaje_service.dart';
 import '../../services/conversacion_service.dart';
+import '../../services/gemini_ai_service.dart';
 
 class ChatController extends GetxController {
   final MensajeService _mensajeService = MensajeService();
   final ConversacionService _conversacionService = ConversacionService();
+  final GeminiAIService _geminiAIService = GeminiAIService();
 
   late final Usuario user;
   Conversacion? conversacion; // Permitir que sea null
   var mensajes = <Mensaje>[].obs;
   final TextEditingController messageTextController = TextEditingController();
+
+  // Estados para la IA
+  var isAIResponding = false.obs;
 
   @override
   void onInit() {
@@ -52,6 +57,7 @@ class ChatController extends GetxController {
     final texto = messageTextController.text.trim();
     if (texto.isEmpty || conversacion == null) return;
 
+    // Crear mensaje del usuario
     final mensajeUsuario = Mensaje(
       mensaje_id: DateTime.now().millisecondsSinceEpoch,
       conversacion_id: conversacion!.conversacion_id,
@@ -60,38 +66,64 @@ class ChatController extends GetxController {
       timestamp_envio: DateTime.now(),
     );
 
-    // Agregar mensaje a la lista inmediatamente para UI responsiva
+    // Agregar mensaje del usuario a la UI inmediatamente
     mensajes.add(mensajeUsuario);
     messageTextController.clear();
 
-    // Guardar mensaje en el backend
-    final guardado = await _mensajeService.guardarMensaje(mensajeUsuario);
-    if (guardado) {
-      print('>> [ChatController] Mensaje de usuario guardado en backend');
+    // Guardar mensaje del usuario en el backend
+    final guardadoUsuario =
+        await _mensajeService.guardarMensaje(mensajeUsuario);
+    if (guardadoUsuario) {
+      print('✅ Mensaje de usuario guardado en backend');
     } else {
-      print(
-          '>> [ChatController] Error guardando mensaje de usuario en backend');
+      print('❌ Error guardando mensaje de usuario en backend');
     }
 
-    // Simular respuesta del bot
-    final respuestaBot = Mensaje(
-      mensaje_id: DateTime.now().millisecondsSinceEpoch + 1,
-      conversacion_id: conversacion!.conversacion_id,
-      remitente: RemitenteType.ia,
-      contenido_texto: 'Hola soy Broer-Bot, ¿en qué puedo ayudarte?',
-      timestamp_envio: DateTime.now().add(const Duration(milliseconds: 200)),
-    );
+    // Indicar que la IA está procesando
+    isAIResponding.value = true;
 
-    // Agregar respuesta del bot con delay
-    Future.delayed(const Duration(milliseconds: 300), () async {
-      mensajes.add(respuestaBot);
-      final guardadoBot = await _mensajeService.guardarMensaje(respuestaBot);
-      if (guardadoBot) {
-        print('>> [ChatController] Mensaje de IA guardado en backend');
+    try {
+      // Enviar mensaje a Gemini AI
+      print('🤖 Enviando mensaje a Gemini AI: $texto');
+      final respuestaIA = await _geminiAIService.sendMessage(texto);
+
+      // Crear mensaje de respuesta de la IA
+      final mensajeIA = Mensaje(
+        mensaje_id: DateTime.now().millisecondsSinceEpoch + 1,
+        conversacion_id: conversacion!.conversacion_id,
+        remitente: RemitenteType.ia,
+        contenido_texto: respuestaIA,
+        timestamp_envio: DateTime.now(),
+      );
+
+      // Agregar respuesta de la IA a la UI
+      mensajes.add(mensajeIA);
+
+      // Guardar mensaje de la IA en el backend
+      final guardadoIA = await _mensajeService.guardarMensaje(mensajeIA);
+      if (guardadoIA) {
+        print('✅ Respuesta de IA guardada en backend');
       } else {
-        print('>> [ChatController] Error guardando mensaje de IA en backend');
+        print('❌ Error guardando respuesta de IA en backend');
       }
-    });
+    } catch (e) {
+      print('❌ Error obteniendo respuesta de Gemini: $e');
+
+      // Mostrar mensaje de error al usuario
+      final mensajeError = Mensaje(
+        mensaje_id: DateTime.now().millisecondsSinceEpoch + 1,
+        conversacion_id: conversacion!.conversacion_id,
+        remitente: RemitenteType.ia,
+        contenido_texto:
+            '❌ Error: ${e.toString()}\n\nPor favor verifica tu configuración de API Key en Configuración > Modelo de IA.',
+        timestamp_envio: DateTime.now(),
+      );
+
+      mensajes.add(mensajeError);
+    } finally {
+      // Ocultar indicador de procesamiento
+      isAIResponding.value = false;
+    }
   }
 
   Future<void> _crearNuevaConversacion() async {
