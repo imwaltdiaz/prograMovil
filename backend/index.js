@@ -21,6 +21,9 @@ const messageRoutes = require('./src/routes/messages');
 const aiModelRoutes = require('./src/routes/ai-models');
 const preferenceRoutes = require('./src/routes/preferences');
 
+// Importar el servicio de Google GenAI
+const { generateContent } = require('./src/services/googleGenAIService');
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -55,6 +58,25 @@ app.use(morgan(logLevel));
 // Parseo de JSON
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+// Middleware para manejar text/plain como JSON (temporal para debugging)
+app.use('/api/genai', (req, res, next) => {
+  if (req.headers['content-type'] === 'text/plain') {
+    let data = '';
+    req.on('data', chunk => {
+      data += chunk;
+    });
+    req.on('end', () => {
+      try {
+        req.body = JSON.parse(data);
+      } catch (e) {
+        req.body = { contents: data };
+      }
+      next();
+    });
+  } else {
+    next();
+  }
+});
 
 // Archivos estáticos
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -67,6 +89,72 @@ app.use('/api/conversations', conversationRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/ai-models', aiModelRoutes);
 app.use('/api/preferences', preferenceRoutes);
+
+// Endpoint para probar Google GenAI
+app.post('/api/genai', async (req, res) => {
+  try {
+    console.log('📨 Request recibido');
+    console.log('📋 Headers:', req.headers);
+    console.log('📦 Body completo:', req.body);
+    console.log('📦 Body type:', typeof req.body);
+    
+    const { contents, options = {} } = req.body;
+    
+    if (!contents) {
+      return res.status(400).json({ 
+        error: 'El campo contents es requerido.',
+        message: 'Debes proporcionar un mensaje para generar contenido.' 
+      });
+    }
+
+    const response = await generateContent(contents, options);
+    res.json({ 
+      text: response,
+      status: 'success',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error al generar contenido con Google GenAI:', error);
+    res.status(500).json({ 
+      error: 'Error interno del servidor',
+      message: 'No se pudo procesar la solicitud de IA',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+});
+
+// Endpoint para validar la configuración de IA
+app.get('/api/genai/status', async (req, res) => {
+  try {
+    const { validateApiKey } = require('./src/services/googleGenAIService');
+    const isValid = await validateApiKey();
+    res.json({
+      status: isValid ? 'connected' : 'disconnected',
+      message: isValid ? 'API de IA funcionando correctamente' : 'Error en la configuración de IA'
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Error verificando el estado de la IA'
+    });
+  }
+});
+
+// Endpoint para obtener modelos disponibles
+app.get('/api/genai/models', async (req, res) => {
+  try {
+    const { getAvailableModels } = require('./src/services/googleGenAIService');
+    const models = await getAvailableModels();
+    res.json({
+      models,
+      count: models.length
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Error obteniendo modelos disponibles'
+    });
+  }
+});
 
 // Ruta de prueba
 app.get('/', (req, res) => {
