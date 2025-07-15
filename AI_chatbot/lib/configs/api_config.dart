@@ -1,17 +1,25 @@
 // lib/configs/api_config.dart
 
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 class ApiConfig {
   // Configuración del servidor backend
-  // Diferentes opciones para diferentes dispositivos
   static const String _localhost = 'http://localhost:3001';
   static const String _emulatorAndroid = 'http://10.0.2.2:3001';
-  static const String _realDevice =
-      'http://192.168.1.100:3001'; // Cambiar por tu IP local
 
-  // URL actual - cambiar según el dispositivo
+  // URL actual - detecta automáticamente el entorno
   static String get baseUrl {
-    // Puedes cambiar esto dinámicamente o usar _localhost, _realDevice
-    return _emulatorAndroid;
+    if (kIsWeb) {
+      // En web, usar localhost
+      return _localhost;
+    } else if (Platform.isAndroid) {
+      // En Android emulator, usar 10.0.2.2
+      return _emulatorAndroid;
+    } else {
+      // iOS y otros: usar localhost
+      return _localhost;
+    }
   }
 
   static const String apiVersion = '/api';

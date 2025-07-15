@@ -1,7 +1,7 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 // Configurar la API key desde variables de entorno
-const apiKey = process.env.GOOGLE_AI_API_KEY || 'xddddddd';
+const apiKey = process.env.GOOGLE_AI_API_KEY || 'AIzaSyAFSI8pgmCZ6LDcKM30b2hIw90qqjpjIcY';
 const genAI = new GoogleGenerativeAI(apiKey);
 
 class GoogleGenAIService {

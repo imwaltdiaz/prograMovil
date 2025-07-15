@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+import '../configs/api_config.dart';
 
 class GeminiAIService {
-  // URL de nuestro backend local
-  static const String _backendUrl = 'http://localhost:3001/api';
+  // Usar la configuración centralizada del API
+  static String get _backendUrl => ApiConfig.fullBaseUrl;
 
   /// Enviar mensaje a través de nuestro backend
   Future<String> sendMessage(String message) async {
@@ -32,7 +32,7 @@ class GeminiAIService {
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        
+
         if (responseData['text'] != null) {
           print('✅ Respuesta del backend recibida');
           return responseData['text'];
