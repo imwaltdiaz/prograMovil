@@ -10,7 +10,26 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final LoginController controller = Get.put(LoginController());
+  late final LoginController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // Asegurarse de que tengamos una instancia fresca del controlador
+    if (Get.isRegistered<LoginController>()) {
+      Get.delete<LoginController>();
+    }
+    controller = Get.put(LoginController());
+  }
+
+  @override
+  void dispose() {
+    // Limpiar el controlador al salir de la página
+    if (Get.isRegistered<LoginController>()) {
+      Get.delete<LoginController>();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,21 +91,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-
-                // DEBUG: Mostrar URL actual
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  margin: const EdgeInsets.only(bottom: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    'Debug: API URL = ${controller.getApiUrl()}',
-                    style: const TextStyle(fontSize: 10),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
 
                 // Botón Ingresar + Mensaje reactivo
                 Obx(() {

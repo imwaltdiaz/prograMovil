@@ -7,8 +7,8 @@ import '../../services/auth_service.dart';
 import '../../configs/api_config.dart';
 
 class LoginController extends GetxController {
-  final TextEditingController txtUser = TextEditingController();
-  final TextEditingController txtPassword = TextEditingController();
+  late TextEditingController txtUser;
+  late TextEditingController txtPassword;
   final AuthService _authService = AuthService();
 
   RxString message = ''.obs;
@@ -18,6 +18,11 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    // Inicializar los controladores aquí para evitar problemas de dispose
+    txtUser = TextEditingController();
+    txtPassword = TextEditingController();
+
     // En modo debug, precargar credenciales de prueba
     if (kDebugMode) {
       txtUser.text = 'usuario1@example.com';
@@ -91,8 +96,19 @@ class LoginController extends GetxController {
 
   @override
   void onClose() {
-    txtUser.dispose();
-    txtPassword.dispose();
+    // Verificar que los controladores existen antes de hacer dispose
+    try {
+      txtUser.dispose();
+    } catch (e) {
+      print('Error disposing txtUser: $e');
+    }
+
+    try {
+      txtPassword.dispose();
+    } catch (e) {
+      print('Error disposing txtPassword: $e');
+    }
+
     super.onClose();
   }
 }
